@@ -1,8 +1,13 @@
 namespace Testcontainers.MsSql;
 
-public sealed class MsSqlContainerTest : IAsyncLifetime
+public abstract class MsSqlContainerTest : IAsyncLifetime
 {
-    private readonly MsSqlContainer _msSqlContainer = new MsSqlBuilder().Build();
+    private readonly MsSqlContainer _msSqlContainer;
+
+    private MsSqlContainerTest(MsSqlContainer msSqlContainer)
+    {
+        _msSqlContainer = msSqlContainer;
+    }
 
     public Task InitializeAsync()
     {
@@ -41,5 +46,23 @@ public sealed class MsSqlContainerTest : IAsyncLifetime
 
         // When
         Assert.True(0L.Equals(execResult.ExitCode), execResult.Stderr);
+    }
+
+    [UsedImplicitly]
+    public sealed class MsSqlDefault : MsSqlContainerTest
+    {
+        public MsSqlDefault()
+            : base(new MsSqlBuilder().Build())
+        {
+        }
+    }
+
+    [UsedImplicitly]
+    public sealed class MsSqlWaitForDatabase : MsSqlContainerTest
+    {
+        public MsSqlWaitForDatabase()
+            : base(new MsSqlBuilder().WithWaitStrategy(Wait.ForUnixContainer().UntilDatabaseIsAvailable(SqlClientFactory.Instance)).Build())
+        {
+        }
     }
 }

@@ -2,6 +2,7 @@ namespace DotNet.Testcontainers.Configurations
 {
   using System;
   using System.Collections.Generic;
+  using System.Data.Common;
   using System.Text.RegularExpressions;
 
   /// <inheritdoc cref="IWaitForContainerOS" />
@@ -25,6 +26,12 @@ namespace DotNet.Testcontainers.Configurations
 
     /// <inheritdoc />
     public abstract IWaitForContainerOS UntilPortIsAvailable(int port);
+
+    /// <inheritdoc />
+    public IWaitForContainerOS UntilDatabaseIsAvailable(DbProviderFactory dbProviderFactory, TimeSpan frequency, TimeSpan timeout)
+    {
+      return AddCustomWaitStrategy(new UntilDatabaseIsAvailable(dbProviderFactory, frequency, timeout));
+    }
 
     /// <inheritdoc />
     public virtual IWaitForContainerOS AddCustomWaitStrategy(IWaitUntil waitStrategy)

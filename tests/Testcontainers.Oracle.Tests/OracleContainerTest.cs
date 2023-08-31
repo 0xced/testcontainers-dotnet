@@ -1,8 +1,13 @@
 namespace Testcontainers.Oracle;
 
-public sealed class OracleContainerTest : IAsyncLifetime
+public abstract class OracleContainerTest : IAsyncLifetime
 {
-    private readonly OracleContainer _oracleContainer = new OracleBuilder().Build();
+    private readonly OracleContainer _oracleContainer;
+
+    private OracleContainerTest(OracleContainer oracleContainer)
+    {
+        _oracleContainer = oracleContainer;
+    }
 
     public Task InitializeAsync()
     {
@@ -41,5 +46,23 @@ public sealed class OracleContainerTest : IAsyncLifetime
 
         // When
         Assert.True(0L.Equals(execResult.ExitCode), execResult.Stderr);
+    }
+
+    [UsedImplicitly]
+    public sealed class OracleDefault : OracleContainerTest
+    {
+        public OracleDefault()
+            : base(new OracleBuilder().Build())
+        {
+        }
+    }
+
+    [UsedImplicitly]
+    public sealed class OracleWaitForDatabase : OracleContainerTest
+    {
+        public OracleWaitForDatabase()
+            : base(new OracleBuilder().WithWaitStrategy(Wait.ForUnixContainer().UntilDatabaseIsAvailable(OracleClientFactory.Instance)).Build())
+        {
+        }
     }
 }

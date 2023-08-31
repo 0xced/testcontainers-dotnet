@@ -1,8 +1,13 @@
 namespace Testcontainers.ClickHouse;
 
-public sealed class ClickHouseContainerTest : IAsyncLifetime
+public abstract class ClickHouseContainerTest : IAsyncLifetime
 {
-    private readonly ClickHouseContainer _clickHouseContainer = new ClickHouseBuilder().Build();
+    private readonly ClickHouseContainer _clickHouseContainer;
+
+    private ClickHouseContainerTest(ClickHouseContainer clickHouseContainer)
+    {
+        _clickHouseContainer = clickHouseContainer;
+    }
 
     public Task InitializeAsync()
     {
@@ -41,5 +46,23 @@ public sealed class ClickHouseContainerTest : IAsyncLifetime
 
         // When
         Assert.True(0L.Equals(execResult.ExitCode), execResult.Stderr);
+    }
+
+    [UsedImplicitly]
+    public sealed class ClickHouseDefault : ClickHouseContainerTest
+    {
+        public ClickHouseDefault()
+            : base(new ClickHouseBuilder().Build())
+        {
+        }
+    }
+
+    [UsedImplicitly]
+    public sealed class ClickHouseWaitForDatabase : ClickHouseContainerTest
+    {
+        public ClickHouseWaitForDatabase()
+            : base(new ClickHouseBuilder().WithWaitStrategy(Wait.ForUnixContainer().UntilDatabaseIsAvailable(new ClickHouseConnectionFactory())).Build())
+        {
+        }
     }
 }

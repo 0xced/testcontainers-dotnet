@@ -65,4 +65,13 @@ public abstract class MariaDbContainerTest : IAsyncLifetime
         {
         }
     }
+
+    [UsedImplicitly]
+    public sealed class MariaDbWaitForDatabase : MariaDbContainerTest
+    {
+        public MariaDbWaitForDatabase()
+            : base(new MariaDbBuilder().WithWaitStrategy(Wait.ForUnixContainer().UntilDatabaseIsAvailable(MySqlConnectorFactory.Instance)).Build())
+        {
+        }
+    }
 }

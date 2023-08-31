@@ -1,8 +1,13 @@
 namespace Testcontainers.SqlEdge;
 
-public sealed class SqlEdgeContainerTest : IAsyncLifetime
+public abstract class SqlEdgeContainerTest : IAsyncLifetime
 {
-    private readonly SqlEdgeContainer _sqlEdgeContainer = new SqlEdgeBuilder().Build();
+    private readonly SqlEdgeContainer _sqlEdgeContainer;
+
+    private SqlEdgeContainerTest(SqlEdgeContainer sqlEdgeContainer)
+    {
+        _sqlEdgeContainer = sqlEdgeContainer;
+    }
 
     public Task InitializeAsync()
     {
@@ -26,5 +31,23 @@ public sealed class SqlEdgeContainerTest : IAsyncLifetime
 
         // Then
         Assert.Equal(ConnectionState.Open, connection.State);
+    }
+    
+    [UsedImplicitly]
+    public sealed class SqlEdgeDefault : SqlEdgeContainerTest
+    {
+        public SqlEdgeDefault()
+            : base(new SqlEdgeBuilder().Build())
+        {
+        }
+    }
+
+    [UsedImplicitly]
+    public sealed class SqlEdgeWaitForDatabase : SqlEdgeContainerTest
+    {
+        public SqlEdgeWaitForDatabase()
+            : base(new SqlEdgeBuilder().WithWaitStrategy(Wait.ForUnixContainer().UntilDatabaseIsAvailable(SqlClientFactory.Instance)).Build())
+        {
+        }
     }
 }

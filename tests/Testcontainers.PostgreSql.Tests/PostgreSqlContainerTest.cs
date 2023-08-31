@@ -1,8 +1,13 @@
 namespace Testcontainers.PostgreSql;
 
-public sealed class PostgreSqlContainerTest : IAsyncLifetime
+public abstract class PostgreSqlContainerTest : IAsyncLifetime
 {
-    private readonly PostgreSqlContainer _postgreSqlContainer = new PostgreSqlBuilder().Build();
+    private readonly PostgreSqlContainer _postgreSqlContainer;
+
+    protected PostgreSqlContainerTest(PostgreSqlContainer postgreSqlContainer)
+    {
+        _postgreSqlContainer = postgreSqlContainer;
+    }
 
     public Task InitializeAsync()
     {
@@ -80,6 +85,24 @@ public sealed class PostgreSqlContainerTest : IAsyncLifetime
     {
         public SharedPostgreSqlInstance()
             : base(new PostgreSqlBuilder().Build())
+        {
+        }
+    }
+
+    [UsedImplicitly]
+    public sealed class PostgreSqlDefaultConfiguration : PostgreSqlContainerTest
+    {
+        public PostgreSqlDefaultConfiguration()
+            : base(new PostgreSqlBuilder().Build())
+        {
+        }
+    }
+
+    [UsedImplicitly]
+    public sealed class PostgreSqlWaitForDatabase : PostgreSqlContainerTest
+    {
+        public PostgreSqlWaitForDatabase()
+            : base(new PostgreSqlBuilder().WithWaitStrategy(Wait.ForUnixContainer().UntilDatabaseIsAvailable(NpgsqlFactory.Instance)).Build())
         {
         }
     }

@@ -1,19 +1,11 @@
 namespace Testcontainers.InfluxDb;
 
-public sealed class InfluxDbContainerTest : IAsyncLifetime
+public sealed class InfluxDbContainerTest : ContainerTest<InfluxDbBuilder, InfluxDbContainer>
 {
     private const string AdminToken = "YOUR_API_TOKEN";
 
-    private readonly InfluxDbContainer _influxDbContainer = new InfluxDbBuilder().WithAdminToken(AdminToken).Build();
-
-    public Task InitializeAsync()
+    public InfluxDbContainerTest() : base(builder => builder.WithAdminToken(AdminToken))
     {
-        return _influxDbContainer.StartAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-        return _influxDbContainer.DisposeAsync().AsTask();
     }
 
     [Fact]
@@ -21,7 +13,7 @@ public sealed class InfluxDbContainerTest : IAsyncLifetime
     public async Task PingReturnsTrue()
     {
         // Given
-        using var client = new InfluxDBClient(_influxDbContainer.GetAddress(), AdminToken);
+        using var client = new InfluxDBClient(Container.GetAddress(), AdminToken);
 
         // When
         var result = await client.PingAsync()
@@ -44,7 +36,7 @@ public sealed class InfluxDbContainerTest : IAsyncLifetime
 
         const double temperature = 55d;
 
-        using var client = new InfluxDBClient(_influxDbContainer.GetAddress(), AdminToken);
+        using var client = new InfluxDBClient(Container.GetAddress(), AdminToken);
         var queryApi = client.GetQueryApi();
         var writeApi = client.GetWriteApiAsync();
 

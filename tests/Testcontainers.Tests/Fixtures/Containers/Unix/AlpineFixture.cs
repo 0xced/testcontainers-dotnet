@@ -6,26 +6,19 @@ namespace DotNet.Testcontainers.Tests.Fixtures
   using DotNet.Testcontainers.Commons;
   using DotNet.Testcontainers.Containers;
   using JetBrains.Annotations;
-  using Xunit;
 
   [UsedImplicitly]
-  public sealed class AlpineFixture : IAsyncLifetime
+  public sealed class AlpineFixture : ContainerTest<ContainerBuilder, IContainer>
   {
-    public IContainer Container { get; }
-      = new ContainerBuilder()
-        .WithImage(CommonImages.Alpine)
-        .WithCommand(CommonCommands.SleepInfinity)
-        .WithStartupCallback((_, ct) => Task.Delay(TimeSpan.FromMinutes(1), ct))
-        .Build();
-
-    public Task InitializeAsync()
+    private static void AlpineBuilder(ContainerBuilder builder)
     {
-      return Task.CompletedTask;
+      builder.WithImage(CommonImages.Alpine)
+        .WithCommand(CommonCommands.SleepInfinity)
+        .WithStartupCallback((_, ct) => Task.Delay(TimeSpan.FromMinutes(1), ct));
     }
 
-    public Task DisposeAsync()
+    public AlpineFixture() : base(AlpineBuilder)
     {
-      return Container.DisposeAsync().AsTask();
     }
   }
 }

@@ -9,12 +9,11 @@ namespace DotNet.Testcontainers.Tests.Unit
   using DotNet.Testcontainers.Containers;
   using Xunit;
 
-  public sealed class ReadFileFromContainerTest : IAsyncLifetime
+  public sealed class ReadFileFromContainerTest : ContainerTest<ContainerBuilder, IContainer>
   {
-    private readonly IContainer _container = new ContainerBuilder()
-      .WithImage("alpine")
-      .WithEntrypoint(CommonCommands.SleepInfinity)
-      .Build();
+    public ReadFileFromContainerTest() : base(builder => builder.WithImage("alpine").WithEntrypoint(CommonCommands.SleepInfinity))
+    {
+    }
 
     [Fact]
     public async Task ReadExistingFile()
@@ -25,10 +24,10 @@ namespace DotNet.Testcontainers.Tests.Unit
       var dayOfWeek = DateTime.UtcNow.DayOfWeek.ToString();
 
       // When
-      _ = await _container.ExecAsync(new[] { "/bin/sh", "-c", $"echo {dayOfWeek} > {dayOfWeekFilePath}" })
+      _ = await Container.ExecAsync(new[] { "/bin/sh", "-c", $"echo {dayOfWeek} > {dayOfWeekFilePath}" })
         .ConfigureAwait(false);
 
-      var fileContent = await _container.ReadFileAsync(dayOfWeekFilePath)
+      var fileContent = await Container.ReadFileAsync(dayOfWeekFilePath)
         .ConfigureAwait(false);
 
       // Then
@@ -38,23 +37,13 @@ namespace DotNet.Testcontainers.Tests.Unit
     [Fact]
     public Task AccessNotExistingFileThrowsFileNotFoundException()
     {
-      return Assert.ThrowsAsync<FileNotFoundException>(() => _container.ReadFileAsync("/tmp/fileNotFound"));
+      return Assert.ThrowsAsync<FileNotFoundException>(() => Container.ReadFileAsync("/tmp/fileNotFound"));
     }
 
     [Fact]
     public Task AccessDirectoryThrowsInvalidOperationException()
     {
-      return Assert.ThrowsAsync<InvalidOperationException>(() => _container.ReadFileAsync("/tmp"));
-    }
-
-    public Task InitializeAsync()
-    {
-      return _container.StartAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-      return _container.DisposeAsync().AsTask();
+      return Assert.ThrowsAsync<InvalidOperationException>(() => Container.ReadFileAsync("/tmp"));
     }
   }
 }

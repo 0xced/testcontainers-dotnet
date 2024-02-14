@@ -69,6 +69,48 @@ public sealed class PostgreSqlBuilder : ContainerBuilder<PostgreSqlBuilder, Post
             .WithEnvironment("POSTGRES_PASSWORD", password);
     }
 
+    /// <summary>
+    /// Copies scripts to be run during the container initialization.
+    /// </summary>
+    /// <param name="scriptUrls">The URLs of the scripts to be run during the container initialization.</param>
+    /// <returns>A configured instance of <see cref="PostgreSqlBuilder" />.</returns>
+    /// <remarks>
+    /// If multiple initialization scripts are supplied, they will be executed in sorted file name order.
+    /// See the <a href="https://github.com/docker-library/docs/blob/master/postgres/README.md#initialization-scripts">PostgreSql docker documentation</a> for more information.
+    /// </remarks>
+    public PostgreSqlBuilder WithInitializationScripts(params Uri[] scriptUrls)
+    {
+        return scriptUrls.Aggregate(this, (builder, scriptUrl) => builder.WithResourceMapping(scriptUrl, $"/docker-entrypoint-initdb.d/{scriptUrl.Segments.Last()}"));
+    }
+
+    /// <summary>
+    /// Copies scripts to be run during the container initialization.
+    /// </summary>
+    /// <param name="scriptFiles">The script files on the test host to be run during the container initialization.</param>
+    /// <returns>A configured instance of <see cref="PostgreSqlBuilder" />.</returns>
+    /// <remarks>
+    /// If multiple initialization scripts are supplied, they will be executed in sorted file name order.
+    /// See the <a href="https://github.com/docker-library/docs/blob/master/postgres/README.md#initialization-scripts">PostgreSql docker documentation</a> for more information.
+    /// </remarks>
+    public PostgreSqlBuilder WithInitializationScripts(params FileInfo[] scriptFiles)
+    {
+        return scriptFiles.Aggregate(this, (builder, scriptFile) => builder.WithResourceMapping(scriptFile, $"/docker-entrypoint-initdb.d/{scriptFile.Name}"));
+    }
+
+    /// <summary>
+    /// Copies scripts to be run during the container initialization.
+    /// </summary>
+    /// <param name="scriptsDirectory">A directory on the test host containing scripts to be run during the container initialization.</param>
+    /// <returns>A configured instance of <see cref="PostgreSqlBuilder" />.</returns>
+    /// <remarks>
+    /// If the directory contains multiple initialization scripts, they will be executed in sorted file name order.
+    /// See the <a href="https://github.com/docker-library/docs/blob/master/postgres/README.md#initialization-scripts">PostgreSql docker documentation</a> for more information.
+    /// </remarks>
+    public PostgreSqlBuilder WithInitializationScripts(DirectoryInfo scriptsDirectory)
+    {
+        return WithResourceMapping(scriptsDirectory, "/docker-entrypoint-initdb.d/");
+    }
+
     /// <inheritdoc />
     public override PostgreSqlContainer Build()
     {

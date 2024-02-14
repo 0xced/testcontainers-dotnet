@@ -66,6 +66,28 @@ public abstract class PostgreSqlContainerTest(PostgreSqlContainerTest.PostgreSql
         }
     }
 
+    public sealed class InitializationScriptsTest(PostgreSqlChinookInitializationFixture fixture) : IClassFixture<PostgreSqlChinookInitializationFixture>
+    {
+        [Theory]
+        [InlineData("chinook")]
+        [InlineData("chinook_auto_increment")]
+        [Trait(nameof(DockerCli.DockerPlatform), nameof(DockerCli.DockerPlatform.Linux))]
+        public void ChinookDatabaseIsInitialized(string database)
+        {
+            // Given
+            var connectionStringBuilder = new NpgsqlConnectionStringBuilder(fixture.ConnectionString) { Database = database };
+            using var connection = new NpgsqlConnection(connectionStringBuilder.ConnectionString);
+            using var command = new NpgsqlCommand("SELECT name FROM genre WHERE genre_id = 1", connection);
+            connection.Open();
+
+            // When
+            var result = command.ExecuteScalar();
+
+            // Then
+            Assert.Equal("Rock", result);
+        }
+    }
+
     public class PostgreSqlDefaultFixture(IMessageSink messageSink)
         : DbContainerFixture<PostgreSqlBuilder, PostgreSqlContainer>(messageSink)
     {
@@ -79,6 +101,16 @@ public abstract class PostgreSqlContainerTest(PostgreSqlContainerTest.PostgreSql
     {
         protected override PostgreSqlBuilder Configure(PostgreSqlBuilder builder)
             => builder.WithWaitStrategy(Wait.ForUnixContainer().UntilDatabaseIsAvailable(DbProviderFactory));
+    }
+
+    [UsedImplicitly]
+    public class PostgreSqlChinookInitializationFixture(IMessageSink messageSink)
+        : PostgreSqlDefaultFixture(messageSink)
+    {
+        protected override PostgreSqlBuilder Configure(PostgreSqlBuilder builder)
+            => builder.WithInitializationScripts(
+                new Uri("https://github.com/lerocha/chinook-database/releases/download/v1.4.5/Chinook_PostgreSql.sql"),
+                new Uri("https://github.com/lerocha/chinook-database/releases/download/v1.4.5/Chinook_PostgreSql_AutoIncrementPKs.sql"));
     }
 
     [UsedImplicitly]

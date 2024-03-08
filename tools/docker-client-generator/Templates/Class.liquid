@@ -27,7 +27,7 @@
 [System.Obsolete{% if HasDeprecatedMessage %}({{ DeprecatedMessage | literal }}){% endif %}]
 {% endif -%}
 {%- template Class.Annotations -%}
-{{ TypeAccessModifier }} {% if IsAbstract %}abstract {% endif %}partial {% if GenerateNativeRecords %}record{% else %}class{% endif %} {{ClassName}} {%- template Class.Inheritance %}
+{{ TypeAccessModifier }} {% if IsAbstract %}abstract {% endif %}{% if GenerateNativeRecords %}record{% else %}class{% endif %} {{ClassName}} {%- template Class.Inheritance %}
 {
 {%- if IsTuple -%}
     public {{ ClassName }}({%- for tupleType in TupleTypes %}{{ tupleType }} item{{ forloop.index }}{%- if forloop.last == false %}, {% endif %}{% endfor %}) : base({%- for tupleType in TupleTypes %}item{{ forloop.index }}{%- if forloop.last == false %}, {% endif %}{% endfor %})
@@ -52,7 +52,7 @@
     /// </summary>
 {%-   endif -%}
 {%- if UseSystemTextJson %}
-    [System.Text.Json.Serialization.JsonPropertyName("{{ property.Name }}")]
+    [JsonPropertyName("{{ property.Name }}")]
 {%-   if property.IsStringEnumArray %}
     // TODO(system.text.json): Add string enum item converter
 {%-   endif -%}
@@ -79,14 +79,14 @@
 {%-   endif -%}
 {%-   if property.IsStringEnum -%}
 {%-     if UseSystemTextJson -%}
-    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
+    [JsonConverter(typeof(JsonEnumMemberConverter<{{ property.Type | replace: "?", "" }}>))]
 {%-     else -%}
     [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
 {%-     endif -%}
 {%-  endif -%}
 {%-   if property.IsDate and UseDateFormatConverter -%}
 {%-     if UseSystemTextJson -%}
-    [System.Text.Json.Serialization.JsonConverter(typeof(DateFormatConverter))]
+    [JsonConverter(typeof(DateFormatConverter))]
 {%-     else -%}
     [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
 {%-     endif -%}
@@ -120,16 +120,16 @@
 
 {%- if GenerateAdditionalPropertiesProperty -%}
 
-    private System.Collections.Generic.IDictionary<string, {{ AdditionalPropertiesType }}>{% if GenerateNullableReferenceTypes %}?{% endif %} _additionalProperties;
+    private IDictionary<string, {{ AdditionalPropertiesType }}>{% if GenerateNullableReferenceTypes %}?{% endif %} _additionalProperties;
 
 {%-       if UseSystemTextJson -%}
-    [System.Text.Json.Serialization.JsonExtensionData]
+    [JsonExtensionData]
 {%-       else -%}
     [Newtonsoft.Json.JsonExtensionData]
 {%-       endif -%}
-    public System.Collections.Generic.IDictionary<string, {{ AdditionalPropertiesType }}> AdditionalProperties
+    public IDictionary<string, {{ AdditionalPropertiesType }}> AdditionalProperties
     {
-        get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, {{ AdditionalPropertiesType }}>()); }
+        get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, {{ AdditionalPropertiesType }}>()); }
         {{PropertySetterAccessModifier}}set { _additionalProperties = value; }
     }
 

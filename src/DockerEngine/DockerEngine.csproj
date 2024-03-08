@@ -12,4 +12,7 @@
         <PackageReadmeFile></PackageReadmeFile>
         <PackageTags>api;client;docker;dotnet</PackageTags>
     </PropertyGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="DockerEngine.Tests, PublicKey=$([System.IO.File]::ReadAllText($(MSBuildThisFileDirectory)../strongname.pub))"/>
+    </ItemGroup>
 </Project>

@@ -37,17 +37,18 @@ public sealed class DockerClientTest : IAsyncLifetime
         const string tag = "latest";
 
         // TODO: Add support for additional schemes such as TCP, SSH, Unix, and Named Pipes (npipe) daemon socket.
-        var dockerClient = new DockerClient(new UriBuilder(Uri.UriSchemeHttp, _dockerContainer.Hostname, _dockerContainer.GetMappedPublicPort(DockerPort)).ToString(), new HttpClient());
+        var baseAddress = new UriBuilder(Uri.UriSchemeHttp, _dockerContainer.Hostname, _dockerContainer.GetMappedPublicPort(DockerPort)).Uri;
+        var dockerClient = new DockerClient(new HttpClient { BaseAddress = baseAddress });
 
         // When
         // TODO: Consider creating request and response objects instead of using a lengthy list of arguments (avoid name clash with System.Threading.Tasks.Task etc.).
-        await dockerClient.ImageCreateAsync(repository, null, null, tag, null, string.Empty, null, null, null);
+        await dockerClient.Image.CreateAsync(fromImage: repository, tag: tag);
 
         // TODO: Somehow, the HTTP request terminates too early, and the Docker image cannot be used or is not available right away. The container creation operation returns: no such image.
         await System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(3));
 
         // TODO: Try to avoid wrapping the actual content within an additional (unnecessary) body type, like `Body : ContainerConfig`.
-        var response = await dockerClient.ContainerCreateAsync(null, null, new Body { Image = repository + ":" + tag });
+        var response = await dockerClient.Container.CreateAsync(new Body { Image = repository + ":" + tag });
 
         // Then
         Assert.Equal(64, response.Id.Length);
@@ -62,13 +63,13 @@ public sealed class DockerClientTest : IAsyncLifetime
         // TODO: Fix the '$endpoint' scheme is not supported.
 
         // Given
-        using var httpClient = new HttpClient(HttpMessageHandlerFactory.GetHttpMessageHandler(new Uri(endpoint)));
+        using var httpClient = new HttpClient(HttpMessageHandlerFactory.GetHttpMessageHandler(new Uri(endpoint))) { BaseAddress = new Uri(endpoint)};
 
-        var dockerClient = new DockerClient(endpoint, httpClient);
+        var dockerClient = new DockerClient(httpClient);
 
         // When
-        var systemInfo = await dockerClient.SystemInfoAsync()
-            .ConfigureAwait(false);
+        var systemInfo = await dockerClient.System.InfoAsync()
+            .ConfigureAwait(true);
 
         // Then
         Assert.NotEmpty(systemInfo.ID);

@@ -9,6 +9,8 @@
         <PackageVersion Include="Docker.DotNet" Version="3.125.15"/>
         <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0"/>
         <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.4"/>
+        <PackageVersion Include="NSwag.CodeGeneration.CSharp" Version="14.0.3"/>
+        <PackageVersion Include="NSwag.Core.Yaml" Version="14.0.3"/>
         <PackageVersion Include="SharpZipLib" Version="1.4.2"/>
         <PackageVersion Include="SSH.NET" Version="2023.0.0"/>
         <PackageVersion Include="System.Text.Json" Version="6.0.9"/>

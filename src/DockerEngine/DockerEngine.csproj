@@ -11,13 +11,4 @@
         <PackageReadmeFile></PackageReadmeFile>
         <PackageTags>api;client;docker;dotnet</PackageTags>
     </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="NSwag.MSBuild" Version="13.20.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
-    <Target Name="NSwag" BeforeTargets="CoreCompile">
-        <Exec Command="$(NSwagExe_Net60) run NSwag.json"/>
-    </Target>
 </Project>

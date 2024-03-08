@@ -11,12 +11,7 @@
 {% if InjectHttpClient -%}
     private readonly {{ HttpClientType }} _httpClient;
 {% endif -%}
-{% if UseRequestAndResponseSerializationSettings -%}
-    private static readonly Lazy<JsonSerializerOptions> _requestSettings = new Lazy<JsonSerializerOptions>(() => CreateSerializerSettings(true), true);
-    private static readonly Lazy<JsonSerializerOptions> _responseSettings = new Lazy<JsonSerializerOptions>(() => CreateSerializerSettings(false), true);
-{% else -%}
-    private static readonly Lazy<JsonSerializerOptions> _settings = new Lazy<JsonSerializerOptions>(CreateSerializerSettings, true);
-{% endif -%}
+    private readonly JsonSerializerOptions _serializerOptions;
 
 {% assign constructorParameters = "" -%}
 {% if HasConfigurationClass -%}
@@ -30,6 +25,8 @@
 {%     unless constructorParameters == "" -%}{% assign constructorParameters = constructorParameters | append: ", " -%}{% endunless -%}
 {%     assign constructorParameters = constructorParameters | append: HttpClientType | append: " httpClient" -%}
 {% endif -%}
+{%     unless constructorParameters == "" -%}{% assign constructorParameters = constructorParameters | append: ", " -%}{% endunless -%}
+{%     assign constructorParameters = constructorParameters | append: "JsonSerializerOptions? serializerOptions = null" -%}
     public {{ Class }}({{ constructorParameters }}){% if HasConfigurationClass and HasBaseClass -%}{{ " : base(configuration)"}}{% endif %}
     {
 {%     if UseBaseUrl -%}
@@ -63,22 +60,8 @@
 {%     if InjectHttpClient -%}
         _httpClient = httpClient;
 {%     endif -%}
+        _serializerOptions = serializerOptions ?? new JsonSerializerOptions();
     {% template Client.Class.Constructor %}
-    }
-
-    private static JsonSerializerOptions CreateSerializerSettings({% if UseRequestAndResponseSerializationSettings %}bool isRequest{% endif %})
-    {
-        var settings = {{ JsonSerializerParameterCode }};
-{% if UseSystemTextJson == false and SerializeTypeInformation -%}
-        settings.TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto;
-{% endif -%}
-{% if UseSystemTextJson == true and JsonConvertersArrayCode contains "JsonConverter[]" -%}
-        var converters = {{ JsonConvertersArrayCode }};
-        foreach(var converter in converters)
-            settings.Converters.Add(converter);
-{% endif -%}
-        UpdateJsonSerializerSettings(settings{% if UseRequestAndResponseSerializationSettings %}, isRequest{% endif %});
-        return settings;
     }
 
 {% if UseBaseUrl and GenerateBaseUrlProperty -%}
@@ -95,26 +78,6 @@
     }
 
 {% endif -%}
-{% if ExposeJsonSerializerSettings -%}
-{%     assign serializerSettingsAccessModifier = "public" %}
-{% else -%}
-{%     assign serializerSettingsAccessModifier = "protected" %}
-{% endif -%}
-{% if UseRequestAndResponseSerializationSettings -%}
-    {{ serializerSettingsAccessModifier }} JsonSerializerOptions RequestJsonSerializerSettings => _requestSettings.Value;
-    {{ serializerSettingsAccessModifier }} JsonSerializerOptions ResponseJsonSerializerSettings => _responseSettings.Value;
-{% else -%}
-    {{ serializerSettingsAccessModifier }} JsonSerializerOptions JsonSerializerSettings => _settings.Value;
-{% endif -%}
-
-{% if GenerateUpdateJsonSerializerSettingsMethod -%}
-{%     if UseRequestAndResponseSerializationSettings -%}
-    static partial void UpdateJsonSerializerSettings(JsonSerializerOptions settings, bool isRequest);
-{%     else -%}
-    static partial void UpdateJsonSerializerSettings(JsonSerializerOptions settings);
-{%     endif -%}
-{% endif -%}
-
 
 {% if GeneratePrepareRequestAndProcessResponseAsAsyncMethods == false -%}
     partial void PrepareRequest({{ HttpClientType }} client, HttpRequestMessage request, string url);
@@ -201,15 +164,15 @@
                 var content = new StringContent({{ operation.ContentParameter.VariableName }});
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("{{ operation.Consumes }}");
 {%         elsif operation.ConsumesFormUrlEncoded -%}
-                var json = {% if UseSystemTextJson %}JsonSerializer.SerializeToUtf8Bytes{% else %}Newtonsoft.Json.JsonConvert.SerializeObject{% endif %}({{ operation.ContentParameter.VariableName }}, _settings.Value);
-                var dictionary_ = {% if UseSystemTextJson %}JsonSerializer.Deserialize{% else %}Newtonsoft.Json.JsonConvert.DeserializeObject{% endif %}<Dictionary<string, string>>(json, _settings.Value);
+                var json = {% if UseSystemTextJson %}JsonSerializer.SerializeToUtf8Bytes{% else %}Newtonsoft.Json.JsonConvert.SerializeObject{% endif %}({{ operation.ContentParameter.VariableName }}, _serializerOptions);
+                var dictionary_ = {% if UseSystemTextJson %}JsonSerializer.Deserialize{% else %}Newtonsoft.Json.JsonConvert.DeserializeObject{% endif %}<Dictionary<string, string>>(json, _serializerOptions);
                 var content = new FormUrlEncodedContent(dictionary_);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("{{ operation.Consumes }}");
 {%         elsif operation.HasPlainTextBodyParameter -%}
                 var content = new StringContent({{ operation.ContentParameter.VariableName }});
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("{{ operation.Consumes }}");
 {%         else -%}
-                var json = {% if UseSystemTextJson %}JsonSerializer.SerializeToUtf8Bytes{% else %}Newtonsoft.Json.JsonConvert.SerializeObject{% endif %}({{ operation.ContentParameter.VariableName }}, {% if SerializeTypeInformation %}typeof({{ operation.ContentParameter.Type }}), {% endif %}{% if UseRequestAndResponseSerializationSettings %}_requestSettings{% else %}_settings{% endif %}.Value);
+                var json = {% if UseSystemTextJson %}JsonSerializer.SerializeToUtf8Bytes{% else %}Newtonsoft.Json.JsonConvert.SerializeObject{% endif %}({{ operation.ContentParameter.VariableName }}, {% if SerializeTypeInformation %}typeof({{ operation.ContentParameter.Type }}), {% endif %}{% if UseRequestAndResponseSerializationSettings %}_requestSettings{% else %}_serializerOptions{% endif %});
                 var content = new {% if UseSystemTextJson %}ByteArrayContent{% else %}StringContent{% endif %}(json);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("{{ operation.Consumes }}");
 {%         endif -%}

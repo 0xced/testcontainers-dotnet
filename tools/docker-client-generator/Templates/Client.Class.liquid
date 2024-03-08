@@ -201,15 +201,15 @@
                 var content = new StringContent({{ operation.ContentParameter.VariableName }});
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("{{ operation.Consumes }}");
 {%         elsif operation.ConsumesFormUrlEncoded -%}
-                var json = {% if UseSystemTextJson %}System.Text.Json.JsonSerializer.SerializeToUtf8Bytes{% else %}Newtonsoft.Json.JsonConvert.SerializeObject{% endif %}({{ operation.ContentParameter.VariableName }}, _settings.Value);
-                var dictionary_ = {% if UseSystemTextJson %}System.Text.Json.JsonSerializer.Deserialize{% else %}Newtonsoft.Json.JsonConvert.DeserializeObject{% endif %}<Dictionary<string, string>>(json, _settings.Value);
+                var json = {% if UseSystemTextJson %}JsonSerializer.SerializeToUtf8Bytes{% else %}Newtonsoft.Json.JsonConvert.SerializeObject{% endif %}({{ operation.ContentParameter.VariableName }}, _settings.Value);
+                var dictionary_ = {% if UseSystemTextJson %}JsonSerializer.Deserialize{% else %}Newtonsoft.Json.JsonConvert.DeserializeObject{% endif %}<Dictionary<string, string>>(json, _settings.Value);
                 var content = new FormUrlEncodedContent(dictionary_);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("{{ operation.Consumes }}");
 {%         elsif operation.HasPlainTextBodyParameter -%}
                 var content = new StringContent({{ operation.ContentParameter.VariableName }});
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("{{ operation.Consumes }}");
 {%         else -%}
-                var json = {% if UseSystemTextJson %}System.Text.Json.JsonSerializer.SerializeToUtf8Bytes{% else %}Newtonsoft.Json.JsonConvert.SerializeObject{% endif %}({{ operation.ContentParameter.VariableName }}, {% if SerializeTypeInformation %}typeof({{ operation.ContentParameter.Type }}), {% endif %}{% if UseRequestAndResponseSerializationSettings %}_requestSettings{% else %}_settings{% endif %}.Value);
+                var json = {% if UseSystemTextJson %}JsonSerializer.SerializeToUtf8Bytes{% else %}Newtonsoft.Json.JsonConvert.SerializeObject{% endif %}({{ operation.ContentParameter.VariableName }}, {% if SerializeTypeInformation %}typeof({{ operation.ContentParameter.Type }}), {% endif %}{% if UseRequestAndResponseSerializationSettings %}_requestSettings{% else %}_settings{% endif %}.Value);
                 var content = new {% if UseSystemTextJson %}ByteArrayContent{% else %}StringContent{% endif %}(json);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("{{ operation.Consumes }}");
 {%         endif -%}
@@ -264,7 +264,7 @@
                         content.Add(new StringContent(ConvertToString(item, CultureInfo.InvariantCulture)), "{{ parameter.Name }}");
                     }
 {%                     elsif parameter.IsObject -%}
-                    var json = {% if UseSystemTextJson %}System.Text.Json.JsonSerializer.SerializeToUtf8Bytes{% else %}Newtonsoft.Json.JsonConvert.SerializeObject{% endif %}({{ parameter.VariableName }}, {% if UseRequestAndResponseSerializationSettings %}_requestSettings{% else %}_settings{% endif %}.Value);
+                    var json = {% if UseSystemTextJson %}JsonSerializer.SerializeToUtf8Bytes{% else %}Newtonsoft.Json.JsonConvert.SerializeObject{% endif %}({{ parameter.VariableName }}, {% if UseRequestAndResponseSerializationSettings %}_requestSettings{% else %}_settings{% endif %}.Value);
                     content.Add(new {% if UseSystemTextJson %}ByteArrayContent(json{% else %}StringContent(json, Encoding.UTF8, "application/json"{% endif %}), "{{ parameter.Name }}");
 {%                     else -%}
                     content.Add(new StringContent(ConvertToString({{ parameter.VariableName }}, CultureInfo.InvariantCulture)), "{{ parameter.Name }}");

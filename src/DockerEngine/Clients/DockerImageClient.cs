@@ -1477,7 +1477,7 @@ public partial class DockerImageClient : IDockerImageClient
         {
             using (var request = new HttpRequestMessage())
             {
-                var json = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(containerConfig, _settings.Value);
+                var json = JsonSerializer.SerializeToUtf8Bytes(containerConfig, _settings.Value);
                 var content = new ByteArrayContent(json);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 request.Content = content;
@@ -1904,7 +1904,7 @@ public partial class DockerImageClient : IDockerImageClient
 
     public bool ReadResponseAsString { get; set; }
 
-    protected virtual async Task<ObjectResponseResult<T>> ReadObjectResponseAsync<T>(System.Net.Http.HttpResponseMessage response, IReadOnlyDictionary<string, IEnumerable<string>> headers, CancellationToken cancellationToken)
+    protected virtual async Task<ObjectResponseResult<T>> ReadObjectResponseAsync<T>(HttpResponseMessage response, IReadOnlyDictionary<string, IEnumerable<string>> headers, CancellationToken cancellationToken)
     {
         if (response?.Content == null)
         {
@@ -1916,10 +1916,10 @@ public partial class DockerImageClient : IDockerImageClient
             var responseText = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             try
             {
-                var typedBody = System.Text.Json.JsonSerializer.Deserialize<T>(responseText, JsonSerializerSettings);
+                var typedBody = JsonSerializer.Deserialize<T>(responseText, JsonSerializerSettings);
                 return new ObjectResponseResult<T>(typedBody!, responseText);
             }
-            catch (System.Text.Json.JsonException exception)
+            catch (JsonException exception)
             {
                 var message = "Could not deserialize the response body string as " + typeof(T).FullName + ".";
                 throw new DockerApiException(message, (int)response.StatusCode, responseText, headers, exception);
@@ -1931,11 +1931,11 @@ public partial class DockerImageClient : IDockerImageClient
             {
                 using (var responseStream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false))
                 {
-                    var typedBody = await System.Text.Json.JsonSerializer.DeserializeAsync<T>(responseStream, JsonSerializerSettings, cancellationToken).ConfigureAwait(false);
+                    var typedBody = await JsonSerializer.DeserializeAsync<T>(responseStream, JsonSerializerSettings, cancellationToken).ConfigureAwait(false);
                     return new ObjectResponseResult<T>(typedBody!, string.Empty);
                 }
             }
-            catch (System.Text.Json.JsonException exception)
+            catch (JsonException exception)
             {
                 var message = "Could not deserialize the response body stream as " + typeof(T).FullName + ".";
                 throw new DockerApiException(message, (int)response.StatusCode, string.Empty, headers, exception);

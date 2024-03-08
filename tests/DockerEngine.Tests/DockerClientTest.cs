@@ -63,7 +63,9 @@ public sealed class DockerClientTest : IAsyncLifetime
         // TODO: Fix the '$endpoint' scheme is not supported.
 
         // Given
-        using var httpClient = new HttpClient(HttpMessageHandlerFactory.GetHttpMessageHandler(new Uri(endpoint))) { BaseAddress = new Uri("http://localhost")};
+        var dockerEndpoint = new Uri(endpoint);
+        var baseAddress = new UriBuilder(Uri.UriSchemeHttp, dockerEndpoint.Scheme is "npipe" or "unix" ? "localhost" : dockerEndpoint.Host, dockerEndpoint.Port).Uri;
+        using var httpClient = new HttpClient(HttpMessageHandlerFactory.GetHttpMessageHandler(dockerEndpoint)) { BaseAddress = baseAddress };
 
         var dockerClient = new DockerClient(httpClient);
 

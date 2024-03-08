@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DockerEngine;
 
-public class DockerApiException : Exception
+public class DockerApiException : DockerException
 {
     public DockerApiException(string message, int statusCode, string? responseText, IReadOnlyDictionary<string, IEnumerable<string>> headers, Exception? innerException)
         : base(message, innerException)

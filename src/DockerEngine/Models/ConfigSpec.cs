@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -18,7 +19,7 @@ public class ConfigSpec
     /// </summary>
 
     [JsonPropertyName("Labels")]
-    public System.Collections.Generic.IDictionary<string, string>? Labels { get; set; } = default!;
+    public IDictionary<string, string>? Labels { get; set; } = default!;
 
     /// <summary>
     /// Base64-url-safe-encoded ([RFC 4648](https://tools.ietf.org/html/rfc4648#section-5))

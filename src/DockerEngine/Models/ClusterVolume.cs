@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -52,7 +53,7 @@ public class ClusterVolume
     /// </summary>
 
     [JsonPropertyName("PublishStatus")]
-    public System.Collections.Generic.ICollection<PublishStatus>? PublishStatus { get; set; } = default!;
+    public ICollection<PublishStatus>? PublishStatus { get; set; } = default!;
 
 
 }

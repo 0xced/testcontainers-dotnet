@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -8,7 +9,7 @@ public class BuildPruneResponse
 {
 
     [JsonPropertyName("CachesDeleted")]
-    public System.Collections.Generic.ICollection<string>? CachesDeleted { get; set; } = default!;
+    public ICollection<string>? CachesDeleted { get; set; } = default!;
 
     /// <summary>
     /// Disk space reclaimed in bytes

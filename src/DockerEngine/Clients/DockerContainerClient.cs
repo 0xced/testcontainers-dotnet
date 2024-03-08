@@ -82,7 +82,7 @@ public partial class DockerContainerClient : IDockerContainerClient
     /// <br/>- `volume`=(`&lt;volume name&gt;` or `&lt;mount point destination&gt;`)</param>
     /// <returns>no error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task<ICollection<ContainerSummary>> ListAsync(bool? all = null, int? limit = null, bool? size = null, string? filters = null, CancellationToken cancellationToken = default)
+    public virtual async Task<IReadOnlyCollection<ContainerSummary>> ListAsync(bool? all = null, int? limit = null, bool? size = null, string? filters = null, CancellationToken cancellationToken = default)
     {
         var client = _httpClient;
         var disposeClient = false;
@@ -138,7 +138,7 @@ public partial class DockerContainerClient : IDockerContainerClient
                     var statusCode = (int)response.StatusCode;
                     if (statusCode == 200)
                     {
-                        var objectResponse = await ReadObjectResponseAsync<ICollection<ContainerSummary>>(response, headers, cancellationToken).ConfigureAwait(false);
+                        var objectResponse = await ReadObjectResponseAsync<IReadOnlyCollection<ContainerSummary>>(response, headers, cancellationToken).ConfigureAwait(false);
                         if (objectResponse.Object == null)
                         {
                             throw new DockerApiException("Response was null which was not expected.", statusCode, objectResponse.Text, headers, null);
@@ -701,7 +701,7 @@ public partial class DockerContainerClient : IDockerContainerClient
     /// <param name="id">ID or name of the container</param>
     /// <returns>The list of changes</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task<ICollection<FilesystemChange>> ChangesAsync(string id, CancellationToken cancellationToken = default)
+    public virtual async Task<IReadOnlyCollection<FilesystemChange>> ChangesAsync(string id, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(id);
         var client = _httpClient;
@@ -742,7 +742,7 @@ public partial class DockerContainerClient : IDockerContainerClient
                     var statusCode = (int)response.StatusCode;
                     if (statusCode == 200)
                     {
-                        var objectResponse = await ReadObjectResponseAsync<ICollection<FilesystemChange>>(response, headers, cancellationToken).ConfigureAwait(false);
+                        var objectResponse = await ReadObjectResponseAsync<IReadOnlyCollection<FilesystemChange>>(response, headers, cancellationToken).ConfigureAwait(false);
                         if (objectResponse.Object == null)
                         {
                             throw new DockerApiException("Response was null which was not expected.", statusCode, objectResponse.Text, headers, null);

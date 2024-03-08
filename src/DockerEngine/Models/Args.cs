@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -16,11 +17,11 @@ public class Args
 
 
     [JsonPropertyName("Settable")]
-    public System.Collections.Generic.ICollection<string> Settable { get; set; } = new System.Collections.ObjectModel.Collection<string>();
+    public ICollection<string> Settable { get; set; } = new List<string>();
 
 
     [JsonPropertyName("Value")]
-    public System.Collections.Generic.ICollection<string> Value { get; set; } = new System.Collections.ObjectModel.Collection<string>();
+    public ICollection<string> Value { get; set; } = new List<string>();
 
 
 }

@@ -66,7 +66,7 @@ public partial class DockerImageClient : IDockerImageClient
     /// <param name="digests">Show digest information as a `RepoDigests` field on each image.</param>
     /// <returns>Summary image data for the images matching the query</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task<ICollection<ImageSummary>> ListAsync(bool? all = null, string? filters = null, bool? shared_size = null, bool? digests = null, CancellationToken cancellationToken = default)
+    public virtual async Task<IReadOnlyCollection<ImageSummary>> ListAsync(bool? all = null, string? filters = null, bool? shared_size = null, bool? digests = null, CancellationToken cancellationToken = default)
     {
         var client = _httpClient;
         var disposeClient = false;
@@ -122,7 +122,7 @@ public partial class DockerImageClient : IDockerImageClient
                     var statusCode = (int)response.StatusCode;
                     if (statusCode == 200)
                     {
-                        var objectResponse = await ReadObjectResponseAsync<ICollection<ImageSummary>>(response, headers, cancellationToken).ConfigureAwait(false);
+                        var objectResponse = await ReadObjectResponseAsync<IReadOnlyCollection<ImageSummary>>(response, headers, cancellationToken).ConfigureAwait(false);
                         if (objectResponse.Object == null)
                         {
                             throw new DockerApiException("Response was null which was not expected.", statusCode, objectResponse.Text, headers, null);
@@ -797,7 +797,7 @@ public partial class DockerImageClient : IDockerImageClient
     /// <param name="name">Image name or ID</param>
     /// <returns>List of image layers</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task<ICollection<HistoryResponseItem>> HistoryAsync(string name, CancellationToken cancellationToken = default)
+    public virtual async Task<IReadOnlyCollection<HistoryResponseItem>> HistoryAsync(string name, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(name);
         var client = _httpClient;
@@ -838,7 +838,7 @@ public partial class DockerImageClient : IDockerImageClient
                     var statusCode = (int)response.StatusCode;
                     if (statusCode == 200)
                     {
-                        var objectResponse = await ReadObjectResponseAsync<ICollection<HistoryResponseItem>>(response, headers, cancellationToken).ConfigureAwait(false);
+                        var objectResponse = await ReadObjectResponseAsync<IReadOnlyCollection<HistoryResponseItem>>(response, headers, cancellationToken).ConfigureAwait(false);
                         if (objectResponse.Object == null)
                         {
                             throw new DockerApiException("Response was null which was not expected.", statusCode, objectResponse.Text, headers, null);
@@ -1143,7 +1143,7 @@ public partial class DockerImageClient : IDockerImageClient
     /// <param name="noprune">Do not delete untagged parent images</param>
     /// <returns>The image was deleted successfully</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task<ICollection<ImageDeleteResponseItem>> DeleteAsync(string name, bool? force = null, bool? noprune = null, CancellationToken cancellationToken = default)
+    public virtual async Task<IReadOnlyCollection<ImageDeleteResponseItem>> DeleteAsync(string name, bool? force = null, bool? noprune = null, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(name);
         var client = _httpClient;
@@ -1193,7 +1193,7 @@ public partial class DockerImageClient : IDockerImageClient
                     var statusCode = (int)response.StatusCode;
                     if (statusCode == 200)
                     {
-                        var objectResponse = await ReadObjectResponseAsync<ICollection<ImageDeleteResponseItem>>(response, headers, cancellationToken).ConfigureAwait(false);
+                        var objectResponse = await ReadObjectResponseAsync<IReadOnlyCollection<ImageDeleteResponseItem>>(response, headers, cancellationToken).ConfigureAwait(false);
                         if (objectResponse.Object == null)
                         {
                             throw new DockerApiException("Response was null which was not expected.", statusCode, objectResponse.Text, headers, null);
@@ -1271,7 +1271,7 @@ public partial class DockerImageClient : IDockerImageClient
     /// <br/>for `is-automated=true` will yield no results.</param>
     /// <returns>No error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task<ICollection<ImageSearchResponseItem>> SearchAsync(string term, int? limit = null, string? filters = null, CancellationToken cancellationToken = default)
+    public virtual async Task<IReadOnlyCollection<ImageSearchResponseItem>> SearchAsync(string term, int? limit = null, string? filters = null, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(term);
         var client = _httpClient;
@@ -1321,7 +1321,7 @@ public partial class DockerImageClient : IDockerImageClient
                     var statusCode = (int)response.StatusCode;
                     if (statusCode == 200)
                     {
-                        var objectResponse = await ReadObjectResponseAsync<ICollection<ImageSearchResponseItem>>(response, headers, cancellationToken).ConfigureAwait(false);
+                        var objectResponse = await ReadObjectResponseAsync<IReadOnlyCollection<ImageSearchResponseItem>>(response, headers, cancellationToken).ConfigureAwait(false);
                         if (objectResponse.Object == null)
                         {
                             throw new DockerApiException("Response was null which was not expected.", statusCode, objectResponse.Text, headers, null);

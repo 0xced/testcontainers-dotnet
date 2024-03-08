@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -20,7 +21,7 @@ public class EndpointIPAMConfig
 
 
     [JsonPropertyName("LinkLocalIPs")]
-    public System.Collections.Generic.ICollection<string>? LinkLocalIPs { get; set; } = default!;
+    public ICollection<string>? LinkLocalIPs { get; set; } = default!;
 
 
 }

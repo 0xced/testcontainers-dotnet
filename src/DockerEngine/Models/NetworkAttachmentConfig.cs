@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -24,7 +25,7 @@ public class NetworkAttachmentConfig
     /// </summary>
 
     [JsonPropertyName("Aliases")]
-    public System.Collections.Generic.ICollection<string>? Aliases { get; set; } = default!;
+    public ICollection<string>? Aliases { get; set; } = default!;
 
     /// <summary>
     /// Driver attachment options for the network target.
@@ -32,7 +33,7 @@ public class NetworkAttachmentConfig
     /// </summary>
 
     [JsonPropertyName("DriverOpts")]
-    public System.Collections.Generic.IDictionary<string, string>? DriverOpts { get; set; } = default!;
+    public IDictionary<string, string>? DriverOpts { get; set; } = default!;
 
 
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -8,7 +9,7 @@ public class Interface
 {
 
     [JsonPropertyName("Types")]
-    public System.Collections.Generic.ICollection<PluginInterfaceType> Types { get; set; } = new System.Collections.ObjectModel.Collection<PluginInterfaceType>();
+    public ICollection<PluginInterfaceType> Types { get; set; } = new List<PluginInterfaceType>();
 
 
     [JsonPropertyName("Socket")]

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -66,7 +67,7 @@ public class AccessMode
     /// </summary>
 
     [JsonPropertyName("Secrets")]
-    public System.Collections.Generic.ICollection<Secrets2>? Secrets { get; set; } = default!;
+    public ICollection<Secrets2>? Secrets { get; set; } = default!;
 
     /// <summary>
     /// Requirements for the accessible topology of the volume. These

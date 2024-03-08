@@ -58,7 +58,7 @@ public partial class DockerSecretClient : IDockerSecretClient
     /// <br/>- `names=&lt;secret name&gt;`</param>
     /// <returns>no error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task<ICollection<Secret>> ListAsync(string? filters = null, CancellationToken cancellationToken = default)
+    public virtual async Task<IReadOnlyCollection<Secret>> ListAsync(string? filters = null, CancellationToken cancellationToken = default)
     {
         var client = _httpClient;
         var disposeClient = false;
@@ -102,7 +102,7 @@ public partial class DockerSecretClient : IDockerSecretClient
                     var statusCode = (int)response.StatusCode;
                     if (statusCode == 200)
                     {
-                        var objectResponse = await ReadObjectResponseAsync<ICollection<Secret>>(response, headers, cancellationToken).ConfigureAwait(false);
+                        var objectResponse = await ReadObjectResponseAsync<IReadOnlyCollection<Secret>>(response, headers, cancellationToken).ConfigureAwait(false);
                         if (objectResponse.Object == null)
                         {
                             throw new DockerApiException("Response was null which was not expected.", statusCode, objectResponse.Text, headers, null);

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -34,7 +35,7 @@ public class BuildCache
     /// </summary>
 
     [JsonPropertyName("Parents")]
-    public System.Collections.Generic.ICollection<string>? Parents { get; set; } = default!;
+    public ICollection<string>? Parents { get; set; } = default!;
 
     /// <summary>
     /// Cache record type.

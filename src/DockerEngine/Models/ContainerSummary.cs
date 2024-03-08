@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -18,7 +19,7 @@ public class ContainerSummary
     /// </summary>
 
     [JsonPropertyName("Names")]
-    public System.Collections.Generic.ICollection<string>? Names { get; set; } = default!;
+    public ICollection<string>? Names { get; set; } = default!;
 
     /// <summary>
     /// The name of the image used when creating this container
@@ -53,7 +54,7 @@ public class ContainerSummary
     /// </summary>
 
     [JsonPropertyName("Ports")]
-    public System.Collections.Generic.ICollection<Port>? Ports { get; set; } = default!;
+    public ICollection<Port>? Ports { get; set; } = default!;
 
     /// <summary>
     /// The size of files that have been created or changed by this container
@@ -74,7 +75,7 @@ public class ContainerSummary
     /// </summary>
 
     [JsonPropertyName("Labels")]
-    public System.Collections.Generic.IDictionary<string, string>? Labels { get; set; } = default!;
+    public IDictionary<string, string>? Labels { get; set; } = default!;
 
     /// <summary>
     /// The state of this container (e.g. `Exited`)
@@ -103,7 +104,7 @@ public class ContainerSummary
 
 
     [JsonPropertyName("Mounts")]
-    public System.Collections.Generic.ICollection<MountPoint>? Mounts { get; set; } = default!;
+    public ICollection<MountPoint>? Mounts { get; set; } = default!;
 
 
 }

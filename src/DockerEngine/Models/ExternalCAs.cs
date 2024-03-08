@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -31,7 +32,7 @@ public class ExternalCAs
     /// </summary>
 
     [JsonPropertyName("Options")]
-    public System.Collections.Generic.IDictionary<string, string>? Options { get; set; } = default!;
+    public IDictionary<string, string>? Options { get; set; } = default!;
 
     /// <summary>
     /// The root CA certificate (in PEM format) this external CA uses

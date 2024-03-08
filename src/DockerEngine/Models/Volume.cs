@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -45,14 +46,14 @@ public class Volume
     /// </summary>
 
     [JsonPropertyName("Status")]
-    public System.Collections.Generic.IDictionary<string, object>? Status { get; set; } = default!;
+    public IDictionary<string, object>? Status { get; set; } = default!;
 
     /// <summary>
     /// User-defined key/value metadata.
     /// </summary>
 
     [JsonPropertyName("Labels")]
-    public System.Collections.Generic.IDictionary<string, string> Labels { get; set; } = new System.Collections.Generic.Dictionary<string, string>();
+    public IDictionary<string, string> Labels { get; set; } = new Dictionary<string, string>();
 
     /// <summary>
     /// The level at which the volume exists. Either `global` for cluster-wide,
@@ -74,7 +75,7 @@ public class Volume
     /// </summary>
 
     [JsonPropertyName("Options")]
-    public System.Collections.Generic.IDictionary<string, string> Options { get; set; } = new System.Collections.Generic.Dictionary<string, string>();
+    public IDictionary<string, string> Options { get; set; } = new Dictionary<string, string>();
 
     /// <summary>
     /// Usage details about the volume. This information is used by the

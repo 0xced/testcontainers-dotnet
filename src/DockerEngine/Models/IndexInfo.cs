@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -23,7 +24,7 @@ public class IndexInfo
     /// </summary>
 
     [JsonPropertyName("Mirrors")]
-    public System.Collections.Generic.ICollection<string>? Mirrors { get; set; } = default!;
+    public ICollection<string>? Mirrors { get; set; } = default!;
 
     /// <summary>
     /// Indicates if the registry is part of the list of insecure

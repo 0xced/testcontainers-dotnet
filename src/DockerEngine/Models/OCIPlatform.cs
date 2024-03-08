@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -43,7 +44,7 @@ public class OCIPlatform
     /// </summary>
 
     [JsonPropertyName("os.features")]
-    public System.Collections.Generic.ICollection<string>? OsFeatures { get; set; } = default!;
+    public ICollection<string>? OsFeatures { get; set; } = default!;
 
     /// <summary>
     /// Optional field specifying a variant of the CPU, for example `v7` to

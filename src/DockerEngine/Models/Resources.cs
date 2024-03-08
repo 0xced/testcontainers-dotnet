@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -53,7 +54,7 @@ public class Resources
     /// </summary>
 
     [JsonPropertyName("BlkioWeightDevice")]
-    public System.Collections.Generic.ICollection<BlkioWeightDevice>? BlkioWeightDevice { get; set; } = default!;
+    public ICollection<BlkioWeightDevice>? BlkioWeightDevice { get; set; } = default!;
 
     /// <summary>
     /// Limit read rate (bytes per second) from a device, in the form:
@@ -65,7 +66,7 @@ public class Resources
     /// </summary>
 
     [JsonPropertyName("BlkioDeviceReadBps")]
-    public System.Collections.Generic.ICollection<ThrottleDevice>? BlkioDeviceReadBps { get; set; } = default!;
+    public ICollection<ThrottleDevice>? BlkioDeviceReadBps { get; set; } = default!;
 
     /// <summary>
     /// Limit write rate (bytes per second) to a device, in the form:
@@ -77,7 +78,7 @@ public class Resources
     /// </summary>
 
     [JsonPropertyName("BlkioDeviceWriteBps")]
-    public System.Collections.Generic.ICollection<ThrottleDevice>? BlkioDeviceWriteBps { get; set; } = default!;
+    public ICollection<ThrottleDevice>? BlkioDeviceWriteBps { get; set; } = default!;
 
     /// <summary>
     /// Limit read rate (IO per second) from a device, in the form:
@@ -89,7 +90,7 @@ public class Resources
     /// </summary>
 
     [JsonPropertyName("BlkioDeviceReadIOps")]
-    public System.Collections.Generic.ICollection<ThrottleDevice>? BlkioDeviceReadIOps { get; set; } = default!;
+    public ICollection<ThrottleDevice>? BlkioDeviceReadIOps { get; set; } = default!;
 
     /// <summary>
     /// Limit write rate (IO per second) to a device, in the form:
@@ -101,7 +102,7 @@ public class Resources
     /// </summary>
 
     [JsonPropertyName("BlkioDeviceWriteIOps")]
-    public System.Collections.Generic.ICollection<ThrottleDevice>? BlkioDeviceWriteIOps { get; set; } = default!;
+    public ICollection<ThrottleDevice>? BlkioDeviceWriteIOps { get; set; } = default!;
 
     /// <summary>
     /// The length of a CPU period in microseconds.
@@ -158,14 +159,14 @@ public class Resources
     /// </summary>
 
     [JsonPropertyName("Devices")]
-    public System.Collections.Generic.ICollection<DeviceMapping>? Devices { get; set; } = default!;
+    public ICollection<DeviceMapping>? Devices { get; set; } = default!;
 
     /// <summary>
     /// a list of cgroup rules to apply to the container
     /// </summary>
 
     [JsonPropertyName("DeviceCgroupRules")]
-    public System.Collections.Generic.ICollection<string>? DeviceCgroupRules { get; set; } = default!;
+    public ICollection<string>? DeviceCgroupRules { get; set; } = default!;
 
     /// <summary>
     /// A list of requests for devices to be sent to device drivers.
@@ -173,7 +174,7 @@ public class Resources
     /// </summary>
 
     [JsonPropertyName("DeviceRequests")]
-    public System.Collections.Generic.ICollection<DeviceRequest>? DeviceRequests { get; set; } = default!;
+    public ICollection<DeviceRequest>? DeviceRequests { get; set; } = default!;
 
     /// <summary>
     /// Hard limit for kernel TCP buffer memory (in bytes). Depending on the
@@ -255,7 +256,7 @@ public class Resources
     /// </summary>
 
     [JsonPropertyName("Ulimits")]
-    public System.Collections.Generic.ICollection<Ulimits>? Ulimits { get; set; } = default!;
+    public ICollection<Ulimits>? Ulimits { get; set; } = default!;
 
     /// <summary>
     /// The number of usable CPUs (Windows only).

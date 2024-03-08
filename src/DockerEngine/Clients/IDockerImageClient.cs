@@ -32,7 +32,7 @@ public partial interface IDockerImageClient
     /// <param name="digests">Show digest information as a `RepoDigests` field on each image.</param>
     /// <returns>Summary image data for the images matching the query</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    Task<ICollection<ImageSummary>> ListAsync(bool? all = null, string? filters = null, bool? shared_size = null, bool? digests = null, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<ImageSummary>> ListAsync(bool? all = null, string? filters = null, bool? shared_size = null, bool? digests = null, CancellationToken cancellationToken = default);
 
 
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -197,7 +197,7 @@ public partial interface IDockerImageClient
     /// <param name="name">Image name or ID</param>
     /// <returns>List of image layers</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    Task<ICollection<HistoryResponseItem>> HistoryAsync(string name, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<HistoryResponseItem>> HistoryAsync(string name, CancellationToken cancellationToken = default);
 
 
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -255,7 +255,7 @@ public partial interface IDockerImageClient
     /// <param name="noprune">Do not delete untagged parent images</param>
     /// <returns>The image was deleted successfully</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    Task<ICollection<ImageDeleteResponseItem>> DeleteAsync(string name, bool? force = null, bool? noprune = null, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<ImageDeleteResponseItem>> DeleteAsync(string name, bool? force = null, bool? noprune = null, CancellationToken cancellationToken = default);
 
 
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -278,7 +278,7 @@ public partial interface IDockerImageClient
     /// <br/>for `is-automated=true` will yield no results.</param>
     /// <returns>No error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    Task<ICollection<ImageSearchResponseItem>> SearchAsync(string term, int? limit = null, string? filters = null, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<ImageSearchResponseItem>> SearchAsync(string term, int? limit = null, string? filters = null, CancellationToken cancellationToken = default);
 
 
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>

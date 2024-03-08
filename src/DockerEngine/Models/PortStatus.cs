@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -11,7 +12,7 @@ public class PortStatus
 {
 
     [JsonPropertyName("Ports")]
-    public System.Collections.Generic.ICollection<EndpointPortConfig>? Ports { get; set; } = default!;
+    public ICollection<EndpointPortConfig>? Ports { get; set; } = default!;
 
 
 }

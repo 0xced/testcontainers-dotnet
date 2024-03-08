@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -21,7 +22,7 @@ public class NetworkingConfig
     /// </summary>
 
     [JsonPropertyName("EndpointsConfig")]
-    public System.Collections.Generic.IDictionary<string, EndpointSettings>? EndpointsConfig { get; set; } = default!;
+    public IDictionary<string, EndpointSettings>? EndpointsConfig { get; set; } = default!;
 
 
 }

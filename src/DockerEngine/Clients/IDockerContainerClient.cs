@@ -48,7 +48,7 @@ public partial interface IDockerContainerClient
     /// <br/>- `volume`=(`&lt;volume name&gt;` or `&lt;mount point destination&gt;`)</param>
     /// <returns>no error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    Task<ICollection<ContainerSummary>> ListAsync(bool? all = null, int? limit = null, bool? size = null, string? filters = null, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<ContainerSummary>> ListAsync(bool? all = null, int? limit = null, bool? size = null, string? filters = null, CancellationToken cancellationToken = default);
 
 
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -150,7 +150,7 @@ public partial interface IDockerContainerClient
     /// <param name="id">ID or name of the container</param>
     /// <returns>The list of changes</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    Task<ICollection<FilesystemChange>> ChangesAsync(string id, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<FilesystemChange>> ChangesAsync(string id, CancellationToken cancellationToken = default);
 
 
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>

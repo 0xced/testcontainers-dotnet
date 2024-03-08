@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -13,7 +14,7 @@ public class LogConfig
 
 
     [JsonPropertyName("Config")]
-    public System.Collections.Generic.IDictionary<string, string>? Config { get; set; } = default!;
+    public IDictionary<string, string>? Config { get; set; } = default!;
 
 
 }

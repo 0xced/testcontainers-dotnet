@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -14,7 +15,7 @@ public class VolumeListResponse
     /// </summary>
 
     [JsonPropertyName("Volumes")]
-    public System.Collections.Generic.ICollection<Volume>? Volumes { get; set; } = default!;
+    public ICollection<Volume>? Volumes { get; set; } = default!;
 
     /// <summary>
     /// Warnings that occurred when fetching the list of volumes.
@@ -22,7 +23,7 @@ public class VolumeListResponse
     /// </summary>
 
     [JsonPropertyName("Warnings")]
-    public System.Collections.Generic.ICollection<string>? Warnings { get; set; } = default!;
+    public ICollection<string>? Warnings { get; set; } = default!;
 
 
 }

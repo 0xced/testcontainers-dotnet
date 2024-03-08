@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -11,7 +12,7 @@ public class ImagePruneResponse
     /// </summary>
 
     [JsonPropertyName("ImagesDeleted")]
-    public System.Collections.Generic.ICollection<ImageDeleteResponseItem>? ImagesDeleted { get; set; } = default!;
+    public ICollection<ImageDeleteResponseItem>? ImagesDeleted { get; set; } = default!;
 
     /// <summary>
     /// Disk space reclaimed in bytes

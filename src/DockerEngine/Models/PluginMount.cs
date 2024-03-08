@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -16,7 +17,7 @@ public class PluginMount
 
 
     [JsonPropertyName("Settable")]
-    public System.Collections.Generic.ICollection<string> Settable { get; set; } = new System.Collections.ObjectModel.Collection<string>();
+    public ICollection<string> Settable { get; set; } = new List<string>();
 
 
     [JsonPropertyName("Source")]
@@ -32,7 +33,7 @@ public class PluginMount
 
 
     [JsonPropertyName("Options")]
-    public System.Collections.Generic.ICollection<string> Options { get; set; } = new System.Collections.ObjectModel.Collection<string>();
+    public ICollection<string> Options { get; set; } = new List<string>();
 
 
 }

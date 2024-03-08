@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -29,7 +30,7 @@ public class PluginSpec
 
 
     [JsonPropertyName("PluginPrivilege")]
-    public System.Collections.Generic.ICollection<PluginPrivilege>? PluginPrivilege { get; set; } = default!;
+    public ICollection<PluginPrivilege>? PluginPrivilege { get; set; } = default!;
 
 
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -31,14 +32,14 @@ public class VolumeCreateOptions
     /// </summary>
 
     [JsonPropertyName("DriverOpts")]
-    public System.Collections.Generic.IDictionary<string, string>? DriverOpts { get; set; } = default!;
+    public IDictionary<string, string>? DriverOpts { get; set; } = default!;
 
     /// <summary>
     /// User-defined key/value metadata.
     /// </summary>
 
     [JsonPropertyName("Labels")]
-    public System.Collections.Generic.IDictionary<string, string>? Labels { get; set; } = default!;
+    public IDictionary<string, string>? Labels { get; set; } = default!;
 
 
     [JsonPropertyName("ClusterVolumeSpec")]

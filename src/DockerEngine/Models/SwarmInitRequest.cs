@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -66,7 +67,7 @@ public class SwarmInitRequest
     /// </summary>
 
     [JsonPropertyName("DefaultAddrPool")]
-    public System.Collections.Generic.ICollection<string>? DefaultAddrPool { get; set; } = default!;
+    public ICollection<string>? DefaultAddrPool { get; set; } = default!;
 
     /// <summary>
     /// Force creation of a new swarm.

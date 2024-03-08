@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -32,7 +33,7 @@ public class ExecConfig
     /// </summary>
 
     [JsonPropertyName("ConsoleSize")]
-    public System.Collections.Generic.ICollection<int>? ConsoleSize { get; set; } = default!;
+    public ICollection<int>? ConsoleSize { get; set; } = default!;
 
     /// <summary>
     /// Override the key sequence for detaching a container. Format is
@@ -57,14 +58,14 @@ public class ExecConfig
     /// </summary>
 
     [JsonPropertyName("Env")]
-    public System.Collections.Generic.ICollection<string>? Env { get; set; } = default!;
+    public ICollection<string>? Env { get; set; } = default!;
 
     /// <summary>
     /// Command to run, as a string or array of strings.
     /// </summary>
 
     [JsonPropertyName("Cmd")]
-    public System.Collections.Generic.ICollection<string>? Cmd { get; set; } = default!;
+    public ICollection<string>? Cmd { get; set; } = default!;
 
     /// <summary>
     /// Runs the exec process with extended privileges.

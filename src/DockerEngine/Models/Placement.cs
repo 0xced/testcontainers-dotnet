@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -30,7 +31,7 @@ public class Placement
     /// </summary>
 
     [JsonPropertyName("Constraints")]
-    public System.Collections.Generic.ICollection<string>? Constraints { get; set; } = default!;
+    public ICollection<string>? Constraints { get; set; } = default!;
 
     /// <summary>
     /// Preferences provide a way to make the scheduler aware of factors
@@ -40,7 +41,7 @@ public class Placement
     /// </summary>
 
     [JsonPropertyName("Preferences")]
-    public System.Collections.Generic.ICollection<Preferences>? Preferences { get; set; } = default!;
+    public ICollection<Preferences>? Preferences { get; set; } = default!;
 
     /// <summary>
     /// Maximum number of replicas for per node (default value is 0, which
@@ -60,7 +61,7 @@ public class Placement
     /// </summary>
 
     [JsonPropertyName("Platforms")]
-    public System.Collections.Generic.ICollection<Platform>? Platforms { get; set; } = default!;
+    public ICollection<Platform>? Platforms { get; set; } = default!;
 
 
 }

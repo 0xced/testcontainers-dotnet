@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -18,7 +19,7 @@ public class DriverConfig
     /// </summary>
 
     [JsonPropertyName("Options")]
-    public System.Collections.Generic.IDictionary<string, string>? Options { get; set; } = default!;
+    public IDictionary<string, string>? Options { get; set; } = default!;
 
 
 }

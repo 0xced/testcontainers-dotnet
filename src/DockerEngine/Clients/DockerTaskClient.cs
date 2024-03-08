@@ -60,7 +60,7 @@ public partial class DockerTaskClient : IDockerTaskClient
     /// <br/>- `service=&lt;service name&gt;`</param>
     /// <returns>no error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task<ICollection<DockerTask>> ListAsync(string? filters = null, CancellationToken cancellationToken = default)
+    public virtual async Task<IReadOnlyCollection<DockerTask>> ListAsync(string? filters = null, CancellationToken cancellationToken = default)
     {
         var client = _httpClient;
         var disposeClient = false;
@@ -104,7 +104,7 @@ public partial class DockerTaskClient : IDockerTaskClient
                     var statusCode = (int)response.StatusCode;
                     if (statusCode == 200)
                     {
-                        var objectResponse = await ReadObjectResponseAsync<ICollection<DockerTask>>(response, headers, cancellationToken).ConfigureAwait(false);
+                        var objectResponse = await ReadObjectResponseAsync<IReadOnlyCollection<DockerTask>>(response, headers, cancellationToken).ConfigureAwait(false);
                         if (objectResponse.Object == null)
                         {
                             throw new DockerApiException("Response was null which was not expected.", statusCode, objectResponse.Text, headers, null);

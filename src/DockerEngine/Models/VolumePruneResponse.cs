@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -11,7 +12,7 @@ public class VolumePruneResponse
     /// </summary>
 
     [JsonPropertyName("VolumesDeleted")]
-    public System.Collections.Generic.ICollection<string>? VolumesDeleted { get; set; } = default!;
+    public ICollection<string>? VolumesDeleted { get; set; } = default!;
 
     /// <summary>
     /// Disk space reclaimed in bytes

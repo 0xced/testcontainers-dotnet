@@ -59,7 +59,7 @@ public partial class DockerPluginClient : IDockerPluginClient
     /// <br/>- `enable=&lt;true&gt;|&lt;false&gt;`</param>
     /// <returns>No error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task<ICollection<Plugin>> ListAsync(string? filters = null, CancellationToken cancellationToken = default)
+    public virtual async Task<IReadOnlyCollection<Plugin>> ListAsync(string? filters = null, CancellationToken cancellationToken = default)
     {
         var client = _httpClient;
         var disposeClient = false;
@@ -103,7 +103,7 @@ public partial class DockerPluginClient : IDockerPluginClient
                     var statusCode = (int)response.StatusCode;
                     if (statusCode == 200)
                     {
-                        var objectResponse = await ReadObjectResponseAsync<ICollection<Plugin>>(response, headers, cancellationToken).ConfigureAwait(false);
+                        var objectResponse = await ReadObjectResponseAsync<IReadOnlyCollection<Plugin>>(response, headers, cancellationToken).ConfigureAwait(false);
                         if (objectResponse.Object == null)
                         {
                             throw new DockerApiException("Response was null which was not expected.", statusCode, objectResponse.Text, headers, null);
@@ -149,7 +149,7 @@ public partial class DockerPluginClient : IDockerPluginClient
     /// <br/>default if omitted.</param>
     /// <returns>no error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task<ICollection<PluginPrivilege>> GetPluginPrivilegesAsync(string remote, CancellationToken cancellationToken = default)
+    public virtual async Task<IReadOnlyCollection<PluginPrivilege>> GetPluginPrivilegesAsync(string remote, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(remote);
         var client = _httpClient;
@@ -191,7 +191,7 @@ public partial class DockerPluginClient : IDockerPluginClient
                     var statusCode = (int)response.StatusCode;
                     if (statusCode == 200)
                     {
-                        var objectResponse = await ReadObjectResponseAsync<ICollection<PluginPrivilege>>(response, headers, cancellationToken).ConfigureAwait(false);
+                        var objectResponse = await ReadObjectResponseAsync<IReadOnlyCollection<PluginPrivilege>>(response, headers, cancellationToken).ConfigureAwait(false);
                         if (objectResponse.Object == null)
                         {
                             throw new DockerApiException("Response was null which was not expected.", statusCode, objectResponse.Text, headers, null);

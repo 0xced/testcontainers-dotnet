@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -45,7 +46,7 @@ public class SwarmInfo
     /// </summary>
 
     [JsonPropertyName("RemoteManagers")]
-    public System.Collections.Generic.ICollection<PeerNode>? RemoteManagers { get; set; } = default!;
+    public ICollection<PeerNode>? RemoteManagers { get; set; } = default!;
 
     /// <summary>
     /// Total number of nodes in the swarm.

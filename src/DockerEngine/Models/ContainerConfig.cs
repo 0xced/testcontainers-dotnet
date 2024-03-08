@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -69,7 +70,7 @@ public class ContainerConfig
     /// </summary>
 
     [JsonPropertyName("ExposedPorts")]
-    public System.Collections.Generic.IDictionary<string, Anonymous3>? ExposedPorts { get; set; } = default!;
+    public IDictionary<string, Anonymous3>? ExposedPorts { get; set; } = default!;
 
     /// <summary>
     /// Attach standard streams to a TTY, including `stdin` if it is not closed.
@@ -101,7 +102,7 @@ public class ContainerConfig
     /// </summary>
 
     [JsonPropertyName("Env")]
-    public System.Collections.Generic.ICollection<string>? Env { get; set; } = default!;
+    public ICollection<string>? Env { get; set; } = default!;
 
     /// <summary>
     /// Command to run specified as a string or an array of strings.
@@ -109,7 +110,7 @@ public class ContainerConfig
     /// </summary>
 
     [JsonPropertyName("Cmd")]
-    public System.Collections.Generic.ICollection<string>? Cmd { get; set; } = default!;
+    public ICollection<string>? Cmd { get; set; } = default!;
 
 
     [JsonPropertyName("Healthcheck")]
@@ -138,7 +139,7 @@ public class ContainerConfig
     /// </summary>
 
     [JsonPropertyName("Volumes")]
-    public System.Collections.Generic.IDictionary<string, Anonymous4>? Volumes { get; set; } = default!;
+    public IDictionary<string, Anonymous4>? Volumes { get; set; } = default!;
 
     /// <summary>
     /// The working directory for commands to run in.
@@ -157,7 +158,7 @@ public class ContainerConfig
     /// </summary>
 
     [JsonPropertyName("Entrypoint")]
-    public System.Collections.Generic.ICollection<string>? Entrypoint { get; set; } = default!;
+    public ICollection<string>? Entrypoint { get; set; } = default!;
 
     /// <summary>
     /// Disable networking for the container.
@@ -182,14 +183,14 @@ public class ContainerConfig
     /// </summary>
 
     [JsonPropertyName("OnBuild")]
-    public System.Collections.Generic.ICollection<string>? OnBuild { get; set; } = default!;
+    public ICollection<string>? OnBuild { get; set; } = default!;
 
     /// <summary>
     /// User-defined key/value metadata.
     /// </summary>
 
     [JsonPropertyName("Labels")]
-    public System.Collections.Generic.IDictionary<string, string>? Labels { get; set; } = default!;
+    public IDictionary<string, string>? Labels { get; set; } = default!;
 
     /// <summary>
     /// Signal to stop a container as a string or unsigned integer.
@@ -212,7 +213,7 @@ public class ContainerConfig
     /// </summary>
 
     [JsonPropertyName("Shell")]
-    public System.Collections.Generic.ICollection<string>? Shell { get; set; } = default!;
+    public ICollection<string>? Shell { get; set; } = default!;
 
 
 }

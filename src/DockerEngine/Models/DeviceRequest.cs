@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -19,7 +20,7 @@ public class DeviceRequest
 
 
     [JsonPropertyName("DeviceIDs")]
-    public System.Collections.Generic.ICollection<string>? DeviceIDs { get; set; } = default!;
+    public ICollection<string>? DeviceIDs { get; set; } = default!;
 
     /// <summary>
     /// A list of capabilities; an OR list of AND lists of capabilities.
@@ -27,7 +28,7 @@ public class DeviceRequest
     /// </summary>
 
     [JsonPropertyName("Capabilities")]
-    public System.Collections.Generic.ICollection<System.Collections.Generic.ICollection<string>>? Capabilities { get; set; } = default!;
+    public ICollection<ICollection<string>>? Capabilities { get; set; } = default!;
 
     /// <summary>
     /// Driver-specific options, specified as a key/value pairs. These options
@@ -36,7 +37,7 @@ public class DeviceRequest
     /// </summary>
 
     [JsonPropertyName("Options")]
-    public System.Collections.Generic.IDictionary<string, string>? Options { get; set; } = default!;
+    public IDictionary<string, string>? Options { get; set; } = default!;
 
 
 }

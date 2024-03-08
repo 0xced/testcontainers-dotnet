@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -23,14 +24,14 @@ public class IPAM
     /// </summary>
 
     [JsonPropertyName("Config")]
-    public System.Collections.Generic.ICollection<IPAMConfig>? Config { get; set; } = default!;
+    public ICollection<IPAMConfig>? Config { get; set; } = default!;
 
     /// <summary>
     /// Driver-specific options, specified as a map.
     /// </summary>
 
     [JsonPropertyName("Options")]
-    public System.Collections.Generic.IDictionary<string, string>? Options { get; set; } = default!;
+    public IDictionary<string, string>? Options { get; set; } = default!;
 
 
 }

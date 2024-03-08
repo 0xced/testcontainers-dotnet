@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -21,7 +22,7 @@ public class ServiceSpec
     /// </summary>
 
     [JsonPropertyName("Labels")]
-    public System.Collections.Generic.IDictionary<string, string>? Labels { get; set; } = default!;
+    public IDictionary<string, string>? Labels { get; set; } = default!;
 
 
     [JsonPropertyName("TaskTemplate")]
@@ -56,7 +57,7 @@ public class ServiceSpec
     /// </summary>
 
     [JsonPropertyName("Networks")]
-    public System.Collections.Generic.ICollection<NetworkAttachmentConfig>? Networks { get; set; } = default!;
+    public ICollection<NetworkAttachmentConfig>? Networks { get; set; } = default!;
 
 
     [JsonPropertyName("EndpointSpec")]

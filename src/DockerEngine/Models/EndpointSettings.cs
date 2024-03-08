@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -15,7 +16,7 @@ public class EndpointSettings
 
 
     [JsonPropertyName("Links")]
-    public System.Collections.Generic.ICollection<string>? Links { get; set; } = default!;
+    public ICollection<string>? Links { get; set; } = default!;
 
     /// <summary>
     /// MAC address for the endpoint on this network. The network driver might ignore this parameter.
@@ -27,7 +28,7 @@ public class EndpointSettings
 
 
     [JsonPropertyName("Aliases")]
-    public System.Collections.Generic.ICollection<string>? Aliases { get; set; } = default!;
+    public ICollection<string>? Aliases { get; set; } = default!;
 
     /// <summary>
     /// Unique ID of the network.
@@ -100,7 +101,7 @@ public class EndpointSettings
     /// </summary>
 
     [JsonPropertyName("DriverOpts")]
-    public System.Collections.Generic.IDictionary<string, string>? DriverOpts { get; set; } = default!;
+    public IDictionary<string, string>? DriverOpts { get; set; } = default!;
 
     /// <summary>
     /// List of all DNS names an endpoint has on a specific network. This
@@ -116,7 +117,7 @@ public class EndpointSettings
     /// </summary>
 
     [JsonPropertyName("DNSNames")]
-    public System.Collections.Generic.ICollection<string>? DNSNames { get; set; } = default!;
+    public ICollection<string>? DNSNames { get; set; } = default!;
 
 
 }

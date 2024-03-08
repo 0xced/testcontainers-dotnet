@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -36,7 +37,7 @@ public class RegistryServiceConfig
     /// </summary>
 
     [JsonPropertyName("AllowNondistributableArtifactsCIDRs")]
-    public System.Collections.Generic.ICollection<string>? AllowNondistributableArtifactsCIDRs { get; set; } = default!;
+    public ICollection<string>? AllowNondistributableArtifactsCIDRs { get; set; } = default!;
 
     /// <summary>
     /// List of registry hostnames to which nondistributable artifacts can be
@@ -63,7 +64,7 @@ public class RegistryServiceConfig
     /// </summary>
 
     [JsonPropertyName("AllowNondistributableArtifactsHostnames")]
-    public System.Collections.Generic.ICollection<string>? AllowNondistributableArtifactsHostnames { get; set; } = default!;
+    public ICollection<string>? AllowNondistributableArtifactsHostnames { get; set; } = default!;
 
     /// <summary>
     /// List of IP ranges of insecure registries, using the CIDR syntax
@@ -93,11 +94,11 @@ public class RegistryServiceConfig
     /// </summary>
 
     [JsonPropertyName("InsecureRegistryCIDRs")]
-    public System.Collections.Generic.ICollection<string>? InsecureRegistryCIDRs { get; set; } = default!;
+    public ICollection<string>? InsecureRegistryCIDRs { get; set; } = default!;
 
 
     [JsonPropertyName("IndexConfigs")]
-    public System.Collections.Generic.IDictionary<string, IndexInfo?>? IndexConfigs { get; set; } = default!;
+    public IDictionary<string, IndexInfo?>? IndexConfigs { get; set; } = default!;
 
     /// <summary>
     /// List of registry URLs that act as a mirror for the official
@@ -106,7 +107,7 @@ public class RegistryServiceConfig
     /// </summary>
 
     [JsonPropertyName("Mirrors")]
-    public System.Collections.Generic.ICollection<string>? Mirrors { get; set; } = default!;
+    public ICollection<string>? Mirrors { get; set; } = default!;
 
 
 }

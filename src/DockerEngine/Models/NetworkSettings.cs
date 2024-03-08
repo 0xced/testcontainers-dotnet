@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -70,14 +71,14 @@ public class NetworkSettings
     /// </summary>
 
     [JsonPropertyName("SecondaryIPAddresses")]
-    public System.Collections.Generic.ICollection<Address>? SecondaryIPAddresses { get; set; } = default!;
+    public ICollection<Address>? SecondaryIPAddresses { get; set; } = default!;
 
     /// <summary>
     /// Deprecated: This field is never set and will be removed in a future release.
     /// </summary>
 
     [JsonPropertyName("SecondaryIPv6Addresses")]
-    public System.Collections.Generic.ICollection<Address>? SecondaryIPv6Addresses { get; set; } = default!;
+    public ICollection<Address>? SecondaryIPv6Addresses { get; set; } = default!;
 
     /// <summary>
     /// EndpointID uniquely represents a service endpoint in a Sandbox.
@@ -213,7 +214,7 @@ public class NetworkSettings
     /// </summary>
 
     [JsonPropertyName("Networks")]
-    public System.Collections.Generic.IDictionary<string, EndpointSettings>? Networks { get; set; } = default!;
+    public IDictionary<string, EndpointSettings>? Networks { get; set; } = default!;
 
 
 }

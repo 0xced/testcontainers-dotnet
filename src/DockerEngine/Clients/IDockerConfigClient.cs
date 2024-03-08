@@ -24,7 +24,7 @@ public partial interface IDockerConfigClient
     /// <br/>- `names=&lt;config name&gt;`</param>
     /// <returns>no error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    Task<ICollection<Config>> ListAsync(string? filters = null, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Config>> ListAsync(string? filters = null, CancellationToken cancellationToken = default);
 
 
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>

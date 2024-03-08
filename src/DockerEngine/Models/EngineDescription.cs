@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -15,11 +16,11 @@ public class EngineDescription
 
 
     [JsonPropertyName("Labels")]
-    public System.Collections.Generic.IDictionary<string, string>? Labels { get; set; } = default!;
+    public IDictionary<string, string>? Labels { get; set; } = default!;
 
 
     [JsonPropertyName("Plugins")]
-    public System.Collections.Generic.ICollection<Plugins>? Plugins { get; set; } = default!;
+    public ICollection<Plugins>? Plugins { get; set; } = default!;
 
 
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -20,7 +21,7 @@ public class SystemVersion
     /// </summary>
 
     [JsonPropertyName("Components")]
-    public System.Collections.Generic.ICollection<Components>? Components { get; set; } = default!;
+    public ICollection<Components>? Components { get; set; } = default!;
 
     /// <summary>
     /// The version of the daemon

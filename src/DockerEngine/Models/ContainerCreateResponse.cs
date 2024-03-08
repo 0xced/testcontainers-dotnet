@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -21,7 +22,7 @@ public class ContainerCreateResponse
     /// </summary>
 
     [JsonPropertyName("Warnings")]
-    public System.Collections.Generic.ICollection<string> Warnings { get; set; } = new System.Collections.ObjectModel.Collection<string>();
+    public ICollection<string> Warnings { get; set; } = new List<string>();
 
 
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -13,7 +14,7 @@ namespace DockerEngine;
 /// <br/>
 /// </summary>
 [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
-public class PortMap : System.Collections.Generic.Dictionary<string, System.Collections.ObjectModel.Collection<PortBinding>?>
+public class PortMap : Dictionary<string, List<PortBinding>?>
 {
 
 }

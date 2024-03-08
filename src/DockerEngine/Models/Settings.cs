@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -8,19 +9,19 @@ public class Settings
 {
 
     [JsonPropertyName("Mounts")]
-    public System.Collections.Generic.ICollection<PluginMount> Mounts { get; set; } = new System.Collections.ObjectModel.Collection<PluginMount>();
+    public ICollection<PluginMount> Mounts { get; set; } = new List<PluginMount>();
 
 
     [JsonPropertyName("Env")]
-    public System.Collections.Generic.ICollection<string> Env { get; set; } = new System.Collections.ObjectModel.Collection<string>();
+    public ICollection<string> Env { get; set; } = new List<string>();
 
 
     [JsonPropertyName("Args")]
-    public System.Collections.Generic.ICollection<string> Args { get; set; } = new System.Collections.ObjectModel.Collection<string>();
+    public ICollection<string> Args { get; set; } = new List<string>();
 
 
     [JsonPropertyName("Devices")]
-    public System.Collections.Generic.ICollection<PluginDevice> Devices { get; set; } = new System.Collections.ObjectModel.Collection<PluginDevice>();
+    public ICollection<PluginDevice> Devices { get; set; } = new List<PluginDevice>();
 
 
 }

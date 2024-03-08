@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -18,21 +19,21 @@ public class ContainerSpec
     /// </summary>
 
     [JsonPropertyName("Labels")]
-    public System.Collections.Generic.IDictionary<string, string>? Labels { get; set; } = default!;
+    public IDictionary<string, string>? Labels { get; set; } = default!;
 
     /// <summary>
     /// The command to be run in the image.
     /// </summary>
 
     [JsonPropertyName("Command")]
-    public System.Collections.Generic.ICollection<string>? Command { get; set; } = default!;
+    public ICollection<string>? Command { get; set; } = default!;
 
     /// <summary>
     /// Arguments to the command.
     /// </summary>
 
     [JsonPropertyName("Args")]
-    public System.Collections.Generic.ICollection<string>? Args { get; set; } = default!;
+    public ICollection<string>? Args { get; set; } = default!;
 
     /// <summary>
     /// The hostname to use for the container, as a valid
@@ -49,7 +50,7 @@ public class ContainerSpec
     /// </summary>
 
     [JsonPropertyName("Env")]
-    public System.Collections.Generic.ICollection<string>? Env { get; set; } = default!;
+    public ICollection<string>? Env { get; set; } = default!;
 
     /// <summary>
     /// The working directory for commands to run in.
@@ -71,7 +72,7 @@ public class ContainerSpec
     /// </summary>
 
     [JsonPropertyName("Groups")]
-    public System.Collections.Generic.ICollection<string>? Groups { get; set; } = default!;
+    public ICollection<string>? Groups { get; set; } = default!;
 
     /// <summary>
     /// Security options for the container
@@ -108,7 +109,7 @@ public class ContainerSpec
     /// </summary>
 
     [JsonPropertyName("Mounts")]
-    public System.Collections.Generic.ICollection<Mount>? Mounts { get; set; } = default!;
+    public ICollection<Mount>? Mounts { get; set; } = default!;
 
     /// <summary>
     /// Signal to stop the container.
@@ -141,7 +142,7 @@ public class ContainerSpec
     /// </summary>
 
     [JsonPropertyName("Hosts")]
-    public System.Collections.Generic.ICollection<string>? Hosts { get; set; } = default!;
+    public ICollection<string>? Hosts { get; set; } = default!;
 
     /// <summary>
     /// Specification for DNS related configurations in resolver configuration
@@ -159,7 +160,7 @@ public class ContainerSpec
     /// </summary>
 
     [JsonPropertyName("Secrets")]
-    public System.Collections.Generic.ICollection<Secrets>? Secrets { get; set; } = default!;
+    public ICollection<Secrets>? Secrets { get; set; } = default!;
 
     /// <summary>
     /// Configs contains references to zero or more configs that will be
@@ -168,7 +169,7 @@ public class ContainerSpec
     /// </summary>
 
     [JsonPropertyName("Configs")]
-    public System.Collections.Generic.ICollection<Configs>? Configs { get; set; } = default!;
+    public ICollection<Configs>? Configs { get; set; } = default!;
 
     /// <summary>
     /// Isolation technology of the containers running the service.
@@ -202,7 +203,7 @@ public class ContainerSpec
     /// </summary>
 
     [JsonPropertyName("Sysctls")]
-    public System.Collections.Generic.IDictionary<string, string>? Sysctls { get; set; } = default!;
+    public IDictionary<string, string>? Sysctls { get; set; } = default!;
 
     /// <summary>
     /// A list of kernel capabilities to add to the default set
@@ -211,7 +212,7 @@ public class ContainerSpec
     /// </summary>
 
     [JsonPropertyName("CapabilityAdd")]
-    public System.Collections.Generic.ICollection<string>? CapabilityAdd { get; set; } = default!;
+    public ICollection<string>? CapabilityAdd { get; set; } = default!;
 
     /// <summary>
     /// A list of kernel capabilities to drop from the default set
@@ -220,7 +221,7 @@ public class ContainerSpec
     /// </summary>
 
     [JsonPropertyName("CapabilityDrop")]
-    public System.Collections.Generic.ICollection<string>? CapabilityDrop { get; set; } = default!;
+    public ICollection<string>? CapabilityDrop { get; set; } = default!;
 
     /// <summary>
     /// A list of resource limits to set in the container. For example: `{"Name": "nofile", "Soft": 1024, "Hard": 2048}`"
@@ -228,7 +229,7 @@ public class ContainerSpec
     /// </summary>
 
     [JsonPropertyName("Ulimits")]
-    public System.Collections.Generic.ICollection<Ulimits2>? Ulimits { get; set; } = default!;
+    public ICollection<Ulimits2>? Ulimits { get; set; } = default!;
 
 
 }

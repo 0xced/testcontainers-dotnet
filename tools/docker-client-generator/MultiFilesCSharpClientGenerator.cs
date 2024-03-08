@@ -27,6 +27,7 @@ class MultiFilesCSharpClientGenerator(OpenApiDocument document, CSharpClientGene
         var typeNames = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         // Unfortunately Class.Annotations.liquid goes _under_ [System.CodeDom.Compiler.GeneratedCode]
         var annotations = new StringBuilder();
+        annotations.AppendLine("using System;");
         annotations.AppendLine("using System.Collections.Generic;");
         annotations.AppendLine("using System.Text.Json.Serialization;");
         annotations.AppendLine();

@@ -2,7 +2,7 @@
 {
 {%- if UseSystemTextJson %}
     var options = {{ JsonSerializerParameterCode }};
-{%- if JsonConvertersArrayCode contains "System.Text.Json.Serialization.JsonConverter[]" %}
+{%- if JsonConvertersArrayCode contains "JsonConverter[]" %}
     var converters = {{ JsonConvertersArrayCode }};
     foreach(var converter in converters)
         options.Converters.Add(converter);

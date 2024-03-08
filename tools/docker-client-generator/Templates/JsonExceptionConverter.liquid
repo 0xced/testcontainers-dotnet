@@ -2,12 +2,12 @@
 internal class JsonExceptionConverter : Newtonsoft.Json.JsonConverter
 {
     private readonly Newtonsoft.Json.Serialization.DefaultContractResolver _defaultContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
-    private readonly System.Collections.Generic.IDictionary<string, System.Reflection.Assembly> _searchedNamespaces;
+    private readonly IDictionary<string, Assembly> _searchedNamespaces;
     private readonly bool _hideStackTrace = false;
     
     public JsonExceptionConverter()
     {
-        _searchedNamespaces = new System.Collections.Generic.Dictionary<string, System.Reflection.Assembly> { { typeof({{ ExceptionModelClass }}).Namespace, System.Reflection.IntrospectionExtensions.GetTypeInfo(typeof({{ ExceptionModelClass }})).Assembly } };
+        _searchedNamespaces = new Dictionary<string, Assembly> { { typeof({{ ExceptionModelClass }}).Namespace, IntrospectionExtensions.GetTypeInfo(typeof({{ ExceptionModelClass }})).Assembly } };
     }
     
     public override bool CanWrite => true;
@@ -45,7 +45,7 @@ internal class JsonExceptionConverter : Newtonsoft.Json.JsonConverter
     
     public override bool CanConvert(System.Type objectType)
     {
-        return System.Reflection.IntrospectionExtensions.GetTypeInfo(typeof(System.Exception)).IsAssignableFrom(System.Reflection.IntrospectionExtensions.GetTypeInfo(objectType));
+        return IntrospectionExtensions.GetTypeInfo(typeof(System.Exception)).IsAssignableFrom(IntrospectionExtensions.GetTypeInfo(objectType));
     }
     
     public override object ReadJson(Newtonsoft.Json.JsonReader reader, System.Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
@@ -62,9 +62,9 @@ internal class JsonExceptionConverter : Newtonsoft.Json.JsonConverter
             field.SetValue(newSerializer.ContractResolver, false);
     
         dynamic resolver = newSerializer.ContractResolver;
-        if (System.Reflection.RuntimeReflectionExtensions.GetRuntimeProperty(newSerializer.ContractResolver.GetType(), "IgnoreSerializableAttribute") != null)
+        if (RuntimeReflectionExtensions.GetRuntimeProperty(newSerializer.ContractResolver.GetType(), "IgnoreSerializableAttribute") != null)
             resolver.IgnoreSerializableAttribute = true;
-        if (System.Reflection.RuntimeReflectionExtensions.GetRuntimeProperty(newSerializer.ContractResolver.GetType(), "IgnoreSerializableInterface") != null)
+        if (RuntimeReflectionExtensions.GetRuntimeProperty(newSerializer.ContractResolver.GetType(), "IgnoreSerializableInterface") != null)
             resolver.IgnoreSerializableInterface = true;
     
         Newtonsoft.Json.Linq.JToken token;
@@ -115,25 +115,25 @@ internal class JsonExceptionConverter : Newtonsoft.Json.JsonConverter
         return value;
     }
     
-    private System.Reflection.FieldInfo GetField(System.Type type, string fieldName)
+    private FieldInfo GetField(System.Type type, string fieldName)
     {
-        var field = System.Reflection.IntrospectionExtensions.GetTypeInfo(type).GetDeclaredField(fieldName);
-        if (field == null && System.Reflection.IntrospectionExtensions.GetTypeInfo(type).BaseType != null)
-            return GetField(System.Reflection.IntrospectionExtensions.GetTypeInfo(type).BaseType, fieldName);
+        var field = IntrospectionExtensions.GetTypeInfo(type).GetDeclaredField(fieldName);
+        if (field == null && IntrospectionExtensions.GetTypeInfo(type).BaseType != null)
+            return GetField(IntrospectionExtensions.GetTypeInfo(type).BaseType, fieldName);
         return field;
     }
     
-    private System.Collections.Generic.IDictionary<System.Reflection.PropertyInfo, string> GetExceptionProperties(System.Type exceptionType)
+    private IDictionary<PropertyInfo, string> GetExceptionProperties(System.Type exceptionType)
     {
-        var result = new System.Collections.Generic.Dictionary<System.Reflection.PropertyInfo, string>();
-        foreach (var property in System.Reflection.RuntimeReflectionExtensions.GetRuntimeProperties(exceptionType))
+        var result = new Dictionary<PropertyInfo, string>();
+        foreach (var property in RuntimeReflectionExtensions.GetRuntimeProperties(exceptionType))
         {
             if (property.GetMethod?.IsPublic != true)
             {
                 continue;
             }
 
-            var attribute = System.Reflection.CustomAttributeExtensions.GetCustomAttribute<Newtonsoft.Json.JsonPropertyAttribute>(property);
+            var attribute = CustomAttributeExtensions.GetCustomAttribute<Newtonsoft.Json.JsonPropertyAttribute>(property);
             var propertyName = attribute != null ? attribute.PropertyName : property.Name;
 
             switch (propertyName)
@@ -157,7 +157,7 @@ internal class JsonExceptionConverter : Newtonsoft.Json.JsonConverter
     
         private void SetExceptionFieldValue(Newtonsoft.Json.Linq.JObject jObject, string propertyName, object value, string fieldName, Newtonsoft.Json.Serialization.IContractResolver resolver, Newtonsoft.Json.JsonSerializer serializer)
         {
-            var field = System.Reflection.IntrospectionExtensions.GetTypeInfo(typeof(System.Exception)).GetDeclaredField(fieldName);
+            var field = IntrospectionExtensions.GetTypeInfo(typeof(System.Exception)).GetDeclaredField(fieldName);
             var jsonPropertyName = resolver is Newtonsoft.Json.Serialization.DefaultContractResolver ? ((Newtonsoft.Json.Serialization.DefaultContractResolver)resolver).GetResolvedPropertyName(propertyName) : propertyName;
             foreach (var property in jObject.Properties())
             {

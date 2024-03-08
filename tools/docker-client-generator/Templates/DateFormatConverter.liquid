@@ -1,6 +1,6 @@
 ﻿[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "{{ ToolchainVersion }}")]
 {%- if UseSystemTextJson -%}
-internal class DateFormatConverter : System.Text.Json.Serialization.JsonConverter<{{ DateType }}>
+internal class DateFormatConverter : JsonConverter<{{ DateType }}>
 {
     public override {{ DateType }} Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
     {

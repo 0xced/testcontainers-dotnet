@@ -9,7 +9,7 @@
 {%- assign sortedParentProperties = parentProperties | sort: "Name" %}
 
 {%- if UseSystemTextJson %}
-[System.Text.Json.Serialization.JsonConstructor]
+[JsonConstructor]
 {%- else %}
 [Newtonsoft.Json.JsonConstructor]
 {%- endif %}

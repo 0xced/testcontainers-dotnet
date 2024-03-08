@@ -5334,6 +5334,7 @@ definitions:
         default: "default"
         type: "string"
         enum:
+          - ""
           - "default"
           - "hyperv"
           - "process"

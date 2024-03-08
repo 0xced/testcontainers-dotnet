@@ -19,24 +19,13 @@ namespace DockerEngine;
 public partial class DockerVolumeClient : IDockerVolumeClient
 {
     private readonly HttpClient _httpClient;
-    private static readonly Lazy<JsonSerializerOptions> _settings = new Lazy<JsonSerializerOptions>(CreateSerializerSettings, true);
+    private readonly JsonSerializerOptions _serializerOptions;
 
-    public DockerVolumeClient(HttpClient httpClient)
+    public DockerVolumeClient(HttpClient httpClient, JsonSerializerOptions? serializerOptions = null)
     {
         _httpClient = httpClient;
+        _serializerOptions = serializerOptions ?? new JsonSerializerOptions();
     }
-
-    private static JsonSerializerOptions CreateSerializerSettings()
-    {
-        var settings = new System.Text.Json.JsonSerializerOptions();
-        UpdateJsonSerializerSettings(settings);
-        return settings;
-    }
-
-
-    protected JsonSerializerOptions JsonSerializerSettings => _settings.Value;
-
-    static partial void UpdateJsonSerializerSettings(JsonSerializerOptions settings);
 
 
     partial void PrepareRequest(HttpClient client, HttpRequestMessage request, string url);
@@ -158,7 +147,7 @@ public partial class DockerVolumeClient : IDockerVolumeClient
         {
             using (var request = new HttpRequestMessage())
             {
-                var json = JsonSerializer.SerializeToUtf8Bytes(volumeConfig, _settings.Value);
+                var json = JsonSerializer.SerializeToUtf8Bytes(volumeConfig, _serializerOptions);
                 var content = new ByteArrayContent(json);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 request.Content = content;
@@ -347,7 +336,7 @@ public partial class DockerVolumeClient : IDockerVolumeClient
         {
             using (var request = new HttpRequestMessage())
             {
-                var json = JsonSerializer.SerializeToUtf8Bytes(body, _settings.Value);
+                var json = JsonSerializer.SerializeToUtf8Bytes(body, _serializerOptions);
                 var content = new ByteArrayContent(json);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 request.Content = content;
@@ -677,7 +666,7 @@ public partial class DockerVolumeClient : IDockerVolumeClient
             var responseText = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             try
             {
-                var typedBody = JsonSerializer.Deserialize<T>(responseText, JsonSerializerSettings);
+                var typedBody = JsonSerializer.Deserialize<T>(responseText, _serializerOptions);
                 return new ObjectResponseResult<T>(typedBody!, responseText);
             }
             catch (JsonException exception)
@@ -692,7 +681,7 @@ public partial class DockerVolumeClient : IDockerVolumeClient
             {
                 using (var responseStream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false))
                 {
-                    var typedBody = await JsonSerializer.DeserializeAsync<T>(responseStream, JsonSerializerSettings, cancellationToken).ConfigureAwait(false);
+                    var typedBody = await JsonSerializer.DeserializeAsync<T>(responseStream, _serializerOptions, cancellationToken).ConfigureAwait(false);
                     return new ObjectResponseResult<T>(typedBody!, string.Empty);
                 }
             }

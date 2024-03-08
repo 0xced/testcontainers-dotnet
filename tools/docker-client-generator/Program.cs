@@ -42,6 +42,7 @@ static void GenerateClientFiles(OpenApiDocument document)
         GenerateClientInterfaces = true,
         GenerateBaseUrlProperty = false,
         GenerateOptionalParameters = true,
+        GenerateUpdateJsonSerializerSettingsMethod = false,
         GenerateClientClasses = true,
         UseBaseUrl = false,
         OperationNameGenerator = new OperationNameGenerator(),

@@ -16,7 +16,7 @@ protected virtual async Task<ObjectResponseResult<T>> ReadObjectResponseAsync<T>
         var responseText = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            var typedBody = {% if UseSystemTextJson %}JsonSerializer.Deserialize{% else %}Newtonsoft.Json.JsonConvert.DeserializeObject{% endif %}<T>(responseText, {% if UseRequestAndResponseSerializationSettings %}Response{% endif %}JsonSerializerSettings);
+            var typedBody = {% if UseSystemTextJson %}JsonSerializer.Deserialize{% else %}Newtonsoft.Json.JsonConvert.DeserializeObject{% endif %}<T>(responseText, {% if UseRequestAndResponseSerializationSettings %}Response{% endif %}_serializerOptions);
 {%- if GenerateNullableReferenceTypes -%}
             return new ObjectResponseResult<T>(typedBody!, responseText);
 {%- else -%}
@@ -36,12 +36,12 @@ protected virtual async Task<ObjectResponseResult<T>> ReadObjectResponseAsync<T>
             using (var responseStream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false))
 {%- if UseSystemTextJson -%}
             {
-                var typedBody = await JsonSerializer.DeserializeAsync<T>(responseStream, {% if UseRequestAndResponseSerializationSettings %}Response{% endif %}JsonSerializerSettings, cancellationToken).ConfigureAwait(false);
+                var typedBody = await JsonSerializer.DeserializeAsync<T>(responseStream, {% if UseRequestAndResponseSerializationSettings %}Response{% endif %}_serializerOptions, cancellationToken).ConfigureAwait(false);
 {%- else -%}
             using (var streamReader = new StreamReader(responseStream))
             using (var jsonTextReader = new Newtonsoft.Json.JsonTextReader(streamReader))
             {
-                var serializer = Newtonsoft.Json.JsonSerializer.Create({% if UseRequestAndResponseSerializationSettings %}Response{% endif %}JsonSerializerSettings);
+                var serializer = Newtonsoft.Json.JsonSerializer.Create({% if UseRequestAndResponseSerializationSettings %}Response{% endif %}_serializerOptions);
                 var typedBody = serializer.Deserialize<T>(jsonTextReader);
 {%- endif -%}
 {%- if GenerateNullableReferenceTypes -%}

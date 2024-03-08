@@ -19,24 +19,13 @@ namespace DockerEngine;
 public partial class DockerSessionClient : IDockerSessionClient
 {
     private readonly HttpClient _httpClient;
-    private static readonly Lazy<JsonSerializerOptions> _settings = new Lazy<JsonSerializerOptions>(CreateSerializerSettings, true);
+    private readonly JsonSerializerOptions _serializerOptions;
 
-    public DockerSessionClient(HttpClient httpClient)
+    public DockerSessionClient(HttpClient httpClient, JsonSerializerOptions? serializerOptions = null)
     {
         _httpClient = httpClient;
+        _serializerOptions = serializerOptions ?? new JsonSerializerOptions();
     }
-
-    private static JsonSerializerOptions CreateSerializerSettings()
-    {
-        var settings = new System.Text.Json.JsonSerializerOptions();
-        UpdateJsonSerializerSettings(settings);
-        return settings;
-    }
-
-
-    protected JsonSerializerOptions JsonSerializerSettings => _settings.Value;
-
-    static partial void UpdateJsonSerializerSettings(JsonSerializerOptions settings);
 
 
     partial void PrepareRequest(HttpClient client, HttpRequestMessage request, string url);
@@ -190,7 +179,7 @@ public partial class DockerSessionClient : IDockerSessionClient
             var responseText = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             try
             {
-                var typedBody = JsonSerializer.Deserialize<T>(responseText, JsonSerializerSettings);
+                var typedBody = JsonSerializer.Deserialize<T>(responseText, _serializerOptions);
                 return new ObjectResponseResult<T>(typedBody!, responseText);
             }
             catch (JsonException exception)
@@ -205,7 +194,7 @@ public partial class DockerSessionClient : IDockerSessionClient
             {
                 using (var responseStream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false))
                 {
-                    var typedBody = await JsonSerializer.DeserializeAsync<T>(responseStream, JsonSerializerSettings, cancellationToken).ConfigureAwait(false);
+                    var typedBody = await JsonSerializer.DeserializeAsync<T>(responseStream, _serializerOptions, cancellationToken).ConfigureAwait(false);
                     return new ObjectResponseResult<T>(typedBody!, string.Empty);
                 }
             }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -30,7 +31,7 @@ public class Config2
 
 
     [JsonPropertyName("Entrypoint")]
-    public System.Collections.Generic.ICollection<string> Entrypoint { get; set; } = new System.Collections.ObjectModel.Collection<string>();
+    public ICollection<string> Entrypoint { get; set; } = new List<string>();
 
 
     [JsonPropertyName("WorkDir")]
@@ -62,11 +63,11 @@ public class Config2
 
 
     [JsonPropertyName("Mounts")]
-    public System.Collections.Generic.ICollection<PluginMount> Mounts { get; set; } = new System.Collections.ObjectModel.Collection<PluginMount>();
+    public ICollection<PluginMount> Mounts { get; set; } = new List<PluginMount>();
 
 
     [JsonPropertyName("Env")]
-    public System.Collections.Generic.ICollection<PluginEnv> Env { get; set; } = new System.Collections.ObjectModel.Collection<PluginEnv>();
+    public ICollection<PluginEnv> Env { get; set; } = new List<PluginEnv>();
 
 
     [JsonPropertyName("Args")]

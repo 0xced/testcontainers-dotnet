@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -34,7 +35,7 @@ public class PublishStatus
     /// </summary>
 
     [JsonPropertyName("PublishContext")]
-    public System.Collections.Generic.IDictionary<string, string>? PublishContext { get; set; } = default!;
+    public IDictionary<string, string>? PublishContext { get; set; } = default!;
 
 
 }

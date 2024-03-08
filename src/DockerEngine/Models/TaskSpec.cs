@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -99,7 +100,7 @@ public class TaskSpec
     /// </summary>
 
     [JsonPropertyName("Networks")]
-    public System.Collections.Generic.ICollection<NetworkAttachmentConfig>? Networks { get; set; } = default!;
+    public ICollection<NetworkAttachmentConfig>? Networks { get; set; } = default!;
 
     /// <summary>
     /// Specifies the log driver to use for tasks created from this spec. If

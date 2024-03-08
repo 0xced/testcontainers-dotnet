@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -48,15 +49,15 @@ public class Network
 
 
     [JsonPropertyName("Containers")]
-    public System.Collections.Generic.IDictionary<string, NetworkContainer>? Containers { get; set; } = default!;
+    public IDictionary<string, NetworkContainer>? Containers { get; set; } = default!;
 
 
     [JsonPropertyName("Options")]
-    public System.Collections.Generic.IDictionary<string, string>? Options { get; set; } = default!;
+    public IDictionary<string, string>? Options { get; set; } = default!;
 
 
     [JsonPropertyName("Labels")]
-    public System.Collections.Generic.IDictionary<string, string>? Labels { get; set; } = default!;
+    public IDictionary<string, string>? Labels { get; set; } = default!;
 
 
 }

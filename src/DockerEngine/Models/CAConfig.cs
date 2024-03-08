@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -20,7 +21,7 @@ public class CAConfig
     /// </summary>
 
     [JsonPropertyName("ExternalCAs")]
-    public System.Collections.Generic.ICollection<ExternalCAs>? ExternalCAs { get; set; } = default!;
+    public ICollection<ExternalCAs>? ExternalCAs { get; set; } = default!;
 
     /// <summary>
     /// The desired signing CA certificate for all swarm node TLS leaf

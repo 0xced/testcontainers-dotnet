@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -24,7 +25,7 @@ public class ProcessConfig
 
 
     [JsonPropertyName("arguments")]
-    public System.Collections.Generic.ICollection<string>? Arguments { get; set; } = default!;
+    public ICollection<string>? Arguments { get; set; } = default!;
 
 
 }

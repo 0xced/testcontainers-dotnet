@@ -72,7 +72,7 @@ public partial class DockerNetworkClient : IDockerNetworkClient
     /// <br/>- `type=["custom"|"builtin"]` Filters networks by type. The `custom` keyword returns all user-defined networks.</param>
     /// <returns>No error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task<ICollection<Network>> ListAsync(string? filters = null, CancellationToken cancellationToken = default)
+    public virtual async Task<IReadOnlyCollection<Network>> ListAsync(string? filters = null, CancellationToken cancellationToken = default)
     {
         var client = _httpClient;
         var disposeClient = false;
@@ -116,7 +116,7 @@ public partial class DockerNetworkClient : IDockerNetworkClient
                     var statusCode = (int)response.StatusCode;
                     if (statusCode == 200)
                     {
-                        var objectResponse = await ReadObjectResponseAsync<ICollection<Network>>(response, headers, cancellationToken).ConfigureAwait(false);
+                        var objectResponse = await ReadObjectResponseAsync<IReadOnlyCollection<Network>>(response, headers, cancellationToken).ConfigureAwait(false);
                         if (objectResponse.Object == null)
                         {
                             throw new DockerApiException("Response was null which was not expected.", statusCode, objectResponse.Text, headers, null);

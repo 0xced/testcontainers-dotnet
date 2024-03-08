@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -52,7 +53,7 @@ public class HostConfig : Resources
     /// </summary>
 
     [JsonPropertyName("Binds")]
-    public System.Collections.Generic.ICollection<string>? Binds { get; set; } = default!;
+    public ICollection<string>? Binds { get; set; } = default!;
 
     /// <summary>
     /// Path to a file where the container ID is written
@@ -110,7 +111,7 @@ public class HostConfig : Resources
     /// </summary>
 
     [JsonPropertyName("VolumesFrom")]
-    public System.Collections.Generic.ICollection<string>? VolumesFrom { get; set; } = default!;
+    public ICollection<string>? VolumesFrom { get; set; } = default!;
 
     /// <summary>
     /// Specification for mounts to be added to the container.
@@ -118,7 +119,7 @@ public class HostConfig : Resources
     /// </summary>
 
     [JsonPropertyName("Mounts")]
-    public System.Collections.Generic.ICollection<Mount>? Mounts { get; set; } = default!;
+    public ICollection<Mount>? Mounts { get; set; } = default!;
 
     /// <summary>
     /// Initial console size, as an `[height, width]` array.
@@ -126,7 +127,7 @@ public class HostConfig : Resources
     /// </summary>
 
     [JsonPropertyName("ConsoleSize")]
-    public System.Collections.Generic.ICollection<int>? ConsoleSize { get; set; } = default!;
+    public ICollection<int>? ConsoleSize { get; set; } = default!;
 
     /// <summary>
     /// Arbitrary non-identifying metadata attached to container and
@@ -135,7 +136,7 @@ public class HostConfig : Resources
     /// </summary>
 
     [JsonPropertyName("Annotations")]
-    public System.Collections.Generic.IDictionary<string, string>? Annotations { get; set; } = default!;
+    public IDictionary<string, string>? Annotations { get; set; } = default!;
 
     /// <summary>
     /// A list of kernel capabilities to add to the container. Conflicts
@@ -144,7 +145,7 @@ public class HostConfig : Resources
     /// </summary>
 
     [JsonPropertyName("CapAdd")]
-    public System.Collections.Generic.ICollection<string>? CapAdd { get; set; } = default!;
+    public ICollection<string>? CapAdd { get; set; } = default!;
 
     /// <summary>
     /// A list of kernel capabilities to drop from the container. Conflicts
@@ -153,7 +154,7 @@ public class HostConfig : Resources
     /// </summary>
 
     [JsonPropertyName("CapDrop")]
-    public System.Collections.Generic.ICollection<string>? CapDrop { get; set; } = default!;
+    public ICollection<string>? CapDrop { get; set; } = default!;
 
     /// <summary>
     /// cgroup namespace mode for the container. Possible values are:
@@ -175,21 +176,21 @@ public class HostConfig : Resources
     /// </summary>
 
     [JsonPropertyName("Dns")]
-    public System.Collections.Generic.ICollection<string>? Dns { get; set; } = default!;
+    public ICollection<string>? Dns { get; set; } = default!;
 
     /// <summary>
     /// A list of DNS options.
     /// </summary>
 
     [JsonPropertyName("DnsOptions")]
-    public System.Collections.Generic.ICollection<string>? DnsOptions { get; set; } = default!;
+    public ICollection<string>? DnsOptions { get; set; } = default!;
 
     /// <summary>
     /// A list of DNS search domains.
     /// </summary>
 
     [JsonPropertyName("DnsSearch")]
-    public System.Collections.Generic.ICollection<string>? DnsSearch { get; set; } = default!;
+    public ICollection<string>? DnsSearch { get; set; } = default!;
 
     /// <summary>
     /// A list of hostnames/IP mappings to add to the container's `/etc/hosts`
@@ -198,7 +199,7 @@ public class HostConfig : Resources
     /// </summary>
 
     [JsonPropertyName("ExtraHosts")]
-    public System.Collections.Generic.ICollection<string>? ExtraHosts { get; set; } = default!;
+    public ICollection<string>? ExtraHosts { get; set; } = default!;
 
     /// <summary>
     /// A list of additional groups that the container process will run as.
@@ -206,7 +207,7 @@ public class HostConfig : Resources
     /// </summary>
 
     [JsonPropertyName("GroupAdd")]
-    public System.Collections.Generic.ICollection<string>? GroupAdd { get; set; } = default!;
+    public ICollection<string>? GroupAdd { get; set; } = default!;
 
     /// <summary>
     /// IPC sharing mode for the container. Possible values are:
@@ -238,7 +239,7 @@ public class HostConfig : Resources
     /// </summary>
 
     [JsonPropertyName("Links")]
-    public System.Collections.Generic.ICollection<string>? Links { get; set; } = default!;
+    public ICollection<string>? Links { get; set; } = default!;
 
     /// <summary>
     /// An integer value containing the score given to the container in
@@ -299,7 +300,7 @@ public class HostConfig : Resources
     /// </summary>
 
     [JsonPropertyName("SecurityOpt")]
-    public System.Collections.Generic.ICollection<string>? SecurityOpt { get; set; } = default!;
+    public ICollection<string>? SecurityOpt { get; set; } = default!;
 
     /// <summary>
     /// Storage driver options for this container, in the form `{"size": "120G"}`.
@@ -307,7 +308,7 @@ public class HostConfig : Resources
     /// </summary>
 
     [JsonPropertyName("StorageOpt")]
-    public System.Collections.Generic.IDictionary<string, string>? StorageOpt { get; set; } = default!;
+    public IDictionary<string, string>? StorageOpt { get; set; } = default!;
 
     /// <summary>
     /// A map of container directories which should be replaced by tmpfs
@@ -320,7 +321,7 @@ public class HostConfig : Resources
     /// </summary>
 
     [JsonPropertyName("Tmpfs")]
-    public System.Collections.Generic.IDictionary<string, string>? Tmpfs { get; set; } = default!;
+    public IDictionary<string, string>? Tmpfs { get; set; } = default!;
 
     /// <summary>
     /// UTS namespace to use for the container.
@@ -357,7 +358,7 @@ public class HostConfig : Resources
     /// </summary>
 
     [JsonPropertyName("Sysctls")]
-    public System.Collections.Generic.IDictionary<string, string>? Sysctls { get; set; } = default!;
+    public IDictionary<string, string>? Sysctls { get; set; } = default!;
 
     /// <summary>
     /// Runtime to use with this container.
@@ -382,7 +383,7 @@ public class HostConfig : Resources
     /// </summary>
 
     [JsonPropertyName("MaskedPaths")]
-    public System.Collections.Generic.ICollection<string>? MaskedPaths { get; set; } = default!;
+    public ICollection<string>? MaskedPaths { get; set; } = default!;
 
     /// <summary>
     /// The list of paths to be set as read-only inside the container
@@ -391,7 +392,7 @@ public class HostConfig : Resources
     /// </summary>
 
     [JsonPropertyName("ReadonlyPaths")]
-    public System.Collections.Generic.ICollection<string>? ReadonlyPaths { get; set; } = default!;
+    public ICollection<string>? ReadonlyPaths { get; set; } = default!;
 
 
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -21,7 +22,7 @@ public class DistributionInspect
     /// </summary>
 
     [JsonPropertyName("Platforms")]
-    public System.Collections.Generic.ICollection<OCIPlatform> Platforms { get; set; } = new System.Collections.ObjectModel.Collection<OCIPlatform>();
+    public ICollection<OCIPlatform> Platforms { get; set; } = new List<OCIPlatform>();
 
 
 }

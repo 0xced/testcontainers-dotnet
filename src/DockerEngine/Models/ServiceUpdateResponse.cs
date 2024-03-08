@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -11,7 +12,7 @@ public class ServiceUpdateResponse
     /// </summary>
 
     [JsonPropertyName("Warnings")]
-    public System.Collections.Generic.ICollection<string>? Warnings { get; set; } = default!;
+    public ICollection<string>? Warnings { get; set; } = default!;
 
 
 }

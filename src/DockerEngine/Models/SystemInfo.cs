@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -84,7 +85,7 @@ public class SystemInfo
     /// </summary>
 
     [JsonPropertyName("DriverStatus")]
-    public System.Collections.Generic.ICollection<System.Collections.Generic.ICollection<string>>? DriverStatus { get; set; } = default!;
+    public ICollection<ICollection<string>>? DriverStatus { get; set; } = default!;
 
     /// <summary>
     /// Root directory of persistent Docker state.
@@ -423,7 +424,7 @@ public class SystemInfo
     /// </summary>
 
     [JsonPropertyName("Labels")]
-    public System.Collections.Generic.ICollection<string>? Labels { get; set; } = default!;
+    public ICollection<string>? Labels { get; set; } = default!;
 
     /// <summary>
     /// Indicates if experimental features are enabled on the daemon.
@@ -456,7 +457,7 @@ public class SystemInfo
     /// </summary>
 
     [JsonPropertyName("Runtimes")]
-    public System.Collections.Generic.IDictionary<string, Runtime>? Runtimes { get; set; } = default!;
+    public IDictionary<string, Runtime>? Runtimes { get; set; } = default!;
 
     /// <summary>
     /// Name of the default OCI runtime that is used when starting containers.
@@ -533,7 +534,7 @@ public class SystemInfo
     /// </summary>
 
     [JsonPropertyName("SecurityOptions")]
-    public System.Collections.Generic.ICollection<string>? SecurityOptions { get; set; } = default!;
+    public ICollection<string>? SecurityOptions { get; set; } = default!;
 
     /// <summary>
     /// Reports a summary of the product license on the daemon.
@@ -556,7 +557,7 @@ public class SystemInfo
     /// </summary>
 
     [JsonPropertyName("DefaultAddressPools")]
-    public System.Collections.Generic.ICollection<DefaultAddressPools>? DefaultAddressPools { get; set; } = default!;
+    public ICollection<DefaultAddressPools>? DefaultAddressPools { get; set; } = default!;
 
     /// <summary>
     /// List of warnings / informational messages about missing features, or
@@ -567,7 +568,7 @@ public class SystemInfo
     /// </summary>
 
     [JsonPropertyName("Warnings")]
-    public System.Collections.Generic.ICollection<string>? Warnings { get; set; } = default!;
+    public ICollection<string>? Warnings { get; set; } = default!;
 
     /// <summary>
     /// List of directories where (Container Device Interface) CDI
@@ -585,7 +586,7 @@ public class SystemInfo
     /// </summary>
 
     [JsonPropertyName("CDISpecDirs")]
-    public System.Collections.Generic.ICollection<string>? CDISpecDirs { get; set; } = default!;
+    public ICollection<string>? CDISpecDirs { get; set; } = default!;
 
 
 }

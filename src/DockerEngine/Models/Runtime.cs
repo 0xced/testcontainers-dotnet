@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -32,7 +33,7 @@ public class Runtime
     /// </summary>
 
     [JsonPropertyName("runtimeArgs")]
-    public System.Collections.Generic.ICollection<string>? RuntimeArgs { get; set; } = default!;
+    public ICollection<string>? RuntimeArgs { get; set; } = default!;
 
     /// <summary>
     /// Information specific to the runtime.
@@ -53,7 +54,7 @@ public class Runtime
     /// </summary>
 
     [JsonPropertyName("status")]
-    public System.Collections.Generic.IDictionary<string, string>? Status { get; set; } = default!;
+    public IDictionary<string, string>? Status { get; set; } = default!;
 
 
 }

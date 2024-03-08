@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -12,7 +13,7 @@ public class Rootfs
 
 
     [JsonPropertyName("diff_ids")]
-    public System.Collections.Generic.ICollection<string>? Diff_ids { get; set; } = default!;
+    public ICollection<string>? Diff_ids { get; set; } = default!;
 
 
 }

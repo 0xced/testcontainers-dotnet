@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -36,7 +37,7 @@ public class ImageInspect
     /// </summary>
 
     [JsonPropertyName("RepoTags")]
-    public System.Collections.Generic.ICollection<string>? RepoTags { get; set; } = default!;
+    public ICollection<string>? RepoTags { get; set; } = default!;
 
     /// <summary>
     /// List of content-addressable digests of locally available image manifests
@@ -50,7 +51,7 @@ public class ImageInspect
     /// </summary>
 
     [JsonPropertyName("RepoDigests")]
-    public System.Collections.Generic.ICollection<string>? RepoDigests { get; set; } = default!;
+    public ICollection<string>? RepoDigests { get; set; } = default!;
 
     /// <summary>
     /// ID of the parent image.

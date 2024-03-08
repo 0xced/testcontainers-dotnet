@@ -24,7 +24,7 @@ public partial interface IDockerSecretClient
     /// <br/>- `names=&lt;secret name&gt;`</param>
     /// <returns>no error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    Task<ICollection<Secret>> ListAsync(string? filters = null, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Secret>> ListAsync(string? filters = null, CancellationToken cancellationToken = default);
 
 
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>

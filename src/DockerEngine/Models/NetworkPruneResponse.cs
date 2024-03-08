@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -11,7 +12,7 @@ public class NetworkPruneResponse
     /// </summary>
 
     [JsonPropertyName("NetworksDeleted")]
-    public System.Collections.Generic.ICollection<string>? NetworksDeleted { get; set; } = default!;
+    public ICollection<string>? NetworksDeleted { get; set; } = default!;
 
 
 }

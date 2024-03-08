@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -17,7 +18,7 @@ public class HealthcheckResult
     /// </summary>
 
     [JsonPropertyName("Start")]
-    public System.DateTimeOffset? Start { get; set; } = default!;
+    public DateTimeOffset? Start { get; set; } = default!;
 
     /// <summary>
     /// Date and time at which this check ended in

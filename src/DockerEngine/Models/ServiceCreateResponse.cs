@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -26,7 +27,7 @@ public class ServiceCreateResponse
     /// </summary>
 
     [JsonPropertyName("Warnings")]
-    public System.Collections.Generic.ICollection<string>? Warnings { get; set; } = default!;
+    public ICollection<string>? Warnings { get; set; } = default!;
 
 
 }

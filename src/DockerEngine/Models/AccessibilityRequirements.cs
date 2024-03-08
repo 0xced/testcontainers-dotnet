@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -13,7 +14,7 @@ public class AccessibilityRequirements
     /// </summary>
 
     [JsonPropertyName("Requisite")]
-    public System.Collections.Generic.ICollection<Topology>? Requisite { get; set; } = default!;
+    public ICollection<Topology>? Requisite { get; set; } = default!;
 
     /// <summary>
     /// A list of topologies that the volume should attempt to be
@@ -22,7 +23,7 @@ public class AccessibilityRequirements
     /// </summary>
 
     [JsonPropertyName("Preferred")]
-    public System.Collections.Generic.ICollection<Topology>? Preferred { get; set; } = default!;
+    public ICollection<Topology>? Preferred { get; set; } = default!;
 
 
 }

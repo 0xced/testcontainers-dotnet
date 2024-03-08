@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -52,7 +53,7 @@ public class SwarmJoinRequest
     /// </summary>
 
     [JsonPropertyName("RemoteAddrs")]
-    public System.Collections.Generic.ICollection<string>? RemoteAddrs { get; set; } = default!;
+    public ICollection<string>? RemoteAddrs { get; set; } = default!;
 
     /// <summary>
     /// Secret token for joining this swarm.

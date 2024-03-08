@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -32,7 +33,7 @@ public class ContainerInspectResponse
     /// </summary>
 
     [JsonPropertyName("Args")]
-    public System.Collections.Generic.ICollection<string>? Args { get; set; } = default!;
+    public ICollection<string>? Args { get; set; } = default!;
 
 
     [JsonPropertyName("State")]
@@ -94,7 +95,7 @@ public class ContainerInspectResponse
     /// </summary>
 
     [JsonPropertyName("ExecIDs")]
-    public System.Collections.Generic.ICollection<string>? ExecIDs { get; set; } = default!;
+    public ICollection<string>? ExecIDs { get; set; } = default!;
 
 
     [JsonPropertyName("HostConfig")]
@@ -122,7 +123,7 @@ public class ContainerInspectResponse
 
 
     [JsonPropertyName("Mounts")]
-    public System.Collections.Generic.ICollection<MountPoint>? Mounts { get; set; } = default!;
+    public ICollection<MountPoint>? Mounts { get; set; } = default!;
 
 
     [JsonPropertyName("Config")]

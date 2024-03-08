@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -73,7 +74,7 @@ public class ClusterInfo
     /// </summary>
 
     [JsonPropertyName("DefaultAddrPool")]
-    public System.Collections.Generic.ICollection<string>? DefaultAddrPool { get; set; } = default!;
+    public ICollection<string>? DefaultAddrPool { get; set; } = default!;
 
     /// <summary>
     /// SubnetSize specifies the subnet size of the networks created from the

@@ -38,7 +38,7 @@ public partial interface IDockerNetworkClient
     /// <br/>- `type=["custom"|"builtin"]` Filters networks by type. The `custom` keyword returns all user-defined networks.</param>
     /// <returns>No error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    Task<ICollection<Network>> ListAsync(string? filters = null, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Network>> ListAsync(string? filters = null, CancellationToken cancellationToken = default);
 
 
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>

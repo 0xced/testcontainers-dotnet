@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -14,7 +15,7 @@ public class ContainerTopResponse
     /// </summary>
 
     [JsonPropertyName("Titles")]
-    public System.Collections.Generic.ICollection<string>? Titles { get; set; } = default!;
+    public ICollection<string>? Titles { get; set; } = default!;
 
     /// <summary>
     /// Each process running in the container, where each is process
@@ -23,7 +24,7 @@ public class ContainerTopResponse
     /// </summary>
 
     [JsonPropertyName("Processes")]
-    public System.Collections.Generic.ICollection<System.Collections.Generic.ICollection<string>>? Processes { get; set; } = default!;
+    public ICollection<ICollection<string>>? Processes { get; set; } = default!;
 
 
 }

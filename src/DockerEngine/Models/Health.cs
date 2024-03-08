@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -37,7 +38,7 @@ public class Health
     /// </summary>
 
     [JsonPropertyName("Log")]
-    public System.Collections.Generic.ICollection<HealthcheckResult?>? Log { get; set; } = default!;
+    public ICollection<HealthcheckResult?>? Log { get; set; } = default!;
 
 
 }

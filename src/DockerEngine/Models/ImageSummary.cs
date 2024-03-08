@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -44,7 +45,7 @@ public class ImageSummary
     /// </summary>
 
     [JsonPropertyName("RepoTags")]
-    public System.Collections.Generic.ICollection<string> RepoTags { get; set; } = new System.Collections.ObjectModel.Collection<string>();
+    public ICollection<string> RepoTags { get; set; } = new List<string>();
 
     /// <summary>
     /// List of content-addressable digests of locally available image manifests
@@ -58,7 +59,7 @@ public class ImageSummary
     /// </summary>
 
     [JsonPropertyName("RepoDigests")]
-    public System.Collections.Generic.ICollection<string> RepoDigests { get; set; } = new System.Collections.ObjectModel.Collection<string>();
+    public ICollection<string> RepoDigests { get; set; } = new List<string>();
 
     /// <summary>
     /// Date and time at which the image was created as a Unix timestamp
@@ -103,7 +104,7 @@ public class ImageSummary
     /// </summary>
 
     [JsonPropertyName("Labels")]
-    public System.Collections.Generic.IDictionary<string, string> Labels { get; set; } = new System.Collections.Generic.Dictionary<string, string>();
+    public IDictionary<string, string> Labels { get; set; } = new Dictionary<string, string>();
 
     /// <summary>
     /// Number of containers using this image. Includes both stopped and running

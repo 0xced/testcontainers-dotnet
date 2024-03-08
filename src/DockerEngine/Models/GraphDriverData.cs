@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -27,7 +28,7 @@ public class GraphDriverData
     /// </summary>
 
     [JsonPropertyName("Data")]
-    public System.Collections.Generic.IDictionary<string, string> Data { get; set; } = new System.Collections.Generic.Dictionary<string, string>();
+    public IDictionary<string, string> Data { get; set; } = new Dictionary<string, string>();
 
 
 }

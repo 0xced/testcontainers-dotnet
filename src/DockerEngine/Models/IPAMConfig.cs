@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -20,7 +21,7 @@ public class IPAMConfig
 
 
     [JsonPropertyName("AuxiliaryAddresses")]
-    public System.Collections.Generic.IDictionary<string, string>? AuxiliaryAddresses { get; set; } = default!;
+    public IDictionary<string, string>? AuxiliaryAddresses { get; set; } = default!;
 
 
 }

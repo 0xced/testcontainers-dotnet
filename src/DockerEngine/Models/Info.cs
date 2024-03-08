@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -22,7 +23,7 @@ public class Info
     /// </summary>
 
     [JsonPropertyName("VolumeContext")]
-    public System.Collections.Generic.IDictionary<string, string>? VolumeContext { get; set; } = default!;
+    public IDictionary<string, string>? VolumeContext { get; set; } = default!;
 
     /// <summary>
     /// The ID of the volume as returned by the CSI storage plugin. This
@@ -42,7 +43,7 @@ public class Info
     /// </summary>
 
     [JsonPropertyName("AccessibleTopology")]
-    public System.Collections.Generic.ICollection<Topology>? AccessibleTopology { get; set; } = default!;
+    public ICollection<Topology>? AccessibleTopology { get; set; } = default!;
 
 
 }

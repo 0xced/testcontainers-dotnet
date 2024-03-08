@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -8,7 +9,7 @@ public class Linux
 {
 
     [JsonPropertyName("Capabilities")]
-    public System.Collections.Generic.ICollection<string> Capabilities { get; set; } = new System.Collections.ObjectModel.Collection<string>();
+    public ICollection<string> Capabilities { get; set; } = new List<string>();
 
 
     [JsonPropertyName("AllowAllDevices")]
@@ -16,7 +17,7 @@ public class Linux
 
 
     [JsonPropertyName("Devices")]
-    public System.Collections.Generic.ICollection<PluginDevice> Devices { get; set; } = new System.Collections.ObjectModel.Collection<PluginDevice>();
+    public ICollection<PluginDevice> Devices { get; set; } = new List<PluginDevice>();
 
 
 }

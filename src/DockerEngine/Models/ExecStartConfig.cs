@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -25,7 +26,7 @@ public class ExecStartConfig
     /// </summary>
 
     [JsonPropertyName("ConsoleSize")]
-    public System.Collections.Generic.ICollection<int>? ConsoleSize { get; set; } = default!;
+    public ICollection<int>? ConsoleSize { get; set; } = default!;
 
 
 }

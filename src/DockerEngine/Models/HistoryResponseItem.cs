@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -23,7 +24,7 @@ public class HistoryResponseItem
 
 
     [JsonPropertyName("Tags")]
-    public System.Collections.Generic.ICollection<string> Tags { get; set; } = new System.Collections.ObjectModel.Collection<string>();
+    public ICollection<string> Tags { get; set; } = new List<string>();
 
 
     [JsonPropertyName("Size")]

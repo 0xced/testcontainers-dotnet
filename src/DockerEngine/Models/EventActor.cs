@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -24,7 +25,7 @@ public class EventActor
     /// </summary>
 
     [JsonPropertyName("Attributes")]
-    public System.Collections.Generic.IDictionary<string, string>? Attributes { get; set; } = default!;
+    public IDictionary<string, string>? Attributes { get; set; } = default!;
 
 
 }

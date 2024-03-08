@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -12,7 +13,7 @@ public class RootFS
 
 
     [JsonPropertyName("Layers")]
-    public System.Collections.Generic.ICollection<string>? Layers { get; set; } = default!;
+    public ICollection<string>? Layers { get; set; } = default!;
 
 
 }

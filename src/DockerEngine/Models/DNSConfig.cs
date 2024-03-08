@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -11,14 +12,14 @@ public class DNSConfig
     /// </summary>
 
     [JsonPropertyName("Nameservers")]
-    public System.Collections.Generic.ICollection<string>? Nameservers { get; set; } = default!;
+    public ICollection<string>? Nameservers { get; set; } = default!;
 
     /// <summary>
     /// A search list for host-name lookup.
     /// </summary>
 
     [JsonPropertyName("Search")]
-    public System.Collections.Generic.ICollection<string>? Search { get; set; } = default!;
+    public ICollection<string>? Search { get; set; } = default!;
 
     /// <summary>
     /// A list of internal resolver variables to be modified (e.g.,
@@ -27,7 +28,7 @@ public class DNSConfig
     /// </summary>
 
     [JsonPropertyName("Options")]
-    public System.Collections.Generic.ICollection<string>? Options { get; set; } = default!;
+    public ICollection<string>? Options { get; set; } = default!;
 
 
 }

@@ -25,7 +25,7 @@ public partial interface IDockerPluginClient
     /// <br/>- `enable=&lt;true&gt;|&lt;false&gt;`</param>
     /// <returns>No error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    Task<ICollection<Plugin>> ListAsync(string? filters = null, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Plugin>> ListAsync(string? filters = null, CancellationToken cancellationToken = default);
 
 
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -36,7 +36,7 @@ public partial interface IDockerPluginClient
     /// <br/>default if omitted.</param>
     /// <returns>no error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    Task<ICollection<PluginPrivilege>> GetPluginPrivilegesAsync(string remote, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<PluginPrivilege>> GetPluginPrivilegesAsync(string remote, CancellationToken cancellationToken = default);
 
 
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>

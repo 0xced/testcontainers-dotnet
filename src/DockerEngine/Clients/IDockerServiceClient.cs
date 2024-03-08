@@ -25,7 +25,7 @@ public partial interface IDockerServiceClient
     /// <param name="status">Include service status, with count of running and desired tasks.</param>
     /// <returns>no error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    Task<ICollection<Service>> ListAsync(string? filters = null, bool? status = null, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Service>> ListAsync(string? filters = null, bool? status = null, CancellationToken cancellationToken = default);
 
 
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>

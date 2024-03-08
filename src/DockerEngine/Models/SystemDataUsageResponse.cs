@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -12,19 +13,19 @@ public class SystemDataUsageResponse
 
 
     [JsonPropertyName("Images")]
-    public System.Collections.Generic.ICollection<ImageSummary>? Images { get; set; } = default!;
+    public ICollection<ImageSummary>? Images { get; set; } = default!;
 
 
     [JsonPropertyName("Containers")]
-    public System.Collections.Generic.ICollection<ContainerSummary>? Containers { get; set; } = default!;
+    public ICollection<ContainerSummary>? Containers { get; set; } = default!;
 
 
     [JsonPropertyName("Volumes")]
-    public System.Collections.Generic.ICollection<Volume>? Volumes { get; set; } = default!;
+    public ICollection<Volume>? Volumes { get; set; } = default!;
 
 
     [JsonPropertyName("BuildCache")]
-    public System.Collections.Generic.ICollection<BuildCache>? BuildCache { get; set; } = default!;
+    public ICollection<BuildCache>? BuildCache { get; set; } = default!;
 
 
 }

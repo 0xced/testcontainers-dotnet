@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -21,28 +22,28 @@ public class PluginsInfo
     /// </summary>
 
     [JsonPropertyName("Volume")]
-    public System.Collections.Generic.ICollection<string>? Volume { get; set; } = default!;
+    public ICollection<string>? Volume { get; set; } = default!;
 
     /// <summary>
     /// Names of available network-drivers, and network-driver plugins.
     /// </summary>
 
     [JsonPropertyName("Network")]
-    public System.Collections.Generic.ICollection<string>? Network { get; set; } = default!;
+    public ICollection<string>? Network { get; set; } = default!;
 
     /// <summary>
     /// Names of available authorization plugins.
     /// </summary>
 
     [JsonPropertyName("Authorization")]
-    public System.Collections.Generic.ICollection<string>? Authorization { get; set; } = default!;
+    public ICollection<string>? Authorization { get; set; } = default!;
 
     /// <summary>
     /// Names of available logging-drivers, and logging-driver plugins.
     /// </summary>
 
     [JsonPropertyName("Log")]
-    public System.Collections.Generic.ICollection<string>? Log { get; set; } = default!;
+    public ICollection<string>? Log { get; set; } = default!;
 
 
 }

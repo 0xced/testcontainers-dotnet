@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -21,7 +22,7 @@ public class PluginPrivilege
 
 
     [JsonPropertyName("Value")]
-    public System.Collections.Generic.ICollection<string>? Value { get; set; } = default!;
+    public ICollection<string>? Value { get; set; } = default!;
 
 
 }

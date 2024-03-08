@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -20,7 +21,7 @@ public class HealthConfig
     /// </summary>
 
     [JsonPropertyName("Test")]
-    public System.Collections.Generic.ICollection<string>? Test { get; set; } = default!;
+    public ICollection<string>? Test { get; set; } = default!;
 
     /// <summary>
     /// The time to wait between checks in nanoseconds. It should be 0 or at

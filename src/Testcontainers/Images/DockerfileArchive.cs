@@ -4,13 +4,18 @@ namespace DotNet.Testcontainers.Images
   using System.Collections.Generic;
   using System.IO;
   using System.Linq;
-  using System.Text;
   using System.Text.RegularExpressions;
   using System.Threading;
   using System.Threading.Tasks;
   using DotNet.Testcontainers.Configurations;
-  using ICSharpCode.SharpZipLib.Tar;
   using Microsoft.Extensions.Logging;
+
+#if NET8_0_OR_GREATER
+  using System.Formats.Tar;
+#else
+  using System.Text;
+  using ICSharpCode.SharpZipLib.Tar;
+#endif
 
   /// <summary>
   /// Generates a tar archive with Docker configuration files. The tar archive can be used to build a Docker image.
@@ -129,47 +134,81 @@ namespace DotNet.Testcontainers.Images
 
       using (var tarOutputFileStream = new FileStream(dockerfileArchiveFilePath, FileMode.Create, FileAccess.Write))
       {
-        using (var tarOutputStream = new TarOutputStream(tarOutputFileStream, Encoding.Default))
-        {
-          tarOutputStream.IsStreamOwner = false;
-
-          foreach (var absoluteFilePath in GetFiles(dockerfileDirectoryPath))
-          {
-            // SharpZipLib drops the root path: https://github.com/icsharpcode/SharpZipLib/pull/582.
-            var relativeFilePath = absoluteFilePath.Substring(dockerfileDirectoryPath.TrimEnd(Path.AltDirectorySeparatorChar).Length + 1);
-
-            if (dockerIgnoreFile.Denies(relativeFilePath))
-            {
-              continue;
-            }
-
-            try
-            {
-              using (var inputStream = new FileStream(absoluteFilePath, FileMode.Open, FileAccess.Read))
-              {
-                var entry = TarEntry.CreateTarEntry(relativeFilePath);
-                entry.Size = inputStream.Length;
-
-                await tarOutputStream.PutNextEntryAsync(entry, ct)
-                  .ConfigureAwait(false);
-
-                await inputStream.CopyToAsync(tarOutputStream, 81920, ct)
-                  .ConfigureAwait(false);
-
-                await tarOutputStream.CloseEntryAsync(ct)
-                  .ConfigureAwait(false);
-              }
-            }
-            catch (IOException e)
-            {
-              throw new IOException("Cannot create Docker image tar archive.", e);
-            }
-          }
-        }
+        await TarAsync(tarOutputFileStream, dockerfileDirectoryPath, dockerIgnoreFile, ct)
+          .ConfigureAwait(false);
       }
 
       return dockerfileArchiveFilePath;
     }
+
+#if NET8_0_OR_GREATER
+    private static async Task TarAsync(Stream outputStream, string dockerfileDirectoryPath, DockerIgnoreFile dockerIgnoreFile, CancellationToken ct)
+    {
+      using (var writer = new TarWriter(outputStream, leaveOpen: true))
+      {
+        foreach (var absoluteFilePath in GetFiles(dockerfileDirectoryPath))
+        {
+          var relativeFilePath = absoluteFilePath[dockerfileDirectoryPath.Length..];
+
+          if (dockerIgnoreFile.Denies(relativeFilePath))
+          {
+            continue;
+          }
+
+          try
+          {
+            await writer.WriteEntryAsync(absoluteFilePath, relativeFilePath, ct)
+              .ConfigureAwait(false);
+          }
+          catch (IOException e)
+          {
+            throw new IOException("Cannot create Docker image tar archive.", e);
+          }
+        }
+      }
+    }
+#else
+    private static async Task TarAsync(Stream outputStream, string dockerfileDirectoryPath, DockerIgnoreFile dockerIgnoreFile, CancellationToken ct)
+    {
+      using (var tarOutputStream = new TarOutputStream(outputStream, Encoding.Default))
+      {
+        tarOutputStream.IsStreamOwner = false;
+
+        foreach (var absoluteFilePath in GetFiles(dockerfileDirectoryPath))
+        {
+          // SharpZipLib drops the root path: https://github.com/icsharpcode/SharpZipLib/pull/582.
+          var relativeFilePath = absoluteFilePath.Substring(dockerfileDirectoryPath.TrimEnd(Path.AltDirectorySeparatorChar).Length + 1);
+
+          if (dockerIgnoreFile.Denies(relativeFilePath))
+          {
+            continue;
+          }
+
+          try
+          {
+            using (var inputStream = new FileStream(absoluteFilePath, FileMode.Open, FileAccess.Read))
+            {
+              var entry = TarEntry.CreateTarEntry(relativeFilePath);
+              entry.Size = inputStream.Length;
+
+              await tarOutputStream.PutNextEntryAsync(entry, ct)
+                .ConfigureAwait(false);
+
+              await inputStream.CopyToAsync(tarOutputStream, 81920, ct)
+                .ConfigureAwait(false);
+
+              await tarOutputStream.CloseEntryAsync(ct)
+                .ConfigureAwait(false);
+            }
+          }
+          catch (IOException e)
+          {
+            throw new IOException("Cannot create Docker image tar archive.", e);
+          }
+        }
+      }
+    }
+#endif
 
     /// <summary>
     /// Gets all accepted Docker archive files.

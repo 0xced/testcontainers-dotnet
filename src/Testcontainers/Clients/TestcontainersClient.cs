@@ -5,7 +5,6 @@ namespace DotNet.Testcontainers.Clients
   using System.IO;
   using System.Linq;
   using System.Reflection;
-  using System.Text;
   using System.Threading;
   using System.Threading.Tasks;
   using Docker.DotNet;
@@ -13,8 +12,14 @@ namespace DotNet.Testcontainers.Clients
   using DotNet.Testcontainers.Configurations;
   using DotNet.Testcontainers.Containers;
   using DotNet.Testcontainers.Images;
-  using ICSharpCode.SharpZipLib.Tar;
   using Microsoft.Extensions.Logging;
+
+#if NET8_0_OR_GREATER
+  using System.Formats.Tar;
+#else
+  using System.Text;
+  using ICSharpCode.SharpZipLib.Tar;
+#endif
 
   /// <inheritdoc cref="ITestcontainersClient" />
   internal sealed class TestcontainersClient : ITestcontainersClient
@@ -257,6 +262,18 @@ namespace DotNet.Testcontainers.Clients
         throw new FileNotFoundException(null, Path.GetFileName(containerPath), e);
       }
 
+#if NET8_0_OR_GREATER
+      using (var reader = new TarReader(tarStream))
+      {
+        var entry = await reader.GetNextEntryAsync(copyData: true, ct)
+          .ConfigureAwait(false);
+        if (entry is { DataStream: MemoryStream memoryStream, EntryType: TarEntryType.RegularFile })
+        {
+          return memoryStream.ToArray();
+        }
+        throw new InvalidOperationException("Cannot read from a directory. Use a file instead.");
+      }
+#else
       using (var tarInputStream = new TarInputStream(tarStream, Encoding.Default))
       {
         tarInputStream.IsStreamOwner = true;
@@ -281,6 +298,7 @@ namespace DotNet.Testcontainers.Clients
 
         return readBytes;
       }
+#endif
     }
 
     /// <inheritdoc />

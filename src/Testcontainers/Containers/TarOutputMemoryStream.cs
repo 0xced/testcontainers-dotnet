@@ -1,18 +1,27 @@
 namespace DotNet.Testcontainers.Containers
 {
-  using System;
   using System.IO;
-  using System.Text;
   using System.Threading;
   using System.Threading.Tasks;
   using DotNet.Testcontainers.Configurations;
-  using ICSharpCode.SharpZipLib.Tar;
   using Microsoft.Extensions.Logging;
+
+#if NET8_0_OR_GREATER
+  using System.Formats.Tar;
+#else
+  using System;
+  using System.Text;
+  using ICSharpCode.SharpZipLib.Tar;
+#endif
 
   /// <summary>
   /// Represent a tar archive file.
   /// </summary>
+#if NET8_0_OR_GREATER
+  public sealed class TarOutputMemoryStream : MemoryStream
+#else
   public sealed class TarOutputMemoryStream : TarOutputStream
+#endif
   {
     private readonly string _targetDirectoryPath;
 
@@ -36,11 +45,21 @@ namespace DotNet.Testcontainers.Containers
     /// </summary>
     /// <param name="logger">The logger.</param>
     public TarOutputMemoryStream(ILogger logger)
+#if !NET8_0_OR_GREATER
       : base(new MemoryStream(), Encoding.Default)
+#endif
     {
       _logger = logger;
+#if NETSTANDARD
       IsStreamOwner = false;
+#endif
     }
+
+#if !NETSTANDARD
+    public override void Close()
+    {
+    }
+#endif
 
     /// <summary>
     /// Gets the content length.
@@ -63,13 +82,26 @@ namespace DotNet.Testcontainers.Containers
 
       var targetFilePath = Unix.Instance.NormalizePath(resourceMapping.Target);
 
+      _logger.LogInformation("Add file to tar archive: Content length: {Length} byte(s), Target file: \"{Target}\"", fileContent.Length, targetFilePath);
+
+#if NET8_0_OR_GREATER
+      using (var writer = new TarWriter(this, leaveOpen: true))
+      {
+        var entry = new PaxTarEntry(TarEntryType.RegularFile, targetFilePath)
+        {
+          Mode = (UnixFileMode)resourceMapping.FileMode,
+          DataStream = new MemoryStream(fileContent),
+        };
+        await writer.WriteEntryAsync(entry, ct)
+          .ConfigureAwait(false);
+      }
+      _ = Interlocked.Add(ref _contentLength, Length);
+#else
       var tarEntry = new TarEntry(new TarHeader());
       tarEntry.TarHeader.Name = targetFilePath;
       tarEntry.TarHeader.Mode = (int)resourceMapping.FileMode;
       tarEntry.TarHeader.ModTime = DateTime.UtcNow;
       tarEntry.Size = fileContent.Length;
-
-      _logger.LogInformation("Add file to tar archive: Content length: {Length} byte(s), Target file: \"{Target}\"", tarEntry.Size, targetFilePath);
 
       await PutNextEntryAsync(tarEntry, ct)
         .ConfigureAwait(false);
@@ -86,6 +118,7 @@ namespace DotNet.Testcontainers.Containers
         .ConfigureAwait(false);
 
       _ = Interlocked.Add(ref _contentLength, tarEntry.Size);
+#endif
     }
 
     /// <summary>
@@ -131,13 +164,26 @@ namespace DotNet.Testcontainers.Containers
       {
         var targetFilePath = Unix.Instance.NormalizePath(Path.Combine(_targetDirectoryPath, file.FullName.Substring(directory.FullName.TrimEnd(Path.DirectorySeparatorChar).Length + 1)));
 
+        _logger.LogInformation("Add file to tar archive: Source file: \"{Source}\", Target file: \"{Target}\"", file.FullName, targetFilePath);
+
+#if NET8_0_OR_GREATER
+        using (var writer = new TarWriter(this, leaveOpen: true))
+        {
+          var entry = new PaxTarEntry(TarEntryType.RegularFile, targetFilePath)
+          {
+            Mode = (UnixFileMode)fileMode,
+            DataStream = stream,
+          };
+          await writer.WriteEntryAsync(entry, ct)
+            .ConfigureAwait(false);
+        }
+        _ = Interlocked.Add(ref _contentLength, Length);
+#else
         var tarEntry = new TarEntry(new TarHeader());
         tarEntry.TarHeader.Name = targetFilePath;
         tarEntry.TarHeader.Mode = (int)fileMode;
         tarEntry.TarHeader.ModTime = file.LastWriteTimeUtc;
         tarEntry.Size = stream.Length;
-
-        _logger.LogInformation("Add file to tar archive: Source file: \"{Source}\", Target file: \"{Target}\"", tarEntry.TarHeader.Name, targetFilePath);
 
         await PutNextEntryAsync(tarEntry, ct)
           .ConfigureAwait(false);
@@ -149,6 +195,7 @@ namespace DotNet.Testcontainers.Containers
           .ConfigureAwait(false);
 
         _ = Interlocked.Add(ref _contentLength, tarEntry.Size);
+#endif
       }
     }
   }

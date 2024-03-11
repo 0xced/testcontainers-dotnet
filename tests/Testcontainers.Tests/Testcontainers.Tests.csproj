@@ -13,6 +13,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk"/>
     <PackageReference Include="BouncyCastle.Cryptography"/>
     <PackageReference Include="coverlet.collector"/>
+    <PackageReference Include="SharpZipLib"/>
     <PackageReference Include="xunit.runner.visualstudio"/>
     <PackageReference Include="xunit"/>
   </ItemGroup>

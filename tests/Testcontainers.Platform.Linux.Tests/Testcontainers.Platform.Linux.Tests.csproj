@@ -9,6 +9,7 @@
         <PackageReference Include="Microsoft.Extensions.Diagnostics.Testing"/>
         <PackageReference Include="coverlet.collector"/>
         <PackageReference Include="ReflectionMagic"/>
+        <PackageReference Include="SharpZipLib"/>
         <PackageReference Include="xunit.runner.visualstudio"/>
         <PackageReference Include="xunit"/>
     </ItemGroup>

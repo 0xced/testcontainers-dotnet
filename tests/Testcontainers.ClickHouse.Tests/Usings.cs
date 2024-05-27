@@ -1,6 +1,9 @@
+global using System;
 global using System.Data;
 global using System.Data.Common;
 global using System.Threading.Tasks;
 global using ClickHouse.Client.ADO;
 global using DotNet.Testcontainers.Commons;
+global using Testcontainers.Xunit;
 global using Xunit;
+global using Xunit.Abstractions;

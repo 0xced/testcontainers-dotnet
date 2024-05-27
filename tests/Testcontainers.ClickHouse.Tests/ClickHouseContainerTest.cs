@@ -1,25 +1,16 @@
 namespace Testcontainers.ClickHouse;
 
-public sealed class ClickHouseContainerTest : IAsyncLifetime
+public sealed class ClickHouseContainerTest(ITestOutputHelper testOutputHelper, Func<ClickHouseBuilder, ClickHouseBuilder> configure = null)
+    : DbContainerTest<ClickHouseBuilder, ClickHouseContainer>(testOutputHelper, configure)
 {
-    private readonly ClickHouseContainer _clickHouseContainer = new ClickHouseBuilder().Build();
-
-    public Task InitializeAsync()
-    {
-        return _clickHouseContainer.StartAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-        return _clickHouseContainer.DisposeAsync().AsTask();
-    }
+    public override DbProviderFactory DbProviderFactory { get; } = new ClickHouseConnectionFactory();
 
     [Fact]
     [Trait(nameof(DockerCli.DockerPlatform), nameof(DockerCli.DockerPlatform.Linux))]
     public void ConnectionStateReturnsOpen()
     {
         // Given
-        using DbConnection connection = new ClickHouseConnection(_clickHouseContainer.GetConnectionString());
+        using DbConnection connection = CreateConnection();
 
         // When
         connection.Open();
@@ -36,7 +27,7 @@ public sealed class ClickHouseContainerTest : IAsyncLifetime
         const string scriptContent = "SELECT 1;";
 
         // When
-        var execResult = await _clickHouseContainer.ExecScriptAsync(scriptContent)
+        var execResult = await Container.ExecScriptAsync(scriptContent)
             .ConfigureAwait(true);
 
         // Then

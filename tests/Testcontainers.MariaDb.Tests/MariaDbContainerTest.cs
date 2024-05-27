@@ -1,30 +1,13 @@
 namespace Testcontainers.MariaDb;
 
-public abstract class MariaDbContainerTest : IAsyncLifetime
+public abstract class MariaDbContainerTest(MariaDbContainerTest.MariaDbFixture mariaDbFixture)
 {
-    private readonly MariaDbContainer _mariaDbContainer;
-
-    protected MariaDbContainerTest(MariaDbContainer mariaDbContainer)
-    {
-        _mariaDbContainer = mariaDbContainer;
-    }
-
-    public Task InitializeAsync()
-    {
-        return _mariaDbContainer.StartAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-        return _mariaDbContainer.DisposeAsync().AsTask();
-    }
-
     [Fact]
     [Trait(nameof(DockerCli.DockerPlatform), nameof(DockerCli.DockerPlatform.Linux))]
     public void ConnectionStateReturnsOpen()
     {
         // Given
-        using DbConnection connection = new MySqlConnection(_mariaDbContainer.GetConnectionString());
+        using DbConnection connection = mariaDbFixture.CreateConnection();
 
         // When
         connection.Open();
@@ -41,7 +24,7 @@ public abstract class MariaDbContainerTest : IAsyncLifetime
         const string scriptContent = "SELECT 1;";
 
         // When
-        var execResult = await _mariaDbContainer.ExecScriptAsync(scriptContent)
+        var execResult = await mariaDbFixture.Container.ExecScriptAsync(scriptContent)
             .ConfigureAwait(true);
 
         // Then
@@ -50,20 +33,18 @@ public abstract class MariaDbContainerTest : IAsyncLifetime
     }
 
     [UsedImplicitly]
-    public sealed class MariaDbUserConfiguration : MariaDbContainerTest
-    {
-        public MariaDbUserConfiguration()
-            : base(new MariaDbBuilder().Build())
-        {
-        }
-    }
+    public sealed class MariaDbUserConfiguration(MariaDbFixture fixture) : MariaDbContainerTest(fixture), IClassFixture<MariaDbFixture>;
 
     [UsedImplicitly]
-    public sealed class MariaDbRootConfiguration : MariaDbContainerTest
+    public sealed class MariaDbRootConfiguration(MariaDbRootUserFixture fixture) : MariaDbContainerTest(fixture), IClassFixture<MariaDbRootUserFixture>;
+
+    public class MariaDbFixture(IMessageSink messageSink) : DbContainerFixture<MariaDbBuilder, MariaDbContainer>(messageSink)
     {
-        public MariaDbRootConfiguration()
-            : base(new MariaDbBuilder().WithUsername("root").Build())
-        {
-        }
+        public override DbProviderFactory DbProviderFactory => MySqlConnectorFactory.Instance;
+    }
+
+    public class MariaDbRootUserFixture(IMessageSink messageSink) : MariaDbFixture(messageSink)
+    {
+        protected override MariaDbBuilder Configure(MariaDbBuilder builder) => builder.WithUsername("root");
     }
 }

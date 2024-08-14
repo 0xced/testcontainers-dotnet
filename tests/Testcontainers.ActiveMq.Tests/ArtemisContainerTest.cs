@@ -1,38 +1,16 @@
 namespace Testcontainers.ActiveMq;
 
-public abstract class ArtemisContainerTest : IAsyncLifetime
+public abstract class ArtemisContainerTest(ITestOutputHelper testOutputHelper, string userName, string password, Func<ArtemisBuilder, ArtemisBuilder> configure = null)
+    : ContainerTest<ArtemisBuilder, ArtemisContainer>(testOutputHelper, configure)
 {
-    private readonly ArtemisContainer _artemisContainer;
-
-    private readonly string _username;
-
-    private readonly string _password;
-
-    private ArtemisContainerTest(ArtemisContainer artemisContainer, string username, string password)
-    {
-        _artemisContainer = artemisContainer;
-        _username = username;
-        _password = password;
-    }
-
-    public Task InitializeAsync()
-    {
-        return _artemisContainer.StartAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-        return _artemisContainer.DisposeAsync().AsTask();
-    }
-
     [Fact]
     [Trait(nameof(DockerCli.DockerPlatform), nameof(DockerCli.DockerPlatform.Linux))]
     public async Task EstablishesConnection()
     {
         // Given
-        var connectionFactory = new ConnectionFactory(_artemisContainer.GetBrokerAddress());
-        connectionFactory.UserName = _username;
-        connectionFactory.Password = _password;
+        var connectionFactory = new ConnectionFactory(Container.GetBrokerAddress());
+        connectionFactory.UserName = userName;
+        connectionFactory.Password = password;
 
         // When
         using var connection = await connectionFactory.CreateConnectionAsync()
@@ -69,33 +47,19 @@ public abstract class ArtemisContainerTest : IAsyncLifetime
     }
 
     [UsedImplicitly]
-    public sealed class DefaultCredentialsConfiguration : ArtemisContainerTest
-    {
-        public DefaultCredentialsConfiguration()
-            : base(new ArtemisBuilder().Build(), ArtemisBuilder.DefaultUsername, ArtemisBuilder.DefaultPassword)
-        {
-        }
-    }
+    public sealed class DefaultCredentialsConfiguration(ITestOutputHelper testOutputHelper)
+        : ArtemisContainerTest(testOutputHelper, ArtemisBuilder.DefaultUsername, ArtemisBuilder.DefaultPassword);
 
     [UsedImplicitly]
-    public sealed class CustomCredentialsConfiguration : ArtemisContainerTest
+    public sealed class CustomCredentialsConfiguration(ITestOutputHelper testOutputHelper)
+        : ArtemisContainerTest(testOutputHelper, Username, Password, builder => builder.WithUsername(Username).WithPassword(Password))
     {
         private static readonly string Username = Guid.NewGuid().ToString("D");
 
         private static readonly string Password = Guid.NewGuid().ToString("D");
-
-        public CustomCredentialsConfiguration()
-            : base(new ArtemisBuilder().WithUsername(Username).WithPassword(Password).Build(), Username, Password)
-        {
-        }
     }
 
     [UsedImplicitly]
-    public sealed class NoAuthCredentialsConfiguration : ArtemisContainerTest
-    {
-        public NoAuthCredentialsConfiguration()
-            : base(new ArtemisBuilder().WithEnvironment("ANONYMOUS_LOGIN", bool.TrueString).Build(), string.Empty, string.Empty)
-        {
-        }
-    }
+    public sealed class NoAuthCredentialsConfiguration(ITestOutputHelper testOutputHelper)
+        : ArtemisContainerTest(testOutputHelper, string.Empty, string.Empty, builder => builder.WithEnvironment("ANONYMOUS_LOGIN", bool.TrueString));
 }

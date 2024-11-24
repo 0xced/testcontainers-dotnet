@@ -1,30 +1,13 @@
 namespace Testcontainers.LocalStack;
 
-public abstract class LocalStackContainerTest : IAsyncLifetime
+public abstract class LocalStackContainerTest(LocalStackContainerTest.LocalStackFixture localStackFixture)
 {
     private const string AwsService = "Service";
-
-    private readonly LocalStackContainer _localStackContainer;
 
     static LocalStackContainerTest()
     {
         Environment.SetEnvironmentVariable("AWS_ACCESS_KEY_ID", CommonCredentials.AwsAccessKey);
         Environment.SetEnvironmentVariable("AWS_SECRET_ACCESS_KEY", CommonCredentials.AwsSecretKey);
-    }
-
-    private LocalStackContainerTest(LocalStackContainer localStackContainer)
-    {
-        _localStackContainer = localStackContainer;
-    }
-
-    public Task InitializeAsync()
-    {
-        return _localStackContainer.StartAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-        return _localStackContainer.DisposeAsync().AsTask();
     }
 
     [Fact]
@@ -34,7 +17,7 @@ public abstract class LocalStackContainerTest : IAsyncLifetime
     {
         // Given
         var config = new AmazonCloudWatchLogsConfig();
-        config.ServiceURL = _localStackContainer.GetConnectionString();
+        config.ServiceURL = localStackFixture.Container.GetConnectionString();
 
         using var client = new AmazonCloudWatchLogsClient(config);
 
@@ -59,7 +42,7 @@ public abstract class LocalStackContainerTest : IAsyncLifetime
         var tableName = Guid.NewGuid().ToString("D");
 
         var config = new AmazonDynamoDBConfig();
-        config.ServiceURL = _localStackContainer.GetConnectionString();
+        config.ServiceURL = localStackFixture.Container.GetConnectionString();
 
         using var client = new AmazonDynamoDBClient(config);
 
@@ -98,7 +81,7 @@ public abstract class LocalStackContainerTest : IAsyncLifetime
     {
         // Given
         var config = new AmazonS3Config();
-        config.ServiceURL = _localStackContainer.GetConnectionString();
+        config.ServiceURL = localStackFixture.Container.GetConnectionString();
 
         using var client = new AmazonS3Client(config);
 
@@ -117,7 +100,7 @@ public abstract class LocalStackContainerTest : IAsyncLifetime
     {
         // Given
         var config = new AmazonSimpleNotificationServiceConfig();
-        config.ServiceURL = _localStackContainer.GetConnectionString();
+        config.ServiceURL = localStackFixture.Container.GetConnectionString();
 
         using var client = new AmazonSimpleNotificationServiceClient(config);
 
@@ -136,7 +119,7 @@ public abstract class LocalStackContainerTest : IAsyncLifetime
     {
         // Given
         var config = new AmazonSQSConfig();
-        config.ServiceURL = _localStackContainer.GetConnectionString();
+        config.ServiceURL = localStackFixture.Container.GetConnectionString();
 
         using var client = new AmazonSQSClient(config);
 
@@ -149,20 +132,15 @@ public abstract class LocalStackContainerTest : IAsyncLifetime
     }
 
     [UsedImplicitly]
-    public sealed class LocalStackDefaultConfiguration : LocalStackContainerTest
-    {
-        public LocalStackDefaultConfiguration()
-            : base(new LocalStackBuilder().Build())
-        {
-        }
-    }
+    public sealed class LocalStackDefaultConfiguration(LocalStackFixture fixture) : LocalStackContainerTest(fixture), IClassFixture<LocalStackFixture>;
 
     [UsedImplicitly]
-    public sealed class LocalStackV1Configuration : LocalStackContainerTest
+    public sealed class LocalStackV1Configuration(LocalStackV1Fixture fixture) : LocalStackContainerTest(fixture), IClassFixture<LocalStackV1Fixture>;
+
+    public class LocalStackFixture(IMessageSink messageSink) : ContainerFixture<LocalStackBuilder, LocalStackContainer>(messageSink);
+
+    public class LocalStackV1Fixture(IMessageSink messageSink) : LocalStackFixture(messageSink)
     {
-        public LocalStackV1Configuration()
-            : base(new LocalStackBuilder().WithImage("localstack/localstack:1.4").Build())
-        {
-        }
+        protected override LocalStackBuilder Configure(LocalStackBuilder builder) => builder.WithImage("localstack/localstack:1.4");
     }
 }

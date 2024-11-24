@@ -1,26 +1,14 @@
 namespace Testcontainers.Elasticsearch;
 
-public sealed class ElasticsearchContainerTest : IAsyncLifetime
+// # --8<-- [start:UseElasticsearchContainer]
+public sealed class ElasticsearchContainerTest(ITestOutputHelper testOutputHelper) : ContainerTest<ElasticsearchBuilder, ElasticsearchContainer>(testOutputHelper)
 {
-    // # --8<-- [start:UseElasticsearchContainer]
-    private readonly ElasticsearchContainer _elasticsearchContainer = new ElasticsearchBuilder().Build();
-
-    public Task InitializeAsync()
-    {
-        return _elasticsearchContainer.StartAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-        return _elasticsearchContainer.DisposeAsync().AsTask();
-    }
-
     [Fact]
     [Trait(nameof(DockerCli.DockerPlatform), nameof(DockerCli.DockerPlatform.Linux))]
     public void PingReturnsValidResponse()
     {
         // Given
-        var clientSettings = new ElasticsearchClientSettings(new Uri(_elasticsearchContainer.GetConnectionString()));
+        var clientSettings = new ElasticsearchClientSettings(new Uri(Container.GetConnectionString()));
         clientSettings.ServerCertificateValidationCallback(CertificateValidations.AllowAll);
 
         var client = new ElasticsearchClient(clientSettings);
@@ -31,5 +19,5 @@ public sealed class ElasticsearchContainerTest : IAsyncLifetime
         // Then
         Assert.True(response.IsValidResponse);
     }
-    // # --8<-- [end:UseElasticsearchContainer]
 }
+// # --8<-- [end:UseElasticsearchContainer]

@@ -6,4 +6,6 @@ global using System.Threading.Tasks;
 global using DotNet.Testcontainers.Commons;
 global using k8s;
 global using k8s.Models;
+global using Testcontainers.Xunit;
 global using Xunit;
+global using Xunit.Abstractions;

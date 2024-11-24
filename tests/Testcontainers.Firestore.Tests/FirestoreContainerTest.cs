@@ -1,19 +1,7 @@
 namespace Testcontainers.Firestore;
 
-public sealed class FirestoreContainerTest : IAsyncLifetime
+public sealed class FirestoreContainerTest(ITestOutputHelper testOutputHelper) : ContainerTest<FirestoreBuilder, FirestoreContainer>(testOutputHelper)
 {
-    private readonly FirestoreContainer _firestoreContainer = new FirestoreBuilder().Build();
-
-    public Task InitializeAsync()
-    {
-        return _firestoreContainer.StartAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-        return _firestoreContainer.DisposeAsync().AsTask();
-    }
-
     [Fact]
     [Trait(nameof(DockerCli.DockerPlatform), nameof(DockerCli.DockerPlatform.Linux))]
     public async Task GetSnapshotReturnsSetDocument()
@@ -30,7 +18,7 @@ public sealed class FirestoreContainerTest : IAsyncLifetime
 
         var firestoreDbBuilder = new FirestoreDbBuilder();
         firestoreDbBuilder.ProjectId = projectId;
-        firestoreDbBuilder.Endpoint = _firestoreContainer.GetEmulatorEndpoint();
+        firestoreDbBuilder.Endpoint = Container.GetEmulatorEndpoint();
         firestoreDbBuilder.ChannelCredentials = ChannelCredentials.Insecure;
 
         var firestoreDb = await firestoreDbBuilder.BuildAsync()

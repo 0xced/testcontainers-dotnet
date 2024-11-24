@@ -1,19 +1,7 @@
 namespace Testcontainers.Bigtable;
 
-public sealed class BigtableContainerTest : IAsyncLifetime
+public sealed class BigtableContainerTest(ITestOutputHelper testOutputHelper) : ContainerTest<BigtableBuilder, BigtableContainer>(testOutputHelper)
 {
-    private readonly BigtableContainer _bigtableContainer = new BigtableBuilder().Build();
-
-    public Task InitializeAsync()
-    {
-        return _bigtableContainer.StartAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-        return _bigtableContainer.DisposeAsync().AsTask();
-    }
-
     [Fact]
     [Trait(nameof(DockerCli.DockerPlatform), nameof(DockerCli.DockerPlatform.Linux))]
     public async Task GetTableReturnsCreateTable()
@@ -38,7 +26,7 @@ public sealed class BigtableContainerTest : IAsyncLifetime
         table.ColumnFamilies.Add(nameof(columnFamily), columnFamily);
 
         var bigtableClientBuilder = new BigtableTableAdminClientBuilder();
-        bigtableClientBuilder.Endpoint = _bigtableContainer.GetEmulatorEndpoint();
+        bigtableClientBuilder.Endpoint = Container.GetEmulatorEndpoint();
         bigtableClientBuilder.ChannelCredentials = ChannelCredentials.Insecure;
 
         // When

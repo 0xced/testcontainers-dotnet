@@ -1,19 +1,7 @@
 namespace Testcontainers.Consul;
 
-public sealed class ConsulContainerTest : IAsyncLifetime
+public sealed class ConsulContainerTest(ITestOutputHelper testOutputHelper) : ContainerTest<ConsulBuilder, ConsulContainer>(testOutputHelper)
 {
-    private readonly ConsulContainer _consulContainer = new ConsulBuilder().Build();
-
-    public Task InitializeAsync()
-    {
-        return _consulContainer.StartAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-        return _consulContainer.DisposeAsync().AsTask();
-    }
-
     [Fact]
     [Trait(nameof(DockerCli.DockerPlatform), nameof(DockerCli.DockerPlatform.Linux))]
     public async Task GetItemReturnsPutItem()
@@ -27,7 +15,7 @@ public sealed class ConsulContainerTest : IAsyncLifetime
         expected.Value = Encoding.Default.GetBytes(helloWorld);
 
         var consulClientConfiguration = new ConsulClientConfiguration();
-        consulClientConfiguration.Address = new Uri(_consulContainer.GetBaseAddress());
+        consulClientConfiguration.Address = new Uri(Container.GetBaseAddress());
 
         using var consulClient = new ConsulClient(consulClientConfiguration);
 

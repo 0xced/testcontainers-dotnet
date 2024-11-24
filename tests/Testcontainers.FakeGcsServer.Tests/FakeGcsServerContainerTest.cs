@@ -1,19 +1,7 @@
 namespace Testcontainers.FakeGcsServer;
 
-public sealed class FakeGcsServerContainerTest : IAsyncLifetime
+public sealed class FakeGcsServerContainerTest(ITestOutputHelper testOutputHelper) : ContainerTest<FakeGcsServerBuilder, FakeGcsServerContainer>(testOutputHelper)
 {
-    private readonly FakeGcsServerContainer _fakeGcsServerContainer = new FakeGcsServerBuilder().Build();
-
-    public Task InitializeAsync()
-    {
-        return _fakeGcsServerContainer.StartAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-        return _fakeGcsServerContainer.DisposeAsync().AsTask();
-    }
-
     [Fact]
     [Trait(nameof(DockerCli.DockerPlatform), nameof(DockerCli.DockerPlatform.Linux))]
     public async Task DownloadObjectReturnsUploadObject()
@@ -33,7 +21,7 @@ public sealed class FakeGcsServerContainerTest : IAsyncLifetime
 
         var storageClientBuilder = new StorageClientBuilder();
         storageClientBuilder.UnauthenticatedAccess = true;
-        storageClientBuilder.BaseUri = _fakeGcsServerContainer.GetConnectionString();
+        storageClientBuilder.BaseUri = Container.GetConnectionString();
 
         // When
         var client = await storageClientBuilder.BuildAsync()

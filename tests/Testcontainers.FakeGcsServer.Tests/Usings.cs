@@ -4,4 +4,6 @@ global using System.Text;
 global using System.Threading.Tasks;
 global using DotNet.Testcontainers.Commons;
 global using Google.Cloud.Storage.V1;
+global using Testcontainers.Xunit;
 global using Xunit;
+global using Xunit.Abstractions;

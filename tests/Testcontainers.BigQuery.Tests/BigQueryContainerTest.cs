@@ -1,19 +1,7 @@
 namespace Testcontainers.BigQuery;
 
-public sealed class BigQueryContainerTest : IAsyncLifetime
+public sealed class BigQueryContainerTest(ContainerFixture<BigQueryBuilder, BigQueryContainer> fixture) : IClassFixture<ContainerFixture<BigQueryBuilder, BigQueryContainer>>
 {
-    private readonly BigQueryContainer _bigQueryContainer = new BigQueryBuilder().Build();
-
-    public Task InitializeAsync()
-    {
-        return _bigQueryContainer.StartAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-        return _bigQueryContainer.DisposeAsync().AsTask();
-    }
-
     [Fact]
     [Trait(nameof(DockerCli.DockerPlatform), nameof(DockerCli.DockerPlatform.Linux))]
     public async Task ExecuteQueryReturnsInsertRow()
@@ -26,7 +14,7 @@ public sealed class BigQueryContainerTest : IAsyncLifetime
         var utcNowWithoutMilliseconds = new DateTime(utcNow.Year, utcNow.Month, utcNow.Day, utcNow.Hour, utcNow.Minute, utcNow.Second, DateTimeKind.Utc);
 
         var bigQueryClientBuilder = new BigQueryClientBuilder();
-        bigQueryClientBuilder.BaseUri = _bigQueryContainer.GetEmulatorEndpoint();
+        bigQueryClientBuilder.BaseUri = fixture.Container.GetEmulatorEndpoint();
         bigQueryClientBuilder.ProjectId = BigQueryBuilder.DefaultProjectId;
         bigQueryClientBuilder.Credential = new Credential();
 

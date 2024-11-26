@@ -1,30 +1,13 @@
 namespace Testcontainers.MySql;
 
-public abstract class MySqlContainerTest : IAsyncLifetime
+public abstract class MySqlContainerTest(MySqlContainerTest.MySqlFixture mySqlFixture)
 {
-    private readonly MySqlContainer _mySqlContainer;
-
-    protected MySqlContainerTest(MySqlContainer mySqlContainer)
-    {
-        _mySqlContainer = mySqlContainer;
-    }
-
-    public Task InitializeAsync()
-    {
-        return _mySqlContainer.StartAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-        return _mySqlContainer.DisposeAsync().AsTask();
-    }
-
     [Fact]
     [Trait(nameof(DockerCli.DockerPlatform), nameof(DockerCli.DockerPlatform.Linux))]
     public void ConnectionStateReturnsOpen()
     {
         // Given
-        using DbConnection connection = new MySqlConnection(_mySqlContainer.GetConnectionString());
+        using DbConnection connection = mySqlFixture.CreateConnection();
 
         // When
         connection.Open();
@@ -41,7 +24,7 @@ public abstract class MySqlContainerTest : IAsyncLifetime
         const string scriptContent = "SELECT 1;";
 
         // When
-        var execResult = await _mySqlContainer.ExecScriptAsync(scriptContent)
+        var execResult = await mySqlFixture.Container.ExecScriptAsync(scriptContent)
             .ConfigureAwait(true);
 
         // Then
@@ -50,30 +33,29 @@ public abstract class MySqlContainerTest : IAsyncLifetime
     }
 
     [UsedImplicitly]
-    public sealed class MySqlUserConfiguration : MySqlContainerTest
+    public sealed class MySqlUserConfiguration(MySqlFixture fixture) : MySqlContainerTest(fixture), IClassFixture<MySqlFixture>;
+
+    [UsedImplicitly]
+    public sealed class MySqlRootConfiguration(MySqlRootFixture fixture) : MySqlContainerTest(fixture), IClassFixture<MySqlRootFixture>;
+
+    [UsedImplicitly]
+    // https://github.com/testcontainers/testcontainers-dotnet/issues/1142
+    public sealed class GitHubIssue1142(MySqlGitHubIssue1142Fixture fixture) : MySqlContainerTest(fixture), IClassFixture<MySqlGitHubIssue1142Fixture>;
+
+    public class MySqlFixture(IMessageSink messageSink) : DbContainerFixture<MySqlBuilder, MySqlContainer>(messageSink)
     {
-        public MySqlUserConfiguration()
-            : base(new MySqlBuilder().Build())
-        {
-        }
+        public override DbProviderFactory DbProviderFactory => MySqlConnectorFactory.Instance;
     }
 
     [UsedImplicitly]
-    public sealed class MySqlRootConfiguration : MySqlContainerTest
+    public class MySqlRootFixture(IMessageSink messageSink) : MySqlFixture(messageSink)
     {
-        public MySqlRootConfiguration()
-            : base(new MySqlBuilder().WithUsername("root").Build())
-        {
-        }
+        protected override MySqlBuilder Configure(MySqlBuilder builder) => builder.WithUsername("root");
     }
 
     [UsedImplicitly]
-    public sealed class GitHubIssue1142 : MySqlContainerTest
+    public class MySqlGitHubIssue1142Fixture(IMessageSink messageSink) : MySqlFixture(messageSink)
     {
-        // https://github.com/testcontainers/testcontainers-dotnet/issues/1142.
-        public GitHubIssue1142()
-            : base(new MySqlBuilder().WithImage("mysql:8.0.28").Build())
-        {
-        }
+        protected override MySqlBuilder Configure(MySqlBuilder builder) => builder.WithImage("mysql:8.0.28");
     }
 }

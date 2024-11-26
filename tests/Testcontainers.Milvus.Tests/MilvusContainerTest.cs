@@ -1,32 +1,15 @@
 namespace Testcontainers.Milvus;
 
-public abstract class MilvusContainerTest : IAsyncLifetime
+public abstract class MilvusContainerTest(ITestOutputHelper testOutputHelper) : ContainerTest<MilvusBuilder, MilvusContainer>(testOutputHelper)
 {
     private const string MilvusVersion = "v2.3.10";
-
-    private readonly MilvusContainer _milvusContainer;
-
-    private MilvusContainerTest(MilvusContainer milvusContainer)
-    {
-        _milvusContainer = milvusContainer;
-    }
-
-    public Task InitializeAsync()
-    {
-        return _milvusContainer.StartAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-        return _milvusContainer.DisposeAsync().AsTask();
-    }
 
     [Fact]
     [Trait(nameof(DockerCli.DockerPlatform), nameof(DockerCli.DockerPlatform.Linux))]
     public async Task GetVersionReturnsExpectedVersion()
     {
         // Given
-        using var client = new MilvusClient(_milvusContainer.GetEndpoint());
+        using var client = new MilvusClient(Container.GetEndpoint());
 
         // When
         var version = await client.GetVersionAsync()
@@ -37,25 +20,18 @@ public abstract class MilvusContainerTest : IAsyncLifetime
     }
 
     [UsedImplicitly]
-    public sealed class MilvusDefaultConfiguration : MilvusContainerTest
+    public sealed class MilvusDefaultConfiguration(ITestOutputHelper testOutputHelper) : MilvusContainerTest(testOutputHelper)
     {
-        public MilvusDefaultConfiguration()
-            : base(new MilvusBuilder().WithImage("milvusdb/milvus:" + MilvusVersion).Build())
-        {
-        }
+        protected override MilvusBuilder Configure(MilvusBuilder builder) => builder.WithImage("milvusdb/milvus:" + MilvusVersion);
     }
 
     [UsedImplicitly]
-    public sealed class MilvusSidecarConfiguration : MilvusContainerTest
+    public sealed class MilvusSidecarConfiguration(ITestOutputHelper testOutputHelper) : MilvusContainerTest(testOutputHelper)
     {
-        public MilvusSidecarConfiguration()
-            : this(new NetworkBuilder().Build())
+        protected override MilvusBuilder Configure(MilvusBuilder builder)
         {
-        }
-
-        private MilvusSidecarConfiguration(INetwork network)
-            : base(new MilvusBuilder()
-                .WithImage("milvusdb/milvus:" + MilvusVersion)
+            var network = new NetworkBuilder().Build();
+            return builder.WithImage("milvusdb/milvus:" + MilvusVersion)
                 .WithEtcdEndpoint("etcd:2379")
                 .DependsOn(new ContainerBuilder()
                     .WithImage("quay.io/coreos/etcd:v3.5.5")
@@ -71,9 +47,7 @@ public abstract class MilvusContainerTest : IAsyncLifetime
                     .WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged("ready to serve client requests"))
                     .DependsOn(network)
                     .Build())
-                .DependsOn(network)
-                .Build())
-        {
+                .DependsOn(network);
         }
     }
 }

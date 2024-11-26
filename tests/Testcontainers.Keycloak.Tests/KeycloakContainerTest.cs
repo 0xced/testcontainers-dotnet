@@ -1,30 +1,15 @@
+using Xunit.Abstractions;
+
 namespace Testcontainers.Keycloak;
 
-public abstract class KeycloakContainerTest : IAsyncLifetime
+public abstract class KeycloakContainerTest(ITestOutputHelper testOutputHelper) : ContainerTest<KeycloakBuilder, KeycloakContainer>(testOutputHelper)
 {
-    private readonly KeycloakContainer _keycloakContainer;
-
-    private KeycloakContainerTest(KeycloakContainer keycloakContainer)
-    {
-        _keycloakContainer = keycloakContainer;
-    }
-
-    public Task InitializeAsync()
-    {
-        return _keycloakContainer.StartAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-        return _keycloakContainer.DisposeAsync().AsTask();
-    }
-
     [Fact]
     public async Task GetOpenIdEndpointReturnsHttpStatusCodeOk()
     {
         // Given
         using var httpClient = new HttpClient();
-        httpClient.BaseAddress = new Uri(_keycloakContainer.GetBaseAddress());
+        httpClient.BaseAddress = new Uri(Container.GetBaseAddress());
 
         // When
         using var response = await httpClient.GetAsync("/realms/master/.well-known/openid-configuration")
@@ -38,7 +23,7 @@ public abstract class KeycloakContainerTest : IAsyncLifetime
     public async Task MasterRealmIsEnabled()
     {
         // Given
-        var keycloakClient = new KeycloakClient(_keycloakContainer.GetBaseAddress(), KeycloakBuilder.DefaultUsername, KeycloakBuilder.DefaultPassword);
+        var keycloakClient = new KeycloakClient(Container.GetBaseAddress(), KeycloakBuilder.DefaultUsername, KeycloakBuilder.DefaultPassword);
 
         // When
         var masterRealm = await keycloakClient.GetRealmAsync("master")
@@ -49,20 +34,11 @@ public abstract class KeycloakContainerTest : IAsyncLifetime
     }
 
     [UsedImplicitly]
-    public sealed class KeycloakDefaultConfiguration : KeycloakContainerTest
-    {
-        public KeycloakDefaultConfiguration()
-            : base(new KeycloakBuilder().Build())
-        {
-        }
-    }
+    public sealed class KeycloakDefaultConfiguration(ITestOutputHelper testOutputHelper) : KeycloakContainerTest(testOutputHelper);
 
     [UsedImplicitly]
-    public sealed class KeycloakV25Configuration : KeycloakContainerTest
+    public sealed class KeycloakV25Configuration(ITestOutputHelper testOutputHelper) : KeycloakContainerTest(testOutputHelper)
     {
-        public KeycloakV25Configuration()
-            : base(new KeycloakBuilder().WithImage("quay.io/keycloak/keycloak:25.0").Build())
-        {
-        }
+        protected override KeycloakBuilder Configure(KeycloakBuilder builder) => builder.WithImage("quay.io/keycloak/keycloak:25.0");
     }
 }

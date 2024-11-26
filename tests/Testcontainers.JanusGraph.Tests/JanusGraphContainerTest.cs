@@ -1,19 +1,7 @@
 namespace Testcontainers.JanusGraph;
 
-public sealed class JanusGraphContainerTest : IAsyncLifetime
+public sealed class JanusGraphContainerTest(ITestOutputHelper testOutputHelper) : ContainerTest<JanusGraphBuilder, JanusGraphContainer>(testOutputHelper)
 {
-    private readonly JanusGraphContainer _janusGraphContainer = new JanusGraphBuilder().Build();
-
-    public Task InitializeAsync()
-    {
-        return _janusGraphContainer.StartAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-        return _janusGraphContainer.DisposeAsync().AsTask();
-    }
-
     [Fact]
     [Trait(nameof(DockerCli.DockerPlatform), nameof(DockerCli.DockerPlatform.Linux))]
     public async Task InsertedVertexCanBeFound()
@@ -21,7 +9,7 @@ public sealed class JanusGraphContainerTest : IAsyncLifetime
         // Given
         var label = Guid.NewGuid().ToString("D");
 
-        using var client = new GremlinClient(new GremlinServer(_janusGraphContainer.Hostname, _janusGraphContainer.GetMappedPublicPort(JanusGraphBuilder.JanusGraphPort)), new JanusGraphGraphSONMessageSerializer());
+        using var client = new GremlinClient(new GremlinServer(Container.Hostname, Container.GetMappedPublicPort(JanusGraphBuilder.JanusGraphPort)), new JanusGraphGraphSONMessageSerializer());
 
         using var connection = new DriverRemoteConnection(client);
 

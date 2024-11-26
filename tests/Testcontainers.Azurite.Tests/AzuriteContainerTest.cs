@@ -1,23 +1,8 @@
 namespace Testcontainers.Azurite;
 
-public abstract class AzuriteContainerTest : IAsyncLifetime
+public abstract class AzuriteContainerTest(AzuriteContainerTest.AzuriteFixture fixture)
 {
-    private readonly AzuriteContainer _azuriteContainer;
-
-    private AzuriteContainerTest(AzuriteContainer azuriteContainer)
-    {
-        _azuriteContainer = azuriteContainer;
-    }
-
-    public Task InitializeAsync()
-    {
-        return _azuriteContainer.StartAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-        return _azuriteContainer.DisposeAsync().AsTask();
-    }
+    private readonly AzuriteContainer _azuriteContainer = fixture.Container;
 
     [Fact]
     [Trait(nameof(DockerCli.DockerPlatform), nameof(DockerCli.DockerPlatform.Linux))]
@@ -72,48 +57,45 @@ public abstract class AzuriteContainerTest : IAsyncLifetime
         }
     }
 
+    public class AzuriteFixture(IMessageSink messageSink) : ContainerFixture<AzuriteBuilder, AzuriteContainer>(messageSink);
+
     [UsedImplicitly]
-    public sealed class AzuriteDefaultConfiguration : AzuriteContainerTest
+    public sealed class AzuriteInMemoryFixture(IMessageSink messageSink) : AzuriteFixture(messageSink)
     {
-        public AzuriteDefaultConfiguration()
-            : base(new AzuriteBuilder().Build())
-        {
-        }
+        protected override AzuriteBuilder Configure(AzuriteBuilder builder) => builder.WithInMemoryPersistence();
     }
 
     [UsedImplicitly]
-    public sealed class AzuriteInMemoryConfiguration : AzuriteContainerTest
+    public sealed class AzuriteMemoryLimitFixture(IMessageSink messageSink) : AzuriteFixture(messageSink)
     {
-        public AzuriteInMemoryConfiguration()
-            : base(new AzuriteBuilder().WithInMemoryPersistence().Build())
-        {
-        }
+        public const int MemoryLimitInMb = 64;
+
+        protected override AzuriteBuilder Configure(AzuriteBuilder builder) => builder.WithInMemoryPersistence(MemoryLimitInMb);
     }
 
     [UsedImplicitly]
-    public sealed class AzuriteMemoryLimitConfiguration : AzuriteContainerTest
-    {
-        private const int MemoryLimitInMb = 64;
+    public sealed class AzuriteDefaultConfiguration(AzuriteFixture fixture) : AzuriteContainerTest(fixture), IClassFixture<AzuriteFixture>;
 
+    [UsedImplicitly]
+    public sealed class AzuriteInMemoryConfiguration(AzuriteInMemoryFixture fixture) : AzuriteContainerTest(fixture), IClassFixture<AzuriteInMemoryFixture>;
+
+    [UsedImplicitly]
+    public sealed class AzuriteMemoryLimitConfiguration(AzuriteMemoryLimitFixture fixture) : AzuriteContainerTest(fixture), IClassFixture<AzuriteMemoryLimitFixture>
+    {
         private static readonly string[] LineEndings = { "\r\n", "\n" };
-
-        public AzuriteMemoryLimitConfiguration()
-            : base(new AzuriteBuilder().WithInMemoryPersistence(MemoryLimitInMb).Build())
-        {
-        }
 
         [Fact]
         public async Task MemoryLimitIsConfigured()
         {
             // Given
-            var (stdout, _) = await _azuriteContainer.GetLogsAsync(timestampsEnabled: false)
+            var (stdout, _) = await fixture.Container.GetLogsAsync(timestampsEnabled: false)
                 .ConfigureAwait(true);
 
             // When
             var firstLine = stdout.Split(LineEndings, StringSplitOptions.RemoveEmptyEntries).First();
 
             // Then
-            Assert.StartsWith(string.Format(CultureInfo.InvariantCulture, "In-memory extent storage is enabled with a limit of {0:F2} MB", MemoryLimitInMb), firstLine);
+            Assert.StartsWith(string.Format(CultureInfo.InvariantCulture, "In-memory extent storage is enabled with a limit of {0:F2} MB", AzuriteMemoryLimitFixture.MemoryLimitInMb), firstLine);
         }
     }
 }

@@ -1,25 +1,13 @@
 namespace Testcontainers.CockroachDb;
 
-public sealed class CockroachDbContainerTest : IAsyncLifetime
+public sealed class CockroachDbContainerTest(CockroachDbContainerTest.CockroachDbFixture cockroachDbFixture) : IClassFixture<CockroachDbContainerTest.CockroachDbFixture>
 {
-    private readonly CockroachDbContainer _cockroachDbContainer = new CockroachDbBuilder().Build();
-
-    public Task InitializeAsync()
-    {
-        return _cockroachDbContainer.StartAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-        return _cockroachDbContainer.DisposeAsync().AsTask();
-    }
-
     [Fact]
     [Trait(nameof(DockerCli.DockerPlatform), nameof(DockerCli.DockerPlatform.Linux))]
     public void ConnectionStateReturnsOpen()
     {
         // Given
-        using DbConnection connection = new NpgsqlConnection(_cockroachDbContainer.GetConnectionString());
+        using DbConnection connection = cockroachDbFixture.CreateConnection();
 
         // When
         connection.Open();
@@ -36,11 +24,16 @@ public sealed class CockroachDbContainerTest : IAsyncLifetime
         const string scriptContent = "SELECT 1;";
 
         // When
-        var execResult = await _cockroachDbContainer.ExecScriptAsync(scriptContent)
+        var execResult = await cockroachDbFixture.Container.ExecScriptAsync(scriptContent)
             .ConfigureAwait(true);
 
         // Then
         Assert.True(0L.Equals(execResult.ExitCode), execResult.Stderr);
         Assert.Empty(execResult.Stderr);
+    }
+
+    public class CockroachDbFixture(IMessageSink messageSink) : DbContainerFixture<CockroachDbBuilder, CockroachDbContainer>(messageSink)
+    {
+        public override DbProviderFactory DbProviderFactory => NpgsqlFactory.Instance;
     }
 }

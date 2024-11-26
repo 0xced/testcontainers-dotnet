@@ -5,4 +5,6 @@ global using DotNet.Testcontainers.Commons;
 global using InfluxDB.Client;
 global using InfluxDB.Client.Api.Domain;
 global using InfluxDB.Client.Writes;
+global using Testcontainers.Xunit;
 global using Xunit;
+global using Xunit.Abstractions;

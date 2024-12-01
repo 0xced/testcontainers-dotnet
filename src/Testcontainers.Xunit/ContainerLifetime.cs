@@ -90,8 +90,45 @@ public abstract class ContainerLifetime<TBuilderEntity, TContainerEntity> : IAsy
     {
         if (_exception == null)
         {
+#if XUNIT_V3
+            if (AttachLogs)
+            {
+                await AttachLogsAsync()
+                    .ConfigureAwait(false);
+            }
+#endif
             await Container.DisposeAsync()
                 .ConfigureAwait(false);
         }
     }
+
+#if XUNIT_V3
+    /// <summary>
+    /// Whether the container stdout and stderr output should be added as attachments to the test context when the container is disposed. Defaults to <see langword="true"/>.
+    /// </summary>
+    protected virtual bool AttachLogs => true;
+
+    private async Task AttachLogsAsync()
+    {
+        try
+        {
+            var (stdout, stderr) = await Container.GetLogsAsync()
+                .ConfigureAwait(false);
+
+            var containerName = Container.Name.TrimStart('/');
+            if (stdout.Length > 0)
+            {
+                TestContext.Current.AddAttachment($"{containerName}.stdout.txt", stdout);
+            }
+            if (stderr.Length > 0)
+            {
+                TestContext.Current.AddAttachment($"{containerName}.stderr.txt", stderr);
+            }
+        }
+        catch (Exception exception)
+        {
+            TestContext.Current.AddWarning($"Failed to attach container logs: {exception}");
+        }
+    }
+#endif
 }

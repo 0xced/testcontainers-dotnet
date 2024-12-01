@@ -90,8 +90,35 @@ public abstract class ContainerLifetime<TBuilderEntity, TContainerEntity> : IAsy
     {
         if (_exception == null)
         {
+#if XUNIT_V3
+            await CollectLogsAsync()
+                .ConfigureAwait(false);
+#endif
             await Container.DisposeAsync()
                 .ConfigureAwait(false);
         }
     }
+
+#if XUNIT_V3
+    private async Task CollectLogsAsync()
+    {
+        try
+        {
+            var (stdout, stderr) = await Container.GetLogsAsync()
+                .ConfigureAwait(false);
+            if (stdout.Length > 0)
+            {
+                TestContext.Current.AddAttachment("container.stdout.txt", stdout);
+            }
+            if (stderr.Length > 0)
+            {
+                TestContext.Current.AddAttachment("container.stderr.txt", stderr);
+            }
+        }
+        catch (Exception exception)
+        {
+            TestContext.Current.AddWarning($"Failed to collect container logs: {exception}");
+        }
+    }
+#endif
 }

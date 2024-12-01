@@ -5,6 +5,8 @@
         <IsPublishable>false</IsPublishable>
         <OutputType>Exe</OutputType>
         <DefineConstants>$(DefineConstants);XUNIT_V3</DefineConstants>
+        <!-- https://github.com/xunit/visualstudio.xunit/issues/425#issuecomment-2704670014 -->
+        <DisableTestingPlatformServerCapability>true</DisableTestingPlatformServerCapability>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk"/>

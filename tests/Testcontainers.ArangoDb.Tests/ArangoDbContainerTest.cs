@@ -14,7 +14,7 @@ public sealed class ArangoDbContainerTest(ITestOutputHelper testOutputHelper) : 
         using var client = new ArangoDBClient(transport);
 
         // When
-        var response = await client.Database.GetDatabasesAsync()
+        var response = await client.Database.GetDatabasesAsync(TestContext.Current.CancellationToken)
             .ConfigureAwait(true);
 
         // Then

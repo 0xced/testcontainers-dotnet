@@ -24,7 +24,7 @@ public abstract class MariaDbContainerTest(MariaDbContainerTest.MariaDbFixture m
         const string scriptContent = "SELECT 1;";
 
         // When
-        var execResult = await mariaDbFixture.Container.ExecScriptAsync(scriptContent)
+        var execResult = await mariaDbFixture.Container.ExecScriptAsync(scriptContent, TestContext.Current.CancellationToken)
             .ConfigureAwait(true);
 
         // Then

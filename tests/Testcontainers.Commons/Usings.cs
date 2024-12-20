@@ -6,4 +6,3 @@ global using System.Threading.Tasks;
 global using DotNet.Testcontainers.Containers;
 global using DotNet.Testcontainers.Images;
 global using JetBrains.Annotations;
-global using Xunit;

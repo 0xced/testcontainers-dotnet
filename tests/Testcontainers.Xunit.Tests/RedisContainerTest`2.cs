@@ -17,7 +17,7 @@ public sealed partial class RedisContainerTest(RedisContainerFixture fixture)
     : IClassFixture<RedisContainerFixture>;
 // # --8<-- [end:InjectContainerFixture]
 
-[TestCaseOrderer(ordererTypeName: "Testcontainers.Xunit.Tests.AlphabeticalTestCaseOrderer", ordererAssemblyName: "Testcontainers.Xunit.Tests")]
+[TestCaseOrderer(typeof(AlphabeticalTestCaseOrderer))]
 public sealed partial class RedisContainerTest
 {
     [Fact]

@@ -5,9 +5,9 @@ public sealed class PostgreSqlContainerTest(PostgreSqlContainerTest.PostgreSqlFi
     // # --8<-- [start:UsePostgreSqlContainer]
     private readonly CancellationTokenSource _cts = new CancellationTokenSource(TimeSpan.FromMinutes(1));
 
-    Task IAsyncLifetime.InitializeAsync() => postgreSqlFixture.Container.StartAsync(_cts.Token);
+    async ValueTask IAsyncLifetime.InitializeAsync() => await postgreSqlFixture.Container.StartAsync(_cts.Token);
 
-    Task IAsyncLifetime.DisposeAsync() => postgreSqlFixture.Container.StopAsync(_cts.Token);
+    async ValueTask IAsyncDisposable.DisposeAsync() => await postgreSqlFixture.Container.StopAsync(_cts.Token);
 
     void IDisposable.Dispose() => _cts.Dispose();
 
@@ -33,7 +33,7 @@ public sealed class PostgreSqlContainerTest(PostgreSqlContainerTest.PostgreSqlFi
         const string scriptContent = "SELECT 1;";
 
         // When
-        var execResult = await postgreSqlFixture.Container.ExecScriptAsync(scriptContent)
+        var execResult = await postgreSqlFixture.Container.ExecScriptAsync(scriptContent, TestContext.Current.CancellationToken)
             .ConfigureAwait(true);
 
         // Then

@@ -8,6 +8,7 @@ global using Npgsql;
 global using StackExchange.Redis;
 global using Testcontainers.PostgreSql;
 global using Testcontainers.Redis;
+global using Testcontainers.Xunit.Tests;
 global using Xunit;
-global using Xunit.Abstractions;
 global using Xunit.Sdk;
+global using Xunit.v3;

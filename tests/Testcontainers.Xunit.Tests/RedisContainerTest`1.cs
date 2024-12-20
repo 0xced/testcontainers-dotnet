@@ -12,7 +12,7 @@ public sealed partial class RedisContainerTest(ITestOutputHelper testOutputHelpe
 }
 // # --8<-- [end:ConfigureRedisContainer]
 
-[TestCaseOrderer(ordererTypeName: "Testcontainers.Xunit.Tests.AlphabeticalTestCaseOrderer", ordererAssemblyName: "Testcontainers.Xunit.Tests")]
+[TestCaseOrderer(typeof(AlphabeticalTestCaseOrderer))]
 public sealed partial class RedisContainerTest
 {
     [Fact]

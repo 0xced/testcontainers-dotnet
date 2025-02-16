@@ -2,7 +2,7 @@ namespace Testcontainers.JanusGraph;
 
 public sealed class JanusGraphContainerTest : IAsyncLifetime
 {
-    private readonly JanusGraphContainer _janusGraphContainer = new JanusGraphBuilder().Build();
+    private readonly JanusGraphContainer _janusGraphContainer = new JanusGraphBuilder().WithEnvironment("janusgraph.storage.backend", "fail").Build();
 
     public Task InitializeAsync()
     {

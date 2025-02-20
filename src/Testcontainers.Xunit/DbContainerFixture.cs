@@ -42,6 +42,12 @@ public abstract class DbContainerFixture<TBuilderEntity, TContainerEntity>(IMess
     /// </summary>
     public abstract DbProviderFactory DbProviderFactory { get; }
 
+    /// <inheritdoc />
+    protected override TBuilderEntity Configure(TBuilderEntity builder)
+    {
+        return builder.WithWaitStrategy(Wait.ForUnixContainer().UntilDatabaseIsAvailable(DbProviderFactory));
+    }
+
     /// <summary>
     /// Gets the database connection string.
     /// </summary>

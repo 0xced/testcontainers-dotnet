@@ -84,4 +84,23 @@ public abstract class OracleContainerTest(OracleContainerTest.OracleFixture orac
     [UsedImplicitly] public sealed class Oracle23FixtureDefault(IMessageSink messageSink) : OracleFixture(messageSink, "free", 23, "FREEPDB1");
     [UsedImplicitly] public sealed class Oracle23FixtureScott(IMessageSink messageSink) : OracleFixture(messageSink, "free", 23, "SCOTT");
 #endif
+/*
+    [UsedImplicitly]
+    public sealed class OracleDefault : OracleContainerTest
+    {
+        public OracleDefault()
+            : base(new OracleBuilder().Build())
+        {
+        }
+    }
+
+    [UsedImplicitly]
+    public sealed class OracleWaitForDatabase : OracleContainerTest
+    {
+        public OracleWaitForDatabase()
+            : base(new OracleBuilder().WithWaitStrategy(Wait.ForUnixContainer().UntilDatabaseIsAvailable(OracleClientFactory.Instance)).Build())
+        {
+        }
+    }
+*/
 }

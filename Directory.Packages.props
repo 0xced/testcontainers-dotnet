@@ -91,6 +91,7 @@
         <PackageVersion Include="Selenium.WebDriver" Version="4.8.1"/>
         <PackageVersion Include="Seq.Api" Version="2025.2.2"/>
         <PackageVersion Include="Seq.Extensions.Logging" Version="9.0.0"/>
+        <PackageVersion Include="Snowflake.Data" Version="5.2.1"/>
         <PackageVersion Include="StackExchange.Redis" Version="2.6.90"/>
         <PackageVersion Include="Temporalio" Version="1.11.0"/>
         <PackageVersion Include="ToxiproxyNetCore" Version="1.0.40"/>

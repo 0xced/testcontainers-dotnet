@@ -1,0 +1,1 @@
+﻿FROM localstack/snowflake:0.2.5

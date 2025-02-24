@@ -4,13 +4,6 @@ namespace Testcontainers.LowkeyVault;
 [PublicAPI]
 public sealed class LowkeyVaultContainer : DockerContainer
 {
-    private const string LocalHost = "localhost";
-
-    /// <summary>
-    /// Gets a configured HTTP client
-    /// </summary>
-    private static HttpClient HttpClient => new();
-
     /// <summary>
     /// Initializes a new instance of the <see cref="LowkeyVaultContainer" /> class.
     /// </summary>
@@ -20,88 +13,64 @@ public sealed class LowkeyVaultContainer : DockerContainer
     {
     }
 
-    /// <summary>
-    /// Gets the URL of the default vault.
-    /// </summary>
-    /// <returns>The default vault base URL.</returns>
-    public string GetDefaultVaultBaseUrl()
+    public override async Task StartAsync(CancellationToken ct = default)
     {
-        return new UriBuilder(Uri.UriSchemeHttps, Hostname, GetMappedPublicPort(LowkeyVaultBuilder.LowkeyVaultPort)).ToString();
+        await base.StartAsync(ct);
+
+        DefaultVaultBaseUrl = new UriBuilder(Uri.UriSchemeHttps, Hostname, GetMappedPublicPort(LowkeyVaultBuilder.LowkeyVaultPort)).Uri;
+        TokenEndpointUrl = new UriBuilder(Uri.UriSchemeHttp, Hostname, GetMappedPublicPort(LowkeyVaultBuilder.LowkeyVaultTokenPort), LowkeyVaultBuilder.TokenEndPointPath).Uri;
+
+        DefaultKeyStore = await GetDefaultKeyStoreAsync();
     }
 
     /// <summary>
-    /// Gets the full URL of the token endpoint.
+    /// The default vault base URL.
     /// </summary>
-    /// <returns>The full token endpoint URL.</returns>
-    public string GetTokenEndpointUrl()
-    {
-        return new UriBuilder(Uri.UriSchemeHttp, Hostname, GetMappedPublicPort(LowkeyVaultBuilder.LowkeyVaultTokenPort), LowkeyVaultBuilder.TokenEndPointPath).ToString();
-    }
+    public Uri DefaultVaultBaseUrl { get; private set; }
+
+    /// <summary>
+    /// The full token endpoint URL.
+    /// </summary>
+    public Uri TokenEndpointUrl { get; private set; }
+
+    /// <summary>
+    /// The certificate collection containing the default certificate shipped with Lowkey Vault.
+    /// </summary>
+    public X509Certificate2Collection DefaultKeyStore { get; private set; }
 
     /// <summary>
     /// Gets the URL of the vault with a given name.
     /// <param name="vaultName">the name of the vault.</param>
     /// </summary>
     /// <returns>The vault base URL.</returns>
-    public string GetVaultBaseUrl(string vaultName)
+    public Uri GetVaultBaseUrl(string vaultName)
     {
-        // Using `LocalHost` here instead of `Hostname` (which resolves to `127.0.0.1` in this environment) 
+        // Using `localhost` here instead of `Hostname` (which resolves to `127.0.0.1` in this environment)
         // to address a compatibility issue with the Java URI parser utilized by the Lowkey Vault client. 
         // The parser fails to properly handle URIs containing a mix of DNS names and IP addresses, leading to errors. 
         // For more details, refer to: https://github.com/nagyesta/lowkey-vault/issues/1319#issuecomment-2600214768
-        return new UriBuilder(Uri.UriSchemeHttps, $"{vaultName}.{LocalHost}", GetMappedPublicPort(LowkeyVaultBuilder.LowkeyVaultPort)).ToString();
+        return new UriBuilder(Uri.UriSchemeHttps, $"{vaultName}.localhost", GetMappedPublicPort(LowkeyVaultBuilder.LowkeyVaultPort)).Uri;
     }
 
     /// <summary>
     /// Gets a <see cref="X509Certificate2Collection"/> containing the default certificate shipped with Lowkey Vault.
     /// </summary>
     /// <returns>The <see cref="X509Certificate2Collection"/>.</returns>
-    public async Task<X509Certificate2Collection> GetDefaultKeyStore()
+    private async Task<X509Certificate2Collection> GetDefaultKeyStoreAsync()
     {
-        var requestUri = new UriBuilder(Uri.UriSchemeHttp, Hostname, GetMappedPublicPort(LowkeyVaultBuilder.LowkeyVaultTokenPort), "/metadata/default-cert/lowkey-vault.p12").ToString();
-        var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+        using var httpClient = new HttpClient();
 
-        try
-        {
-            var response = await HttpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
+        var passwordUri = new Uri(TokenEndpointUrl, "/metadata/default-cert/password");
+        var password = await httpClient.GetStringAsync(passwordUri);
 
-            var keyStoreBytes = await response.Content.ReadAsByteArrayAsync();
+        var keyStoreUri = new Uri(TokenEndpointUrl, "/metadata/default-cert/lowkey-vault.p12");
+        var keyStore = await httpClient.GetByteArrayAsync(keyStoreUri);
 
-            var password = await GetDefaultKeyStorePassword();
-
-            // Load the PKCS12 keystore
+        // Load the PKCS12 keystore
 #if NET9_0_OR_GREATER
-            return X509CertificateLoader.LoadPkcs12Collection(keyStoreBytes, password, X509KeyStorageFlags.DefaultKeySet);
+        return X509CertificateLoader.LoadPkcs12Collection(keyStore, password, X509KeyStorageFlags.DefaultKeySet);
 #else
-            return [new X509Certificate2(keyStoreBytes, password, X509KeyStorageFlags.DefaultKeySet)];
+        return [new X509Certificate2(keyStore, password, X509KeyStorageFlags.DefaultKeySet)];
 #endif
-        }
-        catch (Exception e)
-        {
-            throw new InvalidOperationException("Failed to get default key store", e);
-        }
-    }
-
-    /// <summary>
-    /// Gets the password protecting the default certificate shipped with Lowkey Vault.
-    /// </summary>
-    /// <returns>The password.</returns>
-    public async Task<string> GetDefaultKeyStorePassword()
-    {
-        var requestUri = new UriBuilder(Uri.UriSchemeHttp, Hostname, GetMappedPublicPort(LowkeyVaultBuilder.LowkeyVaultTokenPort), "/metadata/default-cert/password").ToString();
-        var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
-
-        try
-        {
-            var response = await HttpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadAsStringAsync();
-        }
-        catch (Exception e)
-        {
-            throw new InvalidOperationException("Failed to get default key store password", e);
-        }
     }
 }

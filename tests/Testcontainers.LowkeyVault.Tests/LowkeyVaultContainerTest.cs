@@ -1,19 +1,7 @@
 namespace Testcontainers.LowkeyVault;
 
-public sealed class LowkeyVaultContainerTest : IAsyncLifetime
+public sealed class LowkeyVaultContainerTest(ContainerFixture<LowkeyVaultBuilder, LowkeyVaultContainer> fixture) : IClassFixture<ContainerFixture<LowkeyVaultBuilder, LowkeyVaultContainer>>
 {
-    private readonly LowkeyVaultContainer _fakeLowkeyVaultContainer = new LowkeyVaultBuilder().Build();
-
-    public Task InitializeAsync()
-    {
-        return _fakeLowkeyVaultContainer.StartAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-        return _fakeLowkeyVaultContainer.DisposeAsync().AsTask();
-    }
-
     [Fact]
     [Trait(nameof(DockerCli.DockerPlatform), nameof(DockerCli.DockerPlatform.Linux))]
     public async Task TestContainerDefaults()
@@ -22,18 +10,11 @@ public sealed class LowkeyVaultContainerTest : IAsyncLifetime
         const string Alias = "lowkey-vault.local";
 
         // When
-        var tokenEndpoint = _fakeLowkeyVaultContainer.GetTokenEndpointUrl();
-
-        var keyStore = await _fakeLowkeyVaultContainer.GetDefaultKeyStore();
-
-        var password = await _fakeLowkeyVaultContainer.GetDefaultKeyStorePassword();
+        await VerifyTokenEndpointIsWorking(fixture.Container.TokenEndpointUrl, CreateHttpClientHandlerWithDisabledSslValidation());
 
         // Then
-        await VerifyTokenEndpointIsWorking(tokenEndpoint, CreateHttpClientHandlerWithDisabledSslValidation());
-
-        Assert.NotNull(keyStore);
-        Assert.NotNull(password);
-        Assert.Contains(keyStore, cert => cert.Subject.Split('=')?.LastOrDefault() == Alias);
+        Assert.NotNull(fixture.Container.DefaultKeyStore);
+        Assert.Contains(fixture.Container.DefaultKeyStore, cert => cert.Subject.Split('=').LastOrDefault() == Alias);
     }
 
 
@@ -49,7 +30,7 @@ public sealed class LowkeyVaultContainerTest : IAsyncLifetime
     public async Task TestThatSetAndGetSecretWorksWithManagedIdentity()
     {
         // Set ENV vars to configure the token provider endpoint of the managed identity credential
-        Environment.SetEnvironmentVariable("IDENTITY_ENDPOINT", _fakeLowkeyVaultContainer.GetTokenEndpointUrl());
+        Environment.SetEnvironmentVariable("IDENTITY_ENDPOINT", fixture.Container.TokenEndpointUrl.ToString());
         Environment.SetEnvironmentVariable("IDENTITY_HEADER", "header");
 
         await VerifyThatSetAndGetSecretWorks(CreateDefaultAzureCredential());
@@ -67,7 +48,7 @@ public sealed class LowkeyVaultContainerTest : IAsyncLifetime
     public async Task TestThatCreateAndDownloadCertificateWorksWithManagedIdentity()
     {
         // Set ENV vars to configure the token provider endpoint of the managed identity credential
-        Environment.SetEnvironmentVariable("IDENTITY_ENDPOINT", _fakeLowkeyVaultContainer.GetTokenEndpointUrl());
+        Environment.SetEnvironmentVariable("IDENTITY_ENDPOINT", fixture.Container.TokenEndpointUrl.ToString());
         Environment.SetEnvironmentVariable("IDENTITY_HEADER", "header");
 
         await VerifyThatCreateAndDownloadCertificateWorks(CreateDefaultAzureCredential());
@@ -79,9 +60,7 @@ public sealed class LowkeyVaultContainerTest : IAsyncLifetime
         const string SecretName = "name";
         const string SecretValue = "value";
 
-        var vaultUrl = _fakeLowkeyVaultContainer.GetDefaultVaultBaseUrl();
-
-        var secretClient = new SecretClient(new Uri(vaultUrl), credential, CreateSecretClientOption());
+        var secretClient = new SecretClient(fixture.Container.DefaultVaultBaseUrl, credential, CreateSecretClientOption());
 
         await secretClient.SetSecretAsync(SecretName, SecretValue);
 
@@ -100,9 +79,7 @@ public sealed class LowkeyVaultContainerTest : IAsyncLifetime
         const string CertificateName = "certificate";
         const string Subject = "CN=example.com";
 
-        var vaultUrl = _fakeLowkeyVaultContainer.GetDefaultVaultBaseUrl();
-
-        var certificateClient = new CertificateClient(new Uri(vaultUrl), credential, CreateCertificateClientOption());
+        var certificateClient = new CertificateClient(fixture.Container.DefaultVaultBaseUrl, credential, CreateCertificateClientOption());
 
         var certificatePolicy = new CertificatePolicy("Self", Subject)
         {
@@ -178,22 +155,15 @@ public sealed class LowkeyVaultContainerTest : IAsyncLifetime
         return new HttpClientHandler { ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator };
     }
 
-    private static async Task VerifyTokenEndpointIsWorking(string endpointUrl, HttpClientHandler httpClientHandler)
+    private static async Task VerifyTokenEndpointIsWorking(Uri endpointUrl, HttpClientHandler httpClientHandler)
     {
         using var httpClient = new HttpClient(httpClientHandler);
 
         var requestUri = $"{endpointUrl}?resource=https://localhost";
         using var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
 
-        try
-        {
-            using var response = await httpClient.SendAsync(request);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        }
-        catch (Exception ex)
-        {
-            Assert.Fail($"Request failed: {ex.Message}");
-        }
+        using var response = await httpClient.SendAsync(request);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 }
 

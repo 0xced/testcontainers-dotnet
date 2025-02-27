@@ -46,9 +46,17 @@ public sealed partial class PostgreSqlContainerTest
     public async Task Test1()
     {
         const string sql = "SELECT title FROM album ORDER BY album_id";
-        using var connection = await OpenConnectionAsync();
+        using var connection = await OpenConnectionAsync(TestContext.Current.CancellationToken);
         var title = await connection.QueryFirstAsync<string>(sql);
         Assert.Equal("For Those About To Rock We Salute You", title);
     }
     // # --8<-- [end:RunTests]
+
+#if !XUNIT_V3
+    private class TestContext
+    {
+        public static TestContext Current { get; } = new TestContext();
+        public CancellationToken CancellationToken { get; } = CancellationToken.None;
+    }
+#endif
 }

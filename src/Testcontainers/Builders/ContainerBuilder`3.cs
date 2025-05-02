@@ -2,6 +2,7 @@ namespace DotNet.Testcontainers.Builders
 {
   using System;
   using System.Collections.Generic;
+  using System.Data.Common;
   using System.Globalization;
   using System.IO;
   using System.Linq;
@@ -50,6 +51,13 @@ namespace DotNet.Testcontainers.Builders
     /// Gets the expected value of <see cref="AcceptLicenseAgreementEnvVar" /> that indicates rejection of the license agreement.
     /// </summary>
     protected virtual string DeclineLicenseAgreement { get; }
+
+    /// <summary>
+    /// The assembly-qualified name of the type which contains an <c>Instance</c> field which is a <see cref="DbProviderFactory"/>.
+    /// </summary>
+    /// <example><c>FirebirdSql.Data.FirebirdClient.FirebirdClientFactory, FirebirdSql.Data.FirebirdClient, PublicKeyToken=3750abcc3150b00c</c></example>
+    /// <remarks>Used for database containers only.</remarks>
+    protected virtual string DbFactoryTypeName => "";
 
     /// <inheritdoc />
     public virtual TBuilderEntity WithAcceptLicenseAgreement(bool acceptLicenseAgreement)
@@ -400,6 +408,38 @@ namespace DotNet.Testcontainers.Builders
     public TBuilderEntity WithConnectionStringProvider(IConnectionStringProvider<TContainerEntity, TConfigurationEntity> connectionStringProvider)
     {
       return Clone(new ContainerConfiguration(connectionStringProvider: new ConnectionStringProvider<TContainerEntity, TConfigurationEntity>(connectionStringProvider)));
+    }
+
+    /// <summary>
+    /// Gets a <see cref="DbProviderFactory"/> through reflection, using the <c>Instance</c> field of the <see cref="DbFactoryTypeName"/> type.
+    /// </summary>
+    /// <param name="dbProviderFactory">
+    /// When this method returns, contains the <see cref="DbProviderFactory"/> if the type is loaded; otherwise, <see langword="null"/>. This parameter is passed uninitialized.
+    /// </param>
+    /// <returns><see langword="true"/> if a <see cref="DbProviderFactory"/> was found; otherwise, <see langword="false"/>.</returns>
+    protected virtual bool TryGetDbProviderFactory(out DbProviderFactory dbProviderFactory)
+    {
+      try
+      {
+        dbProviderFactory = (DbProviderFactory)Type.GetType(DbFactoryTypeName)?.GetField("Instance")?.GetValue(null);
+        return dbProviderFactory != null;
+      }
+      catch
+      {
+        dbProviderFactory = null;
+        return false;
+      }
+    }
+
+    /// <summary>
+    /// Sets the wait strategy to wait for the database using a <see cref="DbProviderFactory"/> if available, else use the provided <paramref name="fallbackWaitStrategy"/>.
+    /// </summary>
+    /// <param name="fallbackWaitStrategy">The fallback wait strategy if no <see cref="DbProviderFactory"/> is available.</param>
+    /// <returns>A configured instance of TBuilderEntity.</returns>
+    protected virtual TBuilderEntity WithDatabaseAvailableStrategy(IWaitForContainerOS fallbackWaitStrategy)
+    {
+      var waitStrategy = TryGetDbProviderFactory(out var dbProviderFactory) ? Wait.ForUnixContainer().UntilDatabaseIsAvailable(dbProviderFactory) : fallbackWaitStrategy;
+      return WithWaitStrategy(waitStrategy);
     }
 
     /// <inheritdoc />

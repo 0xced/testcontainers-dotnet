@@ -19,7 +19,6 @@
         <RepositoryUrl>https://github.com/testcontainers/testcontainers-dotnet-sample</RepositoryUrl>
     </PropertyGroup>
     <PropertyGroup>
-        <LangVersion>10.0</LangVersion>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 </Project>

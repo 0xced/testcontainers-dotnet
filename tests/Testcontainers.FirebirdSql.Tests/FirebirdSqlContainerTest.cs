@@ -2,6 +2,7 @@ namespace Testcontainers.FirebirdSql;
 
 public abstract class FirebirdSqlContainerTest(FirebirdSqlContainerTest.FirebirdSqlDefaultFixture fixture)
 {
+#if ADONET_CLIENT
     [Fact]
     [Trait(nameof(DockerCli.DockerPlatform), nameof(DockerCli.DockerPlatform.Linux))]
     public void ConnectionStateReturnsOpen()
@@ -14,6 +15,20 @@ public abstract class FirebirdSqlContainerTest(FirebirdSqlContainerTest.Firebird
 
         // Then
         Assert.Equal(ConnectionState.Open, connection.State);
+    }
+#endif
+
+    [Fact]
+    public void WaitStrategyUsed()
+    {
+        FirebirdSqlConfiguration configuration = fixture.Container.AsDynamic()._configuration;
+        var waitStrategy = configuration.WaitStrategies.Last();
+        IWaitUntil waitUntil = DynamicHelper.Unwrap(waitStrategy.AsDynamic()._waitUntil);
+#if ADONET_CLIENT
+        Assert.Equal("UntilDatabaseIsAvailable", waitUntil.GetType().Name);
+#else
+        Assert.Equal("UntilContainerIsHealthy", waitUntil.GetType().Name);
+#endif
     }
 
     [Fact]
@@ -32,6 +47,7 @@ public abstract class FirebirdSqlContainerTest(FirebirdSqlContainerTest.Firebird
         Assert.Empty(execResult.Stderr);
     }
 
+#if ADONET_CLIENT
     public class FirebirdSqlDefaultFixture(IMessageSink messageSink)
         : DbContainerFixture<FirebirdSqlBuilder, FirebirdSqlContainer>(messageSink)
     {
@@ -41,14 +57,10 @@ public abstract class FirebirdSqlContainerTest(FirebirdSqlContainerTest.Firebird
         public override DbProviderFactory DbProviderFactory
             => FirebirdClientFactory.Instance;
     }
-
-    [UsedImplicitly]
-    public class FirebirdSqlWaitForDatabaseFixture(IMessageSink messageSink)
-        : FirebirdSqlDefaultFixture(messageSink)
-    {
-        protected override FirebirdSqlBuilder Configure(FirebirdSqlBuilder builder)
-            => builder.WithImage(TestSession.GetImageFromDockerfile()).WithWaitStrategy(Wait.ForUnixContainer().UntilDatabaseIsAvailable(DbProviderFactory));
-    }
+#else
+    public class FirebirdSqlDefaultFixture(IMessageSink messageSink)
+        : ContainerFixture<FirebirdSqlBuilder, FirebirdSqlContainer>(messageSink);
+#endif
 
     [UsedImplicitly]
     public class FirebirdSql25ScFixture(IMessageSink messageSink)
@@ -85,10 +97,6 @@ public abstract class FirebirdSqlContainerTest(FirebirdSqlContainerTest.Firebird
     [UsedImplicitly]
     public sealed class FirebirdSqlDefaultConfiguration(FirebirdSqlDefaultFixture fixture)
         : FirebirdSqlContainerTest(fixture), IClassFixture<FirebirdSqlDefaultFixture>;
-
-    [UsedImplicitly]
-    public sealed class FirebirdSqlWaitForDatabaseConfiguration(FirebirdSqlWaitForDatabaseFixture fixture)
-        : FirebirdSqlContainerTest(fixture), IClassFixture<FirebirdSqlWaitForDatabaseFixture>;
 
     [UsedImplicitly]
     public sealed class FirebirdSql25ScConfiguration(FirebirdSql25ScFixture fixture)

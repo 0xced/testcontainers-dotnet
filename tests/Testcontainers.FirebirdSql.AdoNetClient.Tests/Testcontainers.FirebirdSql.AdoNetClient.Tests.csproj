@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
+        <TargetFrameworks>net9.0</TargetFrameworks>
         <IsPackable>false</IsPackable>
         <IsPublishable>false</IsPublishable>
-        <OutputType>Exe</OutputType>
+        <DefineConstants>$(DefineConstants);ADONET_CLIENT</DefineConstants>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk"/>
@@ -11,6 +11,7 @@
         <PackageReference Include="ReflectionMagic"/>
         <PackageReference Include="xunit.runner.visualstudio"/>
         <PackageReference Include="xunit.v3"/>
+        <PackageReference Include="FirebirdSql.Data.FirebirdClient"/>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="../../src/Testcontainers.FirebirdSql/Testcontainers.FirebirdSql.csproj"/>
@@ -18,8 +19,6 @@
         <ProjectReference Include="../Testcontainers.Commons/Testcontainers.Commons.csproj"/>
     </ItemGroup>
     <ItemGroup>
-        <None Update="Dockerfile">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
+      <Compile Include="../Testcontainers.FirebirdSql.Tests/FirebirdSqlContainerTest.cs" />
     </ItemGroup>
 </Project>

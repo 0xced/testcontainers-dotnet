@@ -112,6 +112,9 @@ public sealed class FirebirdSqlBuilder : ContainerBuilder<FirebirdSqlBuilder, Fi
     }
 
     /// <inheritdoc />
+    protected override string DbFactoryTypeName => "FirebirdSql.Data.FirebirdClient.FirebirdClientFactory, FirebirdSql.Data.FirebirdClient, PublicKeyToken=3750abcc3150b00c";
+
+    /// <inheritdoc />
     protected override FirebirdSqlBuilder Init()
     {
         return base.Init()
@@ -120,7 +123,7 @@ public sealed class FirebirdSqlBuilder : ContainerBuilder<FirebirdSqlBuilder, Fi
             .WithUsername(DefaultUsername)
             .WithPassword(DefaultPassword)
             .WithResourceMapping(Encoding.Default.GetBytes(TestQueryString), "/home/firebird_check.sql")
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilContainerIsHealthy());
+            .WithDatabaseAvailableStrategy(Wait.ForUnixContainer().UntilContainerIsHealthy());
     }
 
     /// <inheritdoc />

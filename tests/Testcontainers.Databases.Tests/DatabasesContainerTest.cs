@@ -18,8 +18,6 @@ public sealed class DatabaseContainersTest
 
     public static TheoryData<Type> GetContainerImplementations(bool expectDataProvider)
     {
-        var theoryData = new TheoryData<Type>();
-
         var testAssemblies = Directory.GetFiles(".", "Testcontainers.*.Tests.dll", SearchOption.TopDirectoryOnly)
             .Select(Path.GetFullPath)
             .Select(Assembly.LoadFrom)
@@ -33,6 +31,9 @@ public sealed class DatabaseContainersTest
                 .Select(Assembly.Load)
                 .SelectMany(referencedAssembly => referencedAssembly.ExportedTypes)
                 .ToImmutableList());
+
+        var containerTypes = new HashSet<Type>();
+        var dbContainerTypes = new HashSet<Type>();
 
         foreach (var testAssembly in testAssemblies)
         {
@@ -54,18 +55,19 @@ public sealed class DatabaseContainersTest
 
                 var hasDataProvider = testAssembly.Value.Exists(type => type.IsSubclassOf(typeof(DbProviderFactory)));
 
-                if (expectDataProvider && hasDataProvider)
+                if (hasDataProvider)
                 {
-                    theoryData.Add(containerType);
+                    dbContainerTypes.Add(containerType);
                 }
-
-                if (!expectDataProvider && !hasDataProvider)
+                else
                 {
-                    theoryData.Add(containerType);
+                    containerTypes.Add(containerType);
                 }
             }
         }
 
+        var theoryData = new TheoryData<Type>();
+        theoryData.AddRange((expectDataProvider ? dbContainerTypes : containerTypes.Except(dbContainerTypes)).ToArray());
         return theoryData;
     }
 }

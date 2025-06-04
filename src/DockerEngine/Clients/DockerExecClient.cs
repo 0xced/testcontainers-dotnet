@@ -260,9 +260,11 @@ public partial class DockerExecClient : IDockerExecClient
     /// <param name="w">Width of the TTY session in characters</param>
     /// <returns>No error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task ResizeAsync(string id, int? h = null, int? w = null, CancellationToken cancellationToken = default)
+    public virtual async Task ResizeAsync(string id, int h, int w, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(id);
+        ArgumentNullException.ThrowIfNull(h);
+        ArgumentNullException.ThrowIfNull(w);
         var client = _httpClient;
         var disposeClient = false;
         try
@@ -279,14 +281,8 @@ public partial class DockerExecClient : IDockerExecClient
                 urlBuilder.Append(Uri.EscapeDataString(ConvertToString(id, CultureInfo.InvariantCulture)));
                 urlBuilder.Append("/resize");
                 urlBuilder.Append('?');
-                if (h != null)
-                {
-                    urlBuilder.Append(Uri.EscapeDataString("h")).Append('=').Append(Uri.EscapeDataString(ConvertToString(h, CultureInfo.InvariantCulture))).Append('&');
-                }
-                if (w != null)
-                {
-                    urlBuilder.Append(Uri.EscapeDataString("w")).Append('=').Append(Uri.EscapeDataString(ConvertToString(w, CultureInfo.InvariantCulture))).Append('&');
-                }
+                urlBuilder.Append(Uri.EscapeDataString("h")).Append('=').Append(Uri.EscapeDataString(ConvertToString(h, CultureInfo.InvariantCulture))).Append('&');
+                urlBuilder.Append(Uri.EscapeDataString("w")).Append('=').Append(Uri.EscapeDataString(ConvertToString(w, CultureInfo.InvariantCulture))).Append('&');
                 urlBuilder.Length--;
 
                 PrepareRequest(client, request, urlBuilder);

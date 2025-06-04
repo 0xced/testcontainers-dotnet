@@ -18,8 +18,11 @@ public class SecretSpec
     public IDictionary<string, string>? Labels { get; set; } = default!;
 
     /// <summary>
-    /// Base64-url-safe-encoded ([RFC 4648](https://tools.ietf.org/html/rfc4648#section-5))
-    /// <br/>data to store as secret.
+    /// Data is the data to store as a secret, formatted as a Base64-url-safe-encoded
+    /// <br/>([RFC 4648](https://tools.ietf.org/html/rfc4648#section-5)) string.
+    /// <br/>It must be empty if the Driver field is set, in which case the data is
+    /// <br/>loaded from an external secret store. The maximum allowed size is 500KB,
+    /// <br/>as defined in [MaxSecretSize](https://pkg.go.dev/github.com/moby/swarmkit/v2@v2.0.0-20250103191802-8c1959736554/api/validation#MaxSecretSize).
     /// <br/>
     /// <br/>This field is only used to _create_ a secret, and is not returned by
     /// <br/>other endpoints.

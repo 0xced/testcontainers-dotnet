@@ -11,24 +11,10 @@ public class RegistryServiceConfig
     /// List of IP ranges to which nondistributable artifacts can be pushed,
     /// <br/>using the CIDR syntax [RFC 4632](https://tools.ietf.org/html/4632).
     /// <br/>
-    /// <br/>Some images (for example, Windows base images) contain artifacts
-    /// <br/>whose distribution is restricted by license. When these images are
-    /// <br/>pushed to a registry, restricted artifacts are not included.
+    /// <br/>&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
     /// <br/>
-    /// <br/>This configuration override this behavior, and enables the daemon to
-    /// <br/>push nondistributable artifacts to all registries whose resolved IP
-    /// <br/>address is within the subnet described by the CIDR syntax.
-    /// <br/>
-    /// <br/>This option is useful when pushing images containing
-    /// <br/>nondistributable artifacts to a registry on an air-gapped network so
-    /// <br/>hosts on that network can pull the images without connecting to
-    /// <br/>another server.
-    /// <br/>
-    /// <br/>&gt; **Warning**: Nondistributable artifacts typically have restrictions
-    /// <br/>&gt; on how and where they can be distributed and shared. Only use this
-    /// <br/>&gt; feature to push artifacts to private registries and ensure that you
-    /// <br/>&gt; are in compliance with any terms that cover redistributing
-    /// <br/>&gt; nondistributable artifacts.
+    /// <br/>&gt; **Deprecated**: Pushing nondistributable artifacts is now always enabled
+    /// <br/>&gt; and this field is always `null`.
     /// <br/>
     /// </summary>
 
@@ -39,23 +25,10 @@ public class RegistryServiceConfig
     /// List of registry hostnames to which nondistributable artifacts can be
     /// <br/>pushed, using the format `&lt;hostname&gt;[:&lt;port&gt;]` or `&lt;IP address&gt;[:&lt;port&gt;]`.
     /// <br/>
-    /// <br/>Some images (for example, Windows base images) contain artifacts
-    /// <br/>whose distribution is restricted by license. When these images are
-    /// <br/>pushed to a registry, restricted artifacts are not included.
+    /// <br/>&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
     /// <br/>
-    /// <br/>This configuration override this behavior for the specified
-    /// <br/>registries.
-    /// <br/>
-    /// <br/>This option is useful when pushing images containing
-    /// <br/>nondistributable artifacts to a registry on an air-gapped network so
-    /// <br/>hosts on that network can pull the images without connecting to
-    /// <br/>another server.
-    /// <br/>
-    /// <br/>&gt; **Warning**: Nondistributable artifacts typically have restrictions
-    /// <br/>&gt; on how and where they can be distributed and shared. Only use this
-    /// <br/>&gt; feature to push artifacts to private registries and ensure that you
-    /// <br/>&gt; are in compliance with any terms that cover redistributing
-    /// <br/>&gt; nondistributable artifacts.
+    /// <br/>&gt; **Deprecated**: Pushing nondistributable artifacts is now always enabled
+    /// <br/>&gt; and this field is always `null`.
     /// <br/>
     /// </summary>
 

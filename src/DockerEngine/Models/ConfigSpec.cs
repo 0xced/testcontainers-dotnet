@@ -18,8 +18,9 @@ public class ConfigSpec
     public IDictionary<string, string>? Labels { get; set; } = default!;
 
     /// <summary>
-    /// Base64-url-safe-encoded ([RFC 4648](https://tools.ietf.org/html/rfc4648#section-5))
-    /// <br/>config data.
+    /// Data is the data to store as a config, formatted as a Base64-url-safe-encoded
+    /// <br/>([RFC 4648](https://tools.ietf.org/html/rfc4648#section-5)) string.
+    /// <br/>The maximum allowed size is 1000KB, as defined in [MaxConfigSize](https://pkg.go.dev/github.com/moby/swarmkit/v2@v2.0.0-20250103191802-8c1959736554/manager/controlapi#MaxConfigSize).
     /// <br/>
     /// </summary>
 

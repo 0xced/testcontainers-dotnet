@@ -12,7 +12,7 @@ public class LogDriver2
     public string? Name { get; set; } = default!;
 
     /// <summary>
-    /// Driver-specific options for the selectd log driver, specified
+    /// Driver-specific options for the selected log driver, specified
     /// <br/>as key/value pairs.
     /// <br/>
     /// </summary>

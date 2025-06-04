@@ -4,20 +4,20 @@ namespace DockerEngine;
 public enum SystemInfoIsolation
 {
 
-    [System.Runtime.Serialization.EnumMember(Value = @"")]
-    Empty = 0,
-
-
     [System.Runtime.Serialization.EnumMember(Value = @"default")]
-    Default = 1,
+    Default = 0,
 
 
     [System.Runtime.Serialization.EnumMember(Value = @"hyperv")]
-    Hyperv = 2,
+    Hyperv = 1,
 
 
     [System.Runtime.Serialization.EnumMember(Value = @"process")]
-    Process = 3,
+    Process = 2,
+
+
+    [System.Runtime.Serialization.EnumMember(Value = @"")]
+    Empty = 3,
 
 
 }

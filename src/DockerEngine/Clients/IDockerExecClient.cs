@@ -51,7 +51,7 @@ public partial interface IDockerExecClient
     /// <param name="w">Width of the TTY session in characters</param>
     /// <returns>No error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    Task ResizeAsync(string id, int? h = null, int? w = null, CancellationToken cancellationToken = default);
+    Task ResizeAsync(string id, int h, int w, CancellationToken cancellationToken = default);
 
 
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>

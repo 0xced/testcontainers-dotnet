@@ -59,7 +59,7 @@ public class ImageSummary
 
     /// <summary>
     /// Date and time at which the image was created as a Unix timestamp
-    /// <br/>(number of seconds sinds EPOCH).
+    /// <br/>(number of seconds since EPOCH).
     /// <br/>
     /// </summary>
 

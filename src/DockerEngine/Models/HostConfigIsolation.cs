@@ -16,4 +16,8 @@ public enum HostConfigIsolation
     Hyperv = 2,
 
 
+    [System.Runtime.Serialization.EnumMember(Value = @"")]
+    Empty = 3,
+
+
 }

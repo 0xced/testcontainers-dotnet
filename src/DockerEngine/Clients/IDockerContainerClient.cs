@@ -195,7 +195,7 @@ public partial interface IDockerContainerClient
     /// <br/>* Memory usage % = `(used_memory / available_memory) * 100.0`
     /// <br/>* cpu_delta = `cpu_stats.cpu_usage.total_usage - precpu_stats.cpu_usage.total_usage`
     /// <br/>* system_cpu_delta = `cpu_stats.system_cpu_usage - precpu_stats.system_cpu_usage`
-    /// <br/>* number_cpus = `lenght(cpu_stats.cpu_usage.percpu_usage)` or `cpu_stats.online_cpus`
+    /// <br/>* number_cpus = `length(cpu_stats.cpu_usage.percpu_usage)` or `cpu_stats.online_cpus`
     /// <br/>* CPU usage % = `(cpu_delta / system_cpu_delta) * number_cpus * 100.0`
     /// </remarks>
     /// <param name="id">ID or name of the container</param>
@@ -220,7 +220,7 @@ public partial interface IDockerContainerClient
     /// <param name="w">Width of the TTY session in characters</param>
     /// <returns>no error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    Task ResizeAsync(string id, int? h = null, int? w = null, CancellationToken cancellationToken = default);
+    Task ResizeAsync(string id, int h, int w, CancellationToken cancellationToken = default);
 
 
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>

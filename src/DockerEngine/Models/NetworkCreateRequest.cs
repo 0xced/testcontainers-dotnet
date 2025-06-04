@@ -26,6 +26,15 @@ public class NetworkCreateRequest
     public string? Driver { get; set; } = "bridge";
 
     /// <summary>
+    /// The level at which the network exists (e.g. `swarm` for cluster-wide
+    /// <br/>or `local` for machine level).
+    /// <br/>
+    /// </summary>
+
+    [JsonPropertyName("Scope")]
+    public string? Scope { get; set; } = default!;
+
+    /// <summary>
     /// Restrict external access to the network.
     /// </summary>
 
@@ -49,6 +58,27 @@ public class NetworkCreateRequest
 
     [JsonPropertyName("Ingress")]
     public bool? Ingress { get; set; } = default!;
+
+    /// <summary>
+    /// Creates a config-only network. Config-only networks are placeholder
+    /// <br/>networks for network configurations to be used by other networks.
+    /// <br/>Config-only networks cannot be used directly to run containers
+    /// <br/>or services.
+    /// <br/>
+    /// </summary>
+
+    [JsonPropertyName("ConfigOnly")]
+    public bool? ConfigOnly { get; set; } = false;
+
+    /// <summary>
+    /// Specifies the source which will provide the configuration for
+    /// <br/>this network. The specified network must be an existing
+    /// <br/>config-only network; see ConfigOnly.
+    /// <br/>
+    /// </summary>
+
+    [JsonPropertyName("ConfigFrom")]
+    public ConfigReference? ConfigFrom { get; set; } = default!;
 
     /// <summary>
     /// Optional custom IP scheme for the network.

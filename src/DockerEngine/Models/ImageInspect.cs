@@ -124,7 +124,7 @@ public class ImageInspect
 
 
     [JsonPropertyName("Config")]
-    public ContainerConfig? Config { get; set; } = default!;
+    public ImageConfig? Config { get; set; } = default!;
 
     /// <summary>
     /// Hardware CPU architecture that the image runs on.

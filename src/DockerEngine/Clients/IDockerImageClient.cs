@@ -213,12 +213,21 @@ public partial interface IDockerImageClient
     /// <br/>
     /// <br/>The push is cancelled if the HTTP connection is closed.
     /// </remarks>
-    /// <param name="name">Image name or ID.</param>
+    /// <param name="name">Name of the image to push. For example, `registry.example.com/myimage`.
+    /// <br/>The image must be present in the local image store with the same name.
+    /// <br/>
+    /// <br/>The name should be provided without tag; if a tag is provided, it
+    /// <br/>is ignored. For example, `registry.example.com/myimage:latest` is
+    /// <br/>considered equivalent to `registry.example.com/myimage`.
+    /// <br/>
+    /// <br/>Use the `tag` parameter to specify the tag to push.</param>
     /// <param name="x_Registry_Auth">A base64url-encoded auth configuration.
     /// <br/>
     /// <br/>Refer to the [authentication section](#section/Authentication) for
     /// <br/>details.</param>
-    /// <param name="tag">The tag to associate with the image on the registry.</param>
+    /// <param name="tag">Tag of the image to push. For example, `latest`. If no tag is provided,
+    /// <br/>all tags of the given image that are present in the local image store
+    /// <br/>are pushed.</param>
     /// <returns>No error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
     Task PushAsync(string name, string x_Registry_Auth, string? tag = null, CancellationToken cancellationToken = default);
@@ -325,13 +334,9 @@ public partial interface IDockerImageClient
     /// <br/>
     /// <br/>### Image tarball format
     /// <br/>
-    /// <br/>An image tarball contains one directory per image layer (named using its long ID), each containing these files:
+    /// <br/>An image tarball contains [Content as defined in the OCI Image Layout Specification](https://github.com/opencontainers/image-spec/blob/v1.1.1/image-layout.md#content).
     /// <br/>
-    /// <br/>- `VERSION`: currently `1.0` - the file format version
-    /// <br/>- `json`: detailed layer information, similar to `docker inspect layer_id`
-    /// <br/>- `layer.tar`: A tarfile containing the filesystem changes in this layer
-    /// <br/>
-    /// <br/>The `layer.tar` file contains `aufs` style `.wh..wh.aufs` files and directories for storing attribute changes and deletions.
+    /// <br/>Additionally, includes the manifest.json file associated with a backwards compatible docker save format.
     /// <br/>
     /// <br/>If the tarball defines a repository, the tarball should also include a `repositories` file at the root that contains a list of repository and tag names mapped to layer IDs.
     /// <br/>

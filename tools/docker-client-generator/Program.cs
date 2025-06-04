@@ -3,7 +3,7 @@ using NJsonSchema.CodeGeneration.CSharp;
 using NSwag;
 using NSwag.CodeGeneration.CSharp;
 
-var url = new Uri(args.Length > 0 ? args[0] : "https://docs.docker.com/reference/engine/v1.44.yaml");
+var url = new Uri(args.Length > 0 ? args[0] : "https://docs.docker.com/reference/api/engine/version/v1.44.yaml");
 var openApiDocument = await GetOpenApiDocumentAsync(url);
 GenerateClientFiles(openApiDocument);
 

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace DockerEngine;
 
 public class DockerApiException : DockerException

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DockerEngine
+﻿namespace DockerEngine
 {
     public class DockerException : Exception
     {

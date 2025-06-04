@@ -248,6 +248,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testcontainers.Playwright.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testcontainers.PostgreSql.Tests", "tests\Testcontainers.PostgreSql.Tests\Testcontainers.PostgreSql.Tests.csproj", "{56D0DCA5-567F-4B3B-8B79-CB108F8EB8A6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testcontainers.PostgreSql.AdoNetClient.Tests", "tests\Testcontainers.PostgreSql.AdoNetClient.Tests\Testcontainers.PostgreSql.AdoNetClient.Tests.csproj", "{5D34FC64-0EE3-453C-8A5E-1DC520FB968D}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testcontainers.PubSub.Tests", "tests\Testcontainers.PubSub.Tests\Testcontainers.PubSub.Tests.csproj", "{0F86BCE8-62E1-4BFC-AA84-63C7514C90AC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testcontainers.Pulsar.Tests", "tests\Testcontainers.Pulsar.Tests\Testcontainers.Pulsar.Tests.csproj", "{D05FCB31-793E-43E0-BD6C-077013AE9113}"
@@ -744,6 +746,10 @@ Global
 		{56D0DCA5-567F-4B3B-8B79-CB108F8EB8A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56D0DCA5-567F-4B3B-8B79-CB108F8EB8A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56D0DCA5-567F-4B3B-8B79-CB108F8EB8A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D34FC64-0EE3-453C-8A5E-1DC520FB968D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D34FC64-0EE3-453C-8A5E-1DC520FB968D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D34FC64-0EE3-453C-8A5E-1DC520FB968D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D34FC64-0EE3-453C-8A5E-1DC520FB968D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0F86BCE8-62E1-4BFC-AA84-63C7514C90AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0F86BCE8-62E1-4BFC-AA84-63C7514C90AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F86BCE8-62E1-4BFC-AA84-63C7514C90AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -949,5 +955,6 @@ Global
 		{E901DF14-6F05-4FC2-825A-3055FAD33561} = {7164F1FB-7F24-444A-ACD2-2C329C2B3CCF}
 		{B2E8B7FB-7D1E-4DD3-A25E-34DE4386B1EB} = {7164F1FB-7F24-444A-ACD2-2C329C2B3CCF}
 		{C23EE831-F23B-4829-819B-A3F92D89CEDA} = {7164F1FB-7F24-444A-ACD2-2C329C2B3CCF}
+		{5D34FC64-0EE3-453C-8A5E-1DC520FB968D} = {7164F1FB-7F24-444A-ACD2-2C329C2B3CCF}
 	EndGlobalSection
 EndGlobal

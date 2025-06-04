@@ -3,6 +3,7 @@ namespace Testcontainers.PostgreSql;
 public abstract class PostgreSqlContainerTest(PostgreSqlContainerTest.PostgreSqlDefaultFixture fixture)
 {
     // # --8<-- [start:UsePostgreSqlContainer]
+#if ADONET_CLIENT
     [Fact]
     [Trait(nameof(DockerCli.DockerPlatform), nameof(DockerCli.DockerPlatform.Linux))]
     public void ConnectionStateReturnsOpen()
@@ -16,6 +17,7 @@ public abstract class PostgreSqlContainerTest(PostgreSqlContainerTest.PostgreSql
         // Then
         Assert.Equal(ConnectionState.Open, connection.State);
     }
+#endif
 
     [Fact]
     [Trait(nameof(DockerCli.DockerPlatform), nameof(DockerCli.DockerPlatform.Linux))]
@@ -33,6 +35,19 @@ public abstract class PostgreSqlContainerTest(PostgreSqlContainerTest.PostgreSql
         Assert.Empty(execResult.Stderr);
     }
     // # --8<-- [end:UsePostgreSqlContainer]
+
+    [Fact]
+    public void WaitStrategyUsed()
+    {
+        PostgreSqlConfiguration configuration = fixture.Container.AsDynamic()._configuration;
+        var waitStrategy = configuration.WaitStrategies.Last();
+        IWaitUntil waitUntil = DynamicHelper.Unwrap(waitStrategy.AsDynamic()._waitUntil);
+#if ADONET_CLIENT
+        Assert.Equal("UntilDatabaseIsAvailable", waitUntil.GetType().Name);
+#else
+        Assert.Equal("Testcontainers.PostgreSql.PostgreSqlBuilder+WaitUntil", waitUntil.GetType().FullName);
+#endif
+    }
 
     public sealed class ReuseContainerTest : IClassFixture<PostgreSqlDefaultFixture>, IDisposable
     {
@@ -66,6 +81,7 @@ public abstract class PostgreSqlContainerTest(PostgreSqlContainerTest.PostgreSql
         }
     }
 
+#if ADONET_CLIENT
     public class PostgreSqlDefaultFixture(IMessageSink messageSink)
         : DbContainerFixture<PostgreSqlBuilder, PostgreSqlContainer>(messageSink)
     {
@@ -75,20 +91,25 @@ public abstract class PostgreSqlContainerTest(PostgreSqlContainerTest.PostgreSql
         public override DbProviderFactory DbProviderFactory
             => NpgsqlFactory.Instance;
     }
+#else
+    public class PostgreSqlDefaultFixture(IMessageSink messageSink)
+        : ContainerFixture<PostgreSqlBuilder, PostgreSqlContainer>(messageSink);
+#endif
 
     [UsedImplicitly]
-    public class PostgreSqlWaitForDatabaseFixture(IMessageSink messageSink)
-        : PostgreSqlDefaultFixture(messageSink)
+    public class PostgreSql92Fixture(IMessageSink messageSink) : PostgreSqlDefaultFixture(messageSink)
     {
         protected override PostgreSqlBuilder Configure(PostgreSqlBuilder builder)
-            => builder.WithImage(TestSession.GetImageFromDockerfile()).WithWaitStrategy(Wait.ForUnixContainer().UntilDatabaseIsAvailable(DbProviderFactory));
+            => builder.WithImage("postgres:9.2");
     }
 
     [UsedImplicitly]
     public sealed class PostgreSqlDefaultConfiguration(PostgreSqlDefaultFixture fixture)
         : PostgreSqlContainerTest(fixture), IClassFixture<PostgreSqlDefaultFixture>;
 
+#if ADONET_CLIENT
     [UsedImplicitly]
-    public sealed class PostgreSqlWaitForDatabaseConfiguration(PostgreSqlWaitForDatabaseFixture fixture)
-        : PostgreSqlContainerTest(fixture), IClassFixture<PostgreSqlWaitForDatabaseFixture>;
+    public sealed class PostgreSql92Configuration(PostgreSql92Fixture fixture)
+        : PostgreSqlContainerTest(fixture), IClassFixture<PostgreSql92Fixture>;
+#endif
 }

@@ -113,6 +113,9 @@ public sealed class PostgreSqlBuilder : ContainerBuilder<PostgreSqlBuilder, Post
     }
 
     /// <inheritdoc />
+    protected override string DbFactoryTypeName => "Npgsql.NpgsqlFactory, Npgsql, PublicKeyToken=5d8b90d52f46fda7";
+
+    /// <inheritdoc />
     protected override PostgreSqlBuilder Init()
     {
         return base.Init()
@@ -123,7 +126,8 @@ public sealed class PostgreSqlBuilder : ContainerBuilder<PostgreSqlBuilder, Post
             // Disable durability: https://www.postgresql.org/docs/current/non-durability.html.
             .WithCommand("-c", "fsync=off")
             .WithCommand("-c", "full_page_writes=off")
-            .WithCommand("-c", "synchronous_commit=off");
+            .WithCommand("-c", "synchronous_commit=off")
+            .WithDatabaseAvailableStrategy(Wait.ForUnixContainer());
     }
 
     /// <inheritdoc />

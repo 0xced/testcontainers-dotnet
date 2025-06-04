@@ -1,10 +1,13 @@
 global using System;
+global using System.Data;
+global using System.Data.Common;
 global using System.Linq;
 global using System.Threading;
 global using System.Threading.Tasks;
 global using DotNet.Testcontainers.Commons;
 global using DotNet.Testcontainers.Configurations;
 global using JetBrains.Annotations;
+global using Npgsql;
 global using ReflectionMagic;
 global using Testcontainers.Xunit;
 global using Xunit;

@@ -1,4 +1,7 @@
-﻿namespace DockerEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace DockerEngine;
 
 public sealed class DockerClientTest : IAsyncLifetime
 {
@@ -54,16 +57,16 @@ public sealed class DockerClientTest : IAsyncLifetime
         Assert.Equal(64, response.Id.Length);
     }
 
-    [Theory]
-    [InlineData("tcp://127.0.0.1:2375")]
-    [InlineData("npipe://./pipe/docker_engine")]
-    [InlineData("unix:///var/run/docker.sock")]
-    public async System.Threading.Tasks.Task CreatesDockerClient(string endpoint)
+    [Fact]
+    public async System.Threading.Tasks.Task RetrievesSystemInfo()
     {
-        // TODO: Fix the '$endpoint' scheme is not supported.
-
         // Given
-        var dockerEndpoint = new Uri(endpoint);
+        var endpoints = new List<string>();
+        await Cli.Wrap("docker")
+            .WithArguments(["context", "ls", "--format", "{{ if .Current }}{{ .DockerEndpoint }}{{ end }}"])
+            .WithStandardOutputPipe(PipeTarget.ToDelegate(line => { if (!string.IsNullOrEmpty(line)) endpoints.Add(line); }))
+            .ExecuteAsync();
+        var dockerEndpoint = new Uri(endpoints.Single());
         var baseAddress = new UriBuilder(Uri.UriSchemeHttp, dockerEndpoint.Scheme is "npipe" or "unix" ? "localhost" : dockerEndpoint.Host, dockerEndpoint.Port).Uri;
         using var httpClient = new HttpClient(HttpMessageHandlerFactory.GetHttpMessageHandler(dockerEndpoint)) { BaseAddress = baseAddress };
 

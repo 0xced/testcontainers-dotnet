@@ -5,6 +5,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageVersion Include="BouncyCastle.Cryptography" Version="2.6.1"/>
+        <PackageVersion Include="CliWrap" Version="3.8.2"/>
         <PackageVersion Include="Docker.DotNet.Enhanced.X509" Version="3.129.0"/>
         <PackageVersion Include="Docker.DotNet.Enhanced" Version="3.129.0"/>
         <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0"/>

@@ -1,22 +1,34 @@
 namespace DockerEngine;
 
-// Adapted from https://github.com/dotnet/runtime/issues/74385#issuecomment-1705083109
-internal sealed class JsonEnumMemberConverter<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] TEnum>()
-    : JsonStringEnumConverter(namingPolicy: ResolveNamingPolicy())
+internal sealed class JsonEnumMemberConverter<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] TEnum> : JsonConverter<TEnum>
     where TEnum : struct, Enum
 {
-    private static JsonNamingPolicy? ResolveNamingPolicy()
-    {
-        var map = typeof(TEnum).GetFields(BindingFlags.Public | BindingFlags.Static)
-            .Select(f => (f.Name, AttributeName: f.GetCustomAttribute<EnumMemberAttribute>()?.Value))
-            .Where(pair => pair.AttributeName != null)
-            .ToDictionary(e => e.Name, e => e.AttributeName!);
+    private static readonly Dictionary<string, TEnum> StringToEnum;
+    private static readonly Dictionary<TEnum, string> EnumToString;
 
-        return map.Count > 0 ? new EnumMemberNamingPolicy(map) : null;
+    static JsonEnumMemberConverter()
+    {
+        StringToEnum = typeof(TEnum).GetFields(BindingFlags.Public | BindingFlags.Static)
+            .Select(f => (Value: (TEnum)f.GetValue(null)!, f.Name, AttributeName: f.GetCustomAttribute<EnumMemberAttribute>()?.Value))
+            .ToDictionary(e => e.AttributeName ?? e.Name, e => e.Value);
+
+        EnumToString = StringToEnum.ToDictionary(e => e.Value, e => e.Key);
     }
 
-    private sealed class EnumMemberNamingPolicy(Dictionary<string, string> map) : JsonNamingPolicy
+    public override TEnum Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        public override string ConvertName(string name) => map.GetValueOrDefault(name, name);
+        var text = reader.GetString();
+        if (text != null && StringToEnum.TryGetValue(text, out var value))
+        {
+            return value;
+        }
+
+        throw new JsonException($"Can't convert {text} to enum {typeof(TEnum)}");
+    }
+
+    public override void Write(Utf8JsonWriter writer, TEnum value, JsonSerializerOptions options)
+    {
+        var stringValue = EnumToString.TryGetValue(value, out var text) ? text : value.ToString();
+        writer.WriteStringValue(stringValue);
     }
 }

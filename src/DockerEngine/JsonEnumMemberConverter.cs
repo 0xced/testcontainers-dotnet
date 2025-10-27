@@ -1,9 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.Serialization;
-using System.Text.Json;
-
 namespace DockerEngine;
 
 // Adapted from https://github.com/dotnet/runtime/issues/74385#issuecomment-1705083109

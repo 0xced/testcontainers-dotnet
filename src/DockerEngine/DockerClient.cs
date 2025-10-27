@@ -1,5 +1,3 @@
-using System.Net.Http;
-
 namespace DockerEngine;
 
 internal class DockerClient : IDockerClient

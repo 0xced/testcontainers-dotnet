@@ -24,5 +24,12 @@ public class VolumeOptions
     [JsonPropertyName("DriverConfig")]
     public DriverConfig? DriverConfig { get; set; } = default!;
 
+    /// <summary>
+    /// Source path inside the volume. Must be relative without any back traversals.
+    /// </summary>
+
+    [JsonPropertyName("Subpath")]
+    public string? Subpath { get; set; } = default!;
+
 
 }

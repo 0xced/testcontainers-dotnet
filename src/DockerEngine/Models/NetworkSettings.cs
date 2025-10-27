@@ -9,6 +9,8 @@ public class NetworkSettings
     /// <summary>
     /// Name of the default bridge interface when dockerd's --bridge flag is set.
     /// <br/>
+    /// <br/>Deprecated: This field is only set when the daemon is started with the --bridge flag specified.
+    /// <br/>
     /// </summary>
 
     [JsonPropertyName("Bridge")]

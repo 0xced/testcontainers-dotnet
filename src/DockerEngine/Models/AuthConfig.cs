@@ -11,6 +11,12 @@ public class AuthConfig
     [JsonPropertyName("password")]
     public string? Password { get; set; } = default!;
 
+    /// <summary>
+    /// Email is an optional value associated with the username.
+    /// <br/>
+    /// <br/>&gt; **Deprecated**: This field is deprecated since docker 1.11 (API v1.23) and will be removed in a future release.
+    /// <br/>
+    /// </summary>
 
     [JsonPropertyName("email")]
     public string? Email { get; set; } = default!;

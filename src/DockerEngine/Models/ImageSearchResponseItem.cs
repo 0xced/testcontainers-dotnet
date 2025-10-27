@@ -16,8 +16,7 @@ public class ImageSearchResponseItem
     /// <br/>
     /// <br/>&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
     /// <br/>
-    /// <br/>&gt; **Deprecated**: This field is deprecated and will always
-    /// <br/>&gt; be "false" in future.
+    /// <br/>&gt; **Deprecated**: This field is deprecated and will always be "false".
     /// <br/>
     /// </summary>
 

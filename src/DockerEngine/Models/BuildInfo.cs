@@ -11,6 +11,12 @@ public class BuildInfo
     [JsonPropertyName("stream")]
     public string? Stream { get; set; } = default!;
 
+    /// <summary>
+    /// errors encountered during the operation.
+    /// <br/>
+    /// <br/>
+    /// <br/>&gt; **Deprecated**: This field is deprecated since API v1.4, and will be omitted in a future API version. Use the information in errorDetail instead.
+    /// </summary>
 
     [JsonPropertyName("error")]
     public string? Error { get; set; } = default!;
@@ -23,6 +29,12 @@ public class BuildInfo
     [JsonPropertyName("status")]
     public string? Status { get; set; } = default!;
 
+    /// <summary>
+    /// Progress is a pre-formatted presentation of progressDetail.
+    /// <br/>
+    /// <br/>
+    /// <br/>&gt; **Deprecated**: This field is deprecated since API v1.8, and will be omitted in a future API version. Use the information in progressDetail instead.
+    /// </summary>
 
     [JsonPropertyName("progress")]
     public string? Progress { get; set; } = default!;

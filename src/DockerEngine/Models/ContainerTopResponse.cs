@@ -1,7 +1,7 @@
 namespace DockerEngine;
 
 /// <summary>
-/// OK response to ContainerTop operation
+/// Container "top" response.
 /// </summary>
 [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
 public class ContainerTopResponse
@@ -14,9 +14,8 @@ public class ContainerTopResponse
     public ICollection<string>? Titles { get; set; } = default!;
 
     /// <summary>
-    /// Each process running in the container, where each is process
+    /// Each process running in the container, where each process
     /// <br/>is an array of values corresponding to the titles.
-    /// <br/>
     /// </summary>
 
     [JsonPropertyName("Processes")]

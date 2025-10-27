@@ -898,7 +898,7 @@ public partial class DockerContainerClient : IDockerContainerClient
     /// <br/>with `stream=false`.</param>
     /// <returns>no error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task<object> StatsAsync(string id, bool? stream = null, bool? one_shot = null, CancellationToken cancellationToken = default)
+    public virtual async Task<ContainerStatsResponse> StatsAsync(string id, bool? stream = null, bool? one_shot = null, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(id);
         var client = _httpClient;
@@ -949,7 +949,7 @@ public partial class DockerContainerClient : IDockerContainerClient
                     var statusCode = (int)response.StatusCode;
                     if (statusCode == 200)
                     {
-                        var objectResponse = await ReadObjectResponseAsync<object>(response, headers, cancellationToken).ConfigureAwait(false);
+                        var objectResponse = await ReadObjectResponseAsync<ContainerStatsResponse>(response, headers, cancellationToken).ConfigureAwait(false);
                         if (objectResponse.Object == null)
                         {
                             throw new DockerApiException("Response was null which was not expected.", statusCode, objectResponse.Text, headers, null);

@@ -23,6 +23,37 @@ public class ImageInspect
     public string? Id { get; set; } = default!;
 
     /// <summary>
+    /// Descriptor is an OCI descriptor of the image target.
+    /// <br/>In case of a multi-platform image, this descriptor points to the OCI index
+    /// <br/>or a manifest list.
+    /// <br/>
+    /// <br/>This field is only present if the daemon provides a multi-platform image store.
+    /// <br/>
+    /// <br/>WARNING: This is experimental and may change at any time without any backward
+    /// <br/>compatibility.
+    /// <br/>
+    /// </summary>
+
+    [JsonPropertyName("Descriptor")]
+    public OCIDescriptor? Descriptor { get; set; } = default!;
+
+    /// <summary>
+    /// Manifests is a list of image manifests available in this image. It
+    /// <br/>provides a more detailed view of the platform-specific image manifests or
+    /// <br/>other image-attached data like build attestations.
+    /// <br/>
+    /// <br/>Only available if the daemon provides a multi-platform image store
+    /// <br/>and the `manifests` option is set in the inspect request.
+    /// <br/>
+    /// <br/>WARNING: This is experimental and may change at any time without any backward
+    /// <br/>compatibility.
+    /// <br/>
+    /// </summary>
+
+    [JsonPropertyName("Manifests")]
+    public ICollection<ImageManifestSummary>? Manifests { get; set; } = default!;
+
+    /// <summary>
     /// List of image names/tags in the local image cache that reference this
     /// <br/>image.
     /// <br/>
@@ -56,6 +87,11 @@ public class ImageInspect
     /// <br/>is only set for images that were built/created locally. This field
     /// <br/>is empty if the image was pulled from an image registry.
     /// <br/>
+    /// <br/>&gt; **Deprecated**: This field is only set when using the deprecated
+    /// <br/>&gt; legacy builder. It is included in API responses for informational
+    /// <br/>&gt; purposes, but should not be depended on as it will be omitted
+    /// <br/>&gt; once the legacy builder is removed.
+    /// <br/>
     /// </summary>
 
     [JsonPropertyName("Parent")]
@@ -82,31 +118,14 @@ public class ImageInspect
     public string? Created { get; set; } = default!;
 
     /// <summary>
-    /// The ID of the container that was used to create the image.
-    /// <br/>
-    /// <br/>Depending on how the image was created, this field may be empty.
-    /// <br/>
-    /// <br/>**Deprecated**: this field is kept for backward compatibility, but
-    /// <br/>will be removed in API v1.45.
-    /// <br/>
-    /// </summary>
-
-    [JsonPropertyName("Container")]
-    public string? Container { get; set; } = default!;
-
-    /// <summary>
-    /// **Deprecated**: this field is kept for backward compatibility, but
-    /// <br/>will be removed in API v1.45.
-    /// <br/>
-    /// </summary>
-
-    [JsonPropertyName("ContainerConfig")]
-    public ContainerConfig? ContainerConfig { get; set; } = default!;
-
-    /// <summary>
     /// The version of Docker that was used to build the image.
     /// <br/>
     /// <br/>Depending on how the image was created, this field may be empty.
+    /// <br/>
+    /// <br/>&gt; **Deprecated**: This field is only set when using the deprecated
+    /// <br/>&gt; legacy builder. It is included in API responses for informational
+    /// <br/>&gt; purposes, but should not be depended on as it will be omitted
+    /// <br/>&gt; once the legacy builder is removed.
     /// <br/>
     /// </summary>
 
@@ -167,19 +186,9 @@ public class ImageInspect
     [JsonPropertyName("Size")]
     public long? Size { get; set; } = default!;
 
-    /// <summary>
-    /// Total size of the image including all layers it is composed of.
-    /// <br/>
-    /// <br/>Deprecated: this field is omitted in API v1.44, but kept for backward compatibility. Use Size instead.
-    /// <br/>
-    /// </summary>
-
-    [JsonPropertyName("VirtualSize")]
-    public long? VirtualSize { get; set; } = default!;
-
 
     [JsonPropertyName("GraphDriver")]
-    public GraphDriverData? GraphDriver { get; set; } = default!;
+    public DriverData? GraphDriver { get; set; } = default!;
 
     /// <summary>
     /// Information about the image's RootFS, including the layer IDs.

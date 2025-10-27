@@ -81,7 +81,7 @@ public class TaskSpec
     /// </summary>
 
     [JsonPropertyName("ForceUpdate")]
-    public int? ForceUpdate { get; set; } = default!;
+    public ulong? ForceUpdate { get; set; } = default!;
 
     /// <summary>
     /// Runtime is the type of runtime specified for the task executor.

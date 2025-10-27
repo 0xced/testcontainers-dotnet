@@ -12,16 +12,20 @@ public enum MountPointType
     Volume = 1,
 
 
+    [System.Runtime.Serialization.EnumMember(Value = @"image")]
+    Image = 2,
+
+
     [System.Runtime.Serialization.EnumMember(Value = @"tmpfs")]
-    Tmpfs = 2,
+    Tmpfs = 3,
 
 
     [System.Runtime.Serialization.EnumMember(Value = @"npipe")]
-    Npipe = 3,
+    Npipe = 4,
 
 
     [System.Runtime.Serialization.EnumMember(Value = @"cluster")]
-    Cluster = 4,
+    Cluster = 5,
 
 
 }

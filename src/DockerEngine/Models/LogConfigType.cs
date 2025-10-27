@@ -4,40 +4,44 @@ namespace DockerEngine;
 public enum LogConfigType
 {
 
+    [System.Runtime.Serialization.EnumMember(Value = @"local")]
+    Local = 0,
+
+
     [System.Runtime.Serialization.EnumMember(Value = @"json-file")]
-    JsonFile = 0,
+    JsonFile = 1,
 
 
     [System.Runtime.Serialization.EnumMember(Value = @"syslog")]
-    Syslog = 1,
+    Syslog = 2,
 
 
     [System.Runtime.Serialization.EnumMember(Value = @"journald")]
-    Journald = 2,
+    Journald = 3,
 
 
     [System.Runtime.Serialization.EnumMember(Value = @"gelf")]
-    Gelf = 3,
+    Gelf = 4,
 
 
     [System.Runtime.Serialization.EnumMember(Value = @"fluentd")]
-    Fluentd = 4,
+    Fluentd = 5,
 
 
     [System.Runtime.Serialization.EnumMember(Value = @"awslogs")]
-    Awslogs = 5,
+    Awslogs = 6,
 
 
     [System.Runtime.Serialization.EnumMember(Value = @"splunk")]
-    Splunk = 6,
+    Splunk = 7,
 
 
     [System.Runtime.Serialization.EnumMember(Value = @"etwlogs")]
-    Etwlogs = 7,
+    Etwlogs = 8,
 
 
     [System.Runtime.Serialization.EnumMember(Value = @"none")]
-    None = 8,
+    None = 9,
 
 
 }

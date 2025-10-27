@@ -3,13 +3,6 @@ namespace DockerEngine;
 /// <summary>
 /// Configuration for a container that is portable between hosts.
 /// <br/>
-/// <br/>When used as `ContainerConfig` field in an image, `ContainerConfig` is an
-/// <br/>optional field containing the configuration of the container that was last
-/// <br/>committed when creating the image.
-/// <br/>
-/// <br/>Previous versions of Docker builder used this field to store build cache,
-/// <br/>and it is not in active use anymore.
-/// <br/>
 /// </summary>
 [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
 public class ContainerConfig
@@ -31,7 +24,11 @@ public class ContainerConfig
     public string? Domainname { get; set; } = default!;
 
     /// <summary>
-    /// The user that commands are run as inside the container.
+    /// Commands run as this user inside the container. If omitted, commands
+    /// <br/>run as the user specified in the image the container was started from.
+    /// <br/>
+    /// <br/>Can be either user-name or UID, and optional group-name or GID,
+    /// <br/>separated by a colon (`&lt;user-name|UID&gt;[&lt;:group-name|GID&gt;]`).
     /// </summary>
 
     [JsonPropertyName("User")]

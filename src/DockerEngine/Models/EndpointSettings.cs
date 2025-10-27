@@ -27,6 +27,27 @@ public class EndpointSettings
     public ICollection<string>? Aliases { get; set; } = default!;
 
     /// <summary>
+    /// DriverOpts is a mapping of driver options and values. These options
+    /// <br/>are passed directly to the driver and are driver specific.
+    /// <br/>
+    /// </summary>
+
+    [JsonPropertyName("DriverOpts")]
+    public IDictionary<string, string>? DriverOpts { get; set; } = default!;
+
+    /// <summary>
+    /// This property determines which endpoint will provide the default
+    /// <br/>gateway for a container. The endpoint with the highest priority will
+    /// <br/>be used. If multiple endpoints have the same priority, endpoints are
+    /// <br/>lexicographically sorted based on their network name, and the one
+    /// <br/>that sorts first is picked.
+    /// <br/>
+    /// </summary>
+
+    [JsonPropertyName("GwPriority")]
+    public long? GwPriority { get; set; } = default!;
+
+    /// <summary>
     /// Unique ID of the network.
     /// <br/>
     /// </summary>
@@ -89,15 +110,6 @@ public class EndpointSettings
 
     [JsonPropertyName("GlobalIPv6PrefixLen")]
     public long? GlobalIPv6PrefixLen { get; set; } = default!;
-
-    /// <summary>
-    /// DriverOpts is a mapping of driver options and values. These options
-    /// <br/>are passed directly to the driver and are driver specific.
-    /// <br/>
-    /// </summary>
-
-    [JsonPropertyName("DriverOpts")]
-    public IDictionary<string, string>? DriverOpts { get; set; } = default!;
 
     /// <summary>
     /// List of all DNS names an endpoint has on a specific network. This

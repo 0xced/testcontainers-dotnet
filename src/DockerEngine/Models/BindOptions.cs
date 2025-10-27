@@ -27,7 +27,11 @@ public class BindOptions
 
     /// <summary>
     /// Make the mount non-recursively read-only, but still leave the mount recursive
-    /// <br/>(unless NonRecursive is set to true in conjunction).
+    /// <br/>(unless NonRecursive is set to `true` in conjunction).
+    /// <br/>
+    /// <br/>Added in v1.44, before that version all read-only mounts were
+    /// <br/>non-recursive by default. To match the previous behaviour this
+    /// <br/>will default to `true` for clients on versions prior to v1.44.
     /// <br/>
     /// </summary>
 

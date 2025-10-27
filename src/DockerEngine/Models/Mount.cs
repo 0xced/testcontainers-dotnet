@@ -22,6 +22,7 @@ public class Mount
     /// <br/>
     /// <br/>- `bind` Mounts a file or directory from the host into the container. Must exist prior to creating the container.
     /// <br/>- `volume` Creates a volume with the given name and options (or uses a pre-existing volume with the same name and options). These are **not** removed when the container is removed.
+    /// <br/>- `image` Mounts an image.
     /// <br/>- `tmpfs` Create a tmpfs with the given options. The mount source cannot be specified for tmpfs.
     /// <br/>- `npipe` Mounts a named pipe from the host into the container. Must exist prior to creating the container.
     /// <br/>- `cluster` a Swarm cluster volume
@@ -59,6 +60,13 @@ public class Mount
 
     [JsonPropertyName("VolumeOptions")]
     public VolumeOptions? VolumeOptions { get; set; } = default!;
+
+    /// <summary>
+    /// Optional configuration for the `image` type.
+    /// </summary>
+
+    [JsonPropertyName("ImageOptions")]
+    public ImageOptions? ImageOptions { get; set; } = default!;
 
     /// <summary>
     /// Optional configuration for the `tmpfs` type.

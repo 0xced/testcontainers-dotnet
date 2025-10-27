@@ -179,6 +179,9 @@ public class Resources
     /// <br/>
     /// <br/>This field is omitted when empty.
     /// <br/>
+    /// <br/>**Deprecated**: This field is deprecated as kernel 6.12 has deprecated `memory.kmem.tcp.limit_in_bytes` field
+    /// <br/>for cgroups v1. This field will be removed in a future release.
+    /// <br/>
     /// </summary>
 
     [JsonPropertyName("KernelMemoryTCP")]

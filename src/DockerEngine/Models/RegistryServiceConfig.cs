@@ -8,40 +8,12 @@ namespace DockerEngine;
 public class RegistryServiceConfig
 {
     /// <summary>
-    /// List of IP ranges to which nondistributable artifacts can be pushed,
-    /// <br/>using the CIDR syntax [RFC 4632](https://tools.ietf.org/html/4632).
-    /// <br/>
-    /// <br/>&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-    /// <br/>
-    /// <br/>&gt; **Deprecated**: Pushing nondistributable artifacts is now always enabled
-    /// <br/>&gt; and this field is always `null`.
-    /// <br/>
-    /// </summary>
-
-    [JsonPropertyName("AllowNondistributableArtifactsCIDRs")]
-    public ICollection<string>? AllowNondistributableArtifactsCIDRs { get; set; } = default!;
-
-    /// <summary>
-    /// List of registry hostnames to which nondistributable artifacts can be
-    /// <br/>pushed, using the format `&lt;hostname&gt;[:&lt;port&gt;]` or `&lt;IP address&gt;[:&lt;port&gt;]`.
-    /// <br/>
-    /// <br/>&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-    /// <br/>
-    /// <br/>&gt; **Deprecated**: Pushing nondistributable artifacts is now always enabled
-    /// <br/>&gt; and this field is always `null`.
-    /// <br/>
-    /// </summary>
-
-    [JsonPropertyName("AllowNondistributableArtifactsHostnames")]
-    public ICollection<string>? AllowNondistributableArtifactsHostnames { get; set; } = default!;
-
-    /// <summary>
     /// List of IP ranges of insecure registries, using the CIDR syntax
     /// <br/>([RFC 4632](https://tools.ietf.org/html/4632)). Insecure registries
     /// <br/>accept un-encrypted (HTTP) and/or untrusted (HTTPS with certificates
     /// <br/>from unknown CAs) communication.
     /// <br/>
-    /// <br/>By default, local registries (`127.0.0.0/8`) are configured as
+    /// <br/>By default, local registries (`::1/128` and `127.0.0.0/8`) are configured as
     /// <br/>insecure. All other registries are secure. Communicating with an
     /// <br/>insecure registry is not possible if the daemon assumes that registry
     /// <br/>is secure.

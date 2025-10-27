@@ -200,7 +200,7 @@ public partial interface IDockerContainerClient
     /// <br/>with `stream=false`.</param>
     /// <returns>no error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    Task<object> StatsAsync(string id, bool? stream = null, bool? one_shot = null, CancellationToken cancellationToken = default);
+    Task<ContainerStatsResponse> StatsAsync(string id, bool? stream = null, bool? one_shot = null, CancellationToken cancellationToken = default);
 
 
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>

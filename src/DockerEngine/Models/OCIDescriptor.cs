@@ -32,5 +32,39 @@ public class OCIDescriptor
     [JsonPropertyName("size")]
     public long? Size { get; set; } = default!;
 
+    /// <summary>
+    /// List of URLs from which this object MAY be downloaded.
+    /// </summary>
+
+    [JsonPropertyName("urls")]
+    public ICollection<System.Uri>? Urls { get; set; } = default!;
+
+    /// <summary>
+    /// Arbitrary metadata relating to the targeted content.
+    /// </summary>
+
+    [JsonPropertyName("annotations")]
+    public IDictionary<string, string>? Annotations { get; set; } = default!;
+
+    /// <summary>
+    /// Data is an embedding of the targeted content. This is encoded as a base64
+    /// <br/>string when marshalled to JSON (automatically, by encoding/json). If
+    /// <br/>present, Data can be used directly to avoid fetching the targeted content.
+    /// </summary>
+
+    [JsonPropertyName("data")]
+    public string? Data { get; set; } = default!;
+
+
+    [JsonPropertyName("platform")]
+    public OCIPlatform? Platform { get; set; } = default!;
+
+    /// <summary>
+    /// ArtifactType is the IANA media type of this artifact.
+    /// </summary>
+
+    [JsonPropertyName("artifactType")]
+    public string? ArtifactType { get; set; } = default!;
+
 
 }

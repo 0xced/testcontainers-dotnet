@@ -13,6 +13,7 @@ public class MountPoint
     /// <br/>
     /// <br/>- `bind` a mount of a file or directory from the host into the container.
     /// <br/>- `volume` a docker volume with the given `Name`.
+    /// <br/>- `image` a docker image
     /// <br/>- `tmpfs` a `tmpfs`.
     /// <br/>- `npipe` a named pipe from the host into the container.
     /// <br/>- `cluster` a Swarm cluster volume

@@ -15,7 +15,7 @@ public partial interface IDockerExecClient
     /// <param name="id">ID or name of container</param>
     /// <returns>no error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    Task<IdResponse> ContainerExecAsync(ExecConfig execConfig, string id, CancellationToken cancellationToken = default);
+    Task<IDResponse> ContainerExecAsync(ExecConfig execConfig, string id, CancellationToken cancellationToken = default);
 
 
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>

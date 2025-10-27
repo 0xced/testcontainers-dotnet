@@ -18,7 +18,7 @@ public class DistributionInspect
     /// </summary>
 
     [JsonPropertyName("Platforms")]
-    public ICollection<OCIPlatform> Platforms { get; set; } = new List<OCIPlatform>();
+    public ICollection<OCIPlatform?> Platforms { get; set; } = new List<OCIPlatform?>();
 
 
 }

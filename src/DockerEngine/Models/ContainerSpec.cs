@@ -159,6 +159,15 @@ public class ContainerSpec
     public ICollection<Secrets>? Secrets { get; set; } = default!;
 
     /// <summary>
+    /// An integer value containing the score given to the container in
+    /// <br/>order to tune OOM killer preferences.
+    /// <br/>
+    /// </summary>
+
+    [JsonPropertyName("OomScoreAdj")]
+    public long? OomScoreAdj { get; set; } = default!;
+
+    /// <summary>
     /// Configs contains references to zero or more configs that will be
     /// <br/>exposed to the service.
     /// <br/>

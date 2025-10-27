@@ -11,14 +11,6 @@ public class NetworkCreateRequest
     public string Name { get; set; } = default!;
 
     /// <summary>
-    /// Deprecated: CheckDuplicate is now always enabled.
-    /// <br/>
-    /// </summary>
-
-    [JsonPropertyName("CheckDuplicate")]
-    public bool? CheckDuplicate { get; set; } = default!;
-
-    /// <summary>
     /// Name of the network driver plugin to use.
     /// </summary>
 
@@ -86,6 +78,13 @@ public class NetworkCreateRequest
 
     [JsonPropertyName("IPAM")]
     public IPAM? IPAM { get; set; } = default!;
+
+    /// <summary>
+    /// Enable IPv4 on the network.
+    /// </summary>
+
+    [JsonPropertyName("EnableIPv4")]
+    public bool? EnableIPv4 { get; set; } = default!;
 
     /// <summary>
     /// Enable IPv6 on the network.

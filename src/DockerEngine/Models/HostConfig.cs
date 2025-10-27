@@ -345,12 +345,8 @@ public class HostConfig : Resources
 
     /// <summary>
     /// A list of kernel parameters (sysctls) to set in the container.
-    /// <br/>For example:
     /// <br/>
-    /// <br/>```
-    /// <br/>{"net.ipv4.ip_forward": "1"}
-    /// <br/>```
-    /// <br/>
+    /// <br/>This field is omitted if not set.
     /// </summary>
 
     [JsonPropertyName("Sysctls")]

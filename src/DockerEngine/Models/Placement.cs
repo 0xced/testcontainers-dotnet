@@ -18,7 +18,7 @@ public class Placement
     /// <br/>`node.platform.os`   | Node operating system          | `node.platform.os==windows`
     /// <br/>`node.platform.arch` | Node architecture              | `node.platform.arch==x86_64`
     /// <br/>`node.labels`        | User-defined node labels       | `node.labels.security==high`
-    /// <br/>`engine.labels`      | Docker Engine's labels         | `engine.labels.operatingsystem==ubuntu-14.04`
+    /// <br/>`engine.labels`      | Docker Engine's labels         | `engine.labels.operatingsystem==ubuntu-24.04`
     /// <br/>
     /// <br/>`engine.labels` apply to Docker Engine labels like operating system,
     /// <br/>drivers, etc. Swarm administrators add `node.labels` for operational

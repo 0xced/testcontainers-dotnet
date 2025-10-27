@@ -47,6 +47,14 @@ public class Network
     public string? Driver { get; set; } = default!;
 
     /// <summary>
+    /// Whether the network was created with IPv4 enabled.
+    /// <br/>
+    /// </summary>
+
+    [JsonPropertyName("EnableIPv4")]
+    public bool? EnableIPv4 { get; set; } = default!;
+
+    /// <summary>
     /// Whether the network was created with IPv6 enabled.
     /// <br/>
     /// </summary>

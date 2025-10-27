@@ -63,7 +63,7 @@ public partial interface IDockerNetworkClient
     /// Create a network
     /// </summary>
     /// <param name="networkConfig">Network configuration</param>
-    /// <returns>No error</returns>
+    /// <returns>Network created successfully</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
     Task<NetworkCreateResponse> CreateAsync(NetworkCreateRequest networkConfig, CancellationToken cancellationToken = default);
 

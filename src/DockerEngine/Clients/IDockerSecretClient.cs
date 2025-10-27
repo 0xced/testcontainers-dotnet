@@ -28,7 +28,7 @@ public partial interface IDockerSecretClient
     /// </summary>
     /// <returns>no error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    Task<IdResponse> CreateAsync(Body5? body = null, CancellationToken cancellationToken = default);
+    Task<IDResponse> CreateAsync(Body5? body = null, CancellationToken cancellationToken = default);
 
 
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>

@@ -16,13 +16,5 @@ public class Commit
     [JsonPropertyName("ID")]
     public string? ID { get; set; } = default!;
 
-    /// <summary>
-    /// Commit ID of external tool expected by dockerd as set at build time.
-    /// <br/>
-    /// </summary>
-
-    [JsonPropertyName("Expected")]
-    public string? Expected { get; set; } = default!;
-
 
 }

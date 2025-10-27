@@ -39,9 +39,10 @@ public partial class DockerImageClient : IDockerImageClient
     /// <br/>- `until=&lt;timestamp&gt;`</param>
     /// <param name="shared_size">Compute and show shared size as a `SharedSize` field on each image.</param>
     /// <param name="digests">Show digest information as a `RepoDigests` field on each image.</param>
+    /// <param name="manifests">Include `Manifests` in the image summary.</param>
     /// <returns>Summary image data for the images matching the query</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task<IReadOnlyCollection<ImageSummary>> ListAsync(bool? all = null, string? filters = null, bool? shared_size = null, bool? digests = null, CancellationToken cancellationToken = default)
+    public virtual async Task<IReadOnlyCollection<ImageSummary>> ListAsync(bool? all = null, string? filters = null, bool? shared_size = null, bool? digests = null, bool? manifests = null, CancellationToken cancellationToken = default)
     {
         var client = _httpClient;
         var disposeClient = false;
@@ -72,6 +73,10 @@ public partial class DockerImageClient : IDockerImageClient
                 if (digests != null)
                 {
                     urlBuilder.Append(Uri.EscapeDataString("digests")).Append('=').Append(Uri.EscapeDataString(ConvertToString(digests, CultureInfo.InvariantCulture))).Append('&');
+                }
+                if (manifests != null)
+                {
+                    urlBuilder.Append(Uri.EscapeDataString("manifests")).Append('=').Append(Uri.EscapeDataString(ConvertToString(manifests, CultureInfo.InvariantCulture))).Append('&');
                 }
                 urlBuilder.Length--;
 
@@ -399,7 +404,13 @@ public partial class DockerImageClient : IDockerImageClient
     /// <summary>
     /// Delete builder cache
     /// </summary>
-    /// <param name="keep_storage">Amount of disk space in bytes to keep for cache</param>
+    /// <param name="keep_storage">Amount of disk space in bytes to keep for cache
+    /// <br/>
+    /// <br/>&gt; **Deprecated**: This parameter is deprecated and has been renamed to "reserved-space".
+    /// <br/>&gt; It is kept for backward compatibility and will be removed in API v1.49.</param>
+    /// <param name="reserved_space">Amount of disk space in bytes to keep for cache</param>
+    /// <param name="max_used_space">Maximum amount of disk space allowed to keep for cache</param>
+    /// <param name="min_free_space">Target amount of free disk space after pruning</param>
     /// <param name="all">Remove all types of build cache</param>
     /// <param name="filters">A JSON encoded value of the filters (a `map[string][]string`) to
     /// <br/>process on the list of build cache objects.
@@ -416,7 +427,7 @@ public partial class DockerImageClient : IDockerImageClient
     /// <br/>- `private`</param>
     /// <returns>No error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task<BuildPruneResponse> BuildPruneAsync(long? keep_storage = null, bool? all = null, string? filters = null, CancellationToken cancellationToken = default)
+    public virtual async Task<BuildPruneResponse> BuildPruneAsync(long? keep_storage = null, long? reserved_space = null, long? max_used_space = null, long? min_free_space = null, bool? all = null, string? filters = null, CancellationToken cancellationToken = default)
     {
         var client = _httpClient;
         var disposeClient = false;
@@ -436,6 +447,18 @@ public partial class DockerImageClient : IDockerImageClient
                 if (keep_storage != null)
                 {
                     urlBuilder.Append(Uri.EscapeDataString("keep-storage")).Append('=').Append(Uri.EscapeDataString(ConvertToString(keep_storage, CultureInfo.InvariantCulture))).Append('&');
+                }
+                if (reserved_space != null)
+                {
+                    urlBuilder.Append(Uri.EscapeDataString("reserved-space")).Append('=').Append(Uri.EscapeDataString(ConvertToString(reserved_space, CultureInfo.InvariantCulture))).Append('&');
+                }
+                if (max_used_space != null)
+                {
+                    urlBuilder.Append(Uri.EscapeDataString("max-used-space")).Append('=').Append(Uri.EscapeDataString(ConvertToString(max_used_space, CultureInfo.InvariantCulture))).Append('&');
+                }
+                if (min_free_space != null)
+                {
+                    urlBuilder.Append(Uri.EscapeDataString("min-free-space")).Append('=').Append(Uri.EscapeDataString(ConvertToString(min_free_space, CultureInfo.InvariantCulture))).Append('&');
                 }
                 if (all != null)
                 {
@@ -514,7 +537,12 @@ public partial class DockerImageClient : IDockerImageClient
     /// <remarks>
     /// Pull or import an image.
     /// </remarks>
-    /// <param name="fromImage">Name of the image to pull. The name may include a tag or digest. This parameter may only be used when pulling an image. The pull is cancelled if the HTTP connection is closed.</param>
+    /// <param name="fromImage">Name of the image to pull. If the name includes a tag or digest, specific behavior applies:
+    /// <br/>
+    /// <br/>- If only `fromImage` includes a tag, that tag is used.
+    /// <br/>- If both `fromImage` and `tag` are provided, `tag` takes precedence.
+    /// <br/>- If `fromImage` includes a digest, the image is pulled by digest, and `tag` is ignored.
+    /// <br/>- If neither a tag nor digest is specified, all tags are pulled.</param>
     /// <param name="fromSrc">Source to import. The value may be a URL from which the image can be retrieved or `-` to read the image from the request body. This parameter may only be used when importing an image.</param>
     /// <param name="repo">Repository name given to an image when it is imported. The repo may include a tag. This parameter may only be used when importing an image.</param>
     /// <param name="tag">Tag or digest. If empty when pulling an image, this causes all tags for the given image to be pulled.</param>
@@ -671,9 +699,10 @@ public partial class DockerImageClient : IDockerImageClient
     /// Return low-level information about an image.
     /// </remarks>
     /// <param name="name">Image name or id</param>
+    /// <param name="manifests">Include Manifests in the image summary.</param>
     /// <returns>No error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task<ImageInspect> InspectAsync(string name, CancellationToken cancellationToken = default)
+    public virtual async Task<ImageInspect> InspectAsync(string name, bool? manifests = null, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(name);
         var client = _httpClient;
@@ -691,6 +720,12 @@ public partial class DockerImageClient : IDockerImageClient
                 urlBuilder.Append("images/");
                 urlBuilder.Append(Uri.EscapeDataString(ConvertToString(name, CultureInfo.InvariantCulture)));
                 urlBuilder.Append("/json");
+                urlBuilder.Append('?');
+                if (manifests != null)
+                {
+                    urlBuilder.Append(Uri.EscapeDataString("manifests")).Append('=').Append(Uri.EscapeDataString(ConvertToString(manifests, CultureInfo.InvariantCulture))).Append('&');
+                }
+                urlBuilder.Length--;
 
                 PrepareRequest(client, request, urlBuilder);
 
@@ -770,9 +805,19 @@ public partial class DockerImageClient : IDockerImageClient
     /// Return parent layers of an image.
     /// </remarks>
     /// <param name="name">Image name or ID</param>
+    /// <param name="platform">JSON-encoded OCI platform to select the platform-variant.
+    /// <br/>If omitted, it defaults to any locally available platform,
+    /// <br/>prioritizing the daemon's host platform.
+    /// <br/>
+    /// <br/>If the daemon provides a multi-platform image store, this selects
+    /// <br/>the platform-variant to show the history for. If the image is
+    /// <br/>a single-platform image, or if the multi-platform image does not
+    /// <br/>provide a variant matching the given platform, an error is returned.
+    /// <br/>
+    /// <br/>Example: `{"os": "linux", "architecture": "arm", "variant": "v5"}`</param>
     /// <returns>List of image layers</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task<IReadOnlyCollection<HistoryResponseItem>> HistoryAsync(string name, CancellationToken cancellationToken = default)
+    public virtual async Task<IReadOnlyCollection<HistoryResponseItem>> HistoryAsync(string name, string? platform = null, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(name);
         var client = _httpClient;
@@ -790,6 +835,12 @@ public partial class DockerImageClient : IDockerImageClient
                 urlBuilder.Append("images/");
                 urlBuilder.Append(Uri.EscapeDataString(ConvertToString(name, CultureInfo.InvariantCulture)));
                 urlBuilder.Append("/history");
+                urlBuilder.Append('?');
+                if (platform != null)
+                {
+                    urlBuilder.Append(Uri.EscapeDataString("platform")).Append('=').Append(Uri.EscapeDataString(ConvertToString(platform, CultureInfo.InvariantCulture))).Append('&');
+                }
+                urlBuilder.Length--;
 
                 PrepareRequest(client, request, urlBuilder);
 
@@ -889,9 +940,18 @@ public partial class DockerImageClient : IDockerImageClient
     /// <param name="tag">Tag of the image to push. For example, `latest`. If no tag is provided,
     /// <br/>all tags of the given image that are present in the local image store
     /// <br/>are pushed.</param>
+    /// <param name="platform">JSON-encoded OCI platform to select the platform-variant to push.
+    /// <br/>If not provided, all available variants will attempt to be pushed.
+    /// <br/>
+    /// <br/>If the daemon provides a multi-platform image store, this selects
+    /// <br/>the platform-variant to push to the registry. If the image is
+    /// <br/>a single-platform image, or if the multi-platform image does not
+    /// <br/>provide a variant matching the given platform, an error is returned.
+    /// <br/>
+    /// <br/>Example: `{"os": "linux", "architecture": "arm", "variant": "v5"}`</param>
     /// <returns>No error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task PushAsync(string name, string x_Registry_Auth, string? tag = null, CancellationToken cancellationToken = default)
+    public virtual async Task PushAsync(string name, string x_Registry_Auth, string? tag = null, string? platform = null, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(name);
         var client = _httpClient;
@@ -917,6 +977,10 @@ public partial class DockerImageClient : IDockerImageClient
                 if (tag != null)
                 {
                     urlBuilder.Append(Uri.EscapeDataString("tag")).Append('=').Append(Uri.EscapeDataString(ConvertToString(tag, CultureInfo.InvariantCulture))).Append('&');
+                }
+                if (platform != null)
+                {
+                    urlBuilder.Append(Uri.EscapeDataString("platform")).Append('=').Append(Uri.EscapeDataString(ConvertToString(platform, CultureInfo.InvariantCulture))).Append('&');
                 }
                 urlBuilder.Length--;
 
@@ -1125,9 +1189,12 @@ public partial class DockerImageClient : IDockerImageClient
     /// <param name="name">Image name or ID</param>
     /// <param name="force">Remove the image even if it is being used by stopped containers or has other tags</param>
     /// <param name="noprune">Do not delete untagged parent images</param>
+    /// <param name="platforms">Select platform-specific content to delete.
+    /// <br/>Multiple values are accepted.
+    /// <br/>Each platform is a OCI platform encoded as a JSON string.</param>
     /// <returns>The image was deleted successfully</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task<IReadOnlyCollection<ImageDeleteResponseItem>> DeleteAsync(string name, bool? force = null, bool? noprune = null, CancellationToken cancellationToken = default)
+    public virtual async Task<IReadOnlyCollection<ImageDeleteResponseItem>> DeleteAsync(string name, bool? force = null, bool? noprune = null, IEnumerable<string>? platforms = null, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(name);
         var client = _httpClient;
@@ -1152,6 +1219,10 @@ public partial class DockerImageClient : IDockerImageClient
                 if (noprune != null)
                 {
                     urlBuilder.Append(Uri.EscapeDataString("noprune")).Append('=').Append(Uri.EscapeDataString(ConvertToString(noprune, CultureInfo.InvariantCulture))).Append('&');
+                }
+                if (platforms != null)
+                {
+                    foreach (var item in platforms) { urlBuilder.Append(Uri.EscapeDataString("platforms")).Append('=').Append(Uri.EscapeDataString(ConvertToString(item, CultureInfo.InvariantCulture))).Append('&'); }
                 }
                 urlBuilder.Length--;
 
@@ -1246,13 +1317,8 @@ public partial class DockerImageClient : IDockerImageClient
     /// <param name="limit">Maximum number of results to return</param>
     /// <param name="filters">A JSON encoded value of the filters (a `map[string][]string`) to process on the images list. Available filters:
     /// <br/>
-    /// <br/>- `is-automated=(true|false)` (deprecated, see below)
     /// <br/>- `is-official=(true|false)`
-    /// <br/>- `stars=&lt;number&gt;` Matches images that has at least 'number' stars.
-    /// <br/>
-    /// <br/>The `is-automated` filter is deprecated. The `is_automated` field has
-    /// <br/>been deprecated by Docker Hub's search API. Consequently, searching
-    /// <br/>for `is-automated=true` will yield no results.</param>
+    /// <br/>- `stars=&lt;number&gt;` Matches images that has at least 'number' stars.</param>
     /// <returns>No error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
     public virtual async Task<IReadOnlyCollection<ImageSearchResponseItem>> SearchAsync(string term, int? limit = null, string? filters = null, CancellationToken cancellationToken = default)
@@ -1453,7 +1519,7 @@ public partial class DockerImageClient : IDockerImageClient
     /// <param name="changes">`Dockerfile` instructions to apply while committing</param>
     /// <returns>no error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task<IdResponse> CommitAsync(ContainerConfig? containerConfig = null, string? container = null, string? repo = null, string? tag = null, string? comment = null, string? author = null, bool? pause = null, string? changes = null, CancellationToken cancellationToken = default)
+    public virtual async Task<IDResponse> CommitAsync(ContainerConfig? containerConfig = null, string? container = null, string? repo = null, string? tag = null, string? comment = null, string? author = null, bool? pause = null, string? changes = null, CancellationToken cancellationToken = default)
     {
         var client = _httpClient;
         var disposeClient = false;
@@ -1525,7 +1591,7 @@ public partial class DockerImageClient : IDockerImageClient
                     var statusCode = (int)response.StatusCode;
                     if (statusCode == 201)
                     {
-                        var objectResponse = await ReadObjectResponseAsync<IdResponse>(response, headers, cancellationToken).ConfigureAwait(false);
+                        var objectResponse = await ReadObjectResponseAsync<IDResponse>(response, headers, cancellationToken).ConfigureAwait(false);
                         if (objectResponse.Object == null)
                         {
                             throw new DockerApiException("Response was null which was not expected.", statusCode, objectResponse.Text, headers, null);
@@ -1599,9 +1665,15 @@ public partial class DockerImageClient : IDockerImageClient
     /// <br/>```
     /// </remarks>
     /// <param name="name">Image name or ID</param>
+    /// <param name="platform">JSON encoded OCI platform describing a platform which will be used
+    /// <br/>to select a platform-specific image to be saved if the image is
+    /// <br/>multi-platform.
+    /// <br/>If not provided, the full multi-platform image will be saved.
+    /// <br/>
+    /// <br/>Example: `{"os": "linux", "architecture": "arm", "variant": "v5"}`</param>
     /// <returns>no error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task<FileResponse> GetAsync(string name, CancellationToken cancellationToken = default)
+    public virtual async Task<FileResponse> GetAsync(string name, string? platform = null, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(name);
         var client = _httpClient;
@@ -1619,6 +1691,12 @@ public partial class DockerImageClient : IDockerImageClient
                 urlBuilder.Append("images/");
                 urlBuilder.Append(Uri.EscapeDataString(ConvertToString(name, CultureInfo.InvariantCulture)));
                 urlBuilder.Append("/get");
+                urlBuilder.Append('?');
+                if (platform != null)
+                {
+                    urlBuilder.Append(Uri.EscapeDataString("platform")).Append('=').Append(Uri.EscapeDataString(ConvertToString(platform, CultureInfo.InvariantCulture))).Append('&');
+                }
+                urlBuilder.Length--;
 
                 PrepareRequest(client, request, urlBuilder);
 
@@ -1695,9 +1773,15 @@ public partial class DockerImageClient : IDockerImageClient
     /// <br/>For details on the format, see the [export image endpoint](#operation/ImageGet).
     /// </remarks>
     /// <param name="names">Image names to filter by</param>
+    /// <param name="platform">JSON encoded OCI platform describing a platform which will be used
+    /// <br/>to select a platform-specific image to be saved if the image is
+    /// <br/>multi-platform.
+    /// <br/>If not provided, the full multi-platform image will be saved.
+    /// <br/>
+    /// <br/>Example: `{"os": "linux", "architecture": "arm", "variant": "v5"}`</param>
     /// <returns>no error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task<FileResponse> GetAllAsync(IEnumerable<string>? names = null, CancellationToken cancellationToken = default)
+    public virtual async Task<FileResponse> GetAllAsync(IEnumerable<string>? names = null, string? platform = null, CancellationToken cancellationToken = default)
     {
         var client = _httpClient;
         var disposeClient = false;
@@ -1716,6 +1800,10 @@ public partial class DockerImageClient : IDockerImageClient
                 if (names != null)
                 {
                     foreach (var item in names) { urlBuilder.Append(Uri.EscapeDataString("names")).Append('=').Append(Uri.EscapeDataString(ConvertToString(item, CultureInfo.InvariantCulture))).Append('&'); }
+                }
+                if (platform != null)
+                {
+                    urlBuilder.Append(Uri.EscapeDataString("platform")).Append('=').Append(Uri.EscapeDataString(ConvertToString(platform, CultureInfo.InvariantCulture))).Append('&');
                 }
                 urlBuilder.Length--;
 
@@ -1788,9 +1876,15 @@ public partial class DockerImageClient : IDockerImageClient
     /// </remarks>
     /// <param name="imagesTarball">Tar archive containing images</param>
     /// <param name="quiet">Suppress progress details during load.</param>
+    /// <param name="platform">JSON encoded OCI platform describing a platform which will be used
+    /// <br/>to select a platform-specific image to be load if the image is
+    /// <br/>multi-platform.
+    /// <br/>If not provided, the full multi-platform image will be loaded.
+    /// <br/>
+    /// <br/>Example: `{"os": "linux", "architecture": "arm", "variant": "v5"}`</param>
     /// <returns>no error</returns>
     /// <exception cref="DockerApiException">A server side error occurred.</exception>
-    public virtual async Task LoadAsync(Stream imagesTarball = null, bool? quiet = null, CancellationToken cancellationToken = default)
+    public virtual async Task LoadAsync(Stream imagesTarball = null, bool? quiet = null, string? platform = null, CancellationToken cancellationToken = default)
     {
         var client = _httpClient;
         var disposeClient = false;
@@ -1811,6 +1905,10 @@ public partial class DockerImageClient : IDockerImageClient
                 if (quiet != null)
                 {
                     urlBuilder.Append(Uri.EscapeDataString("quiet")).Append('=').Append(Uri.EscapeDataString(ConvertToString(quiet, CultureInfo.InvariantCulture))).Append('&');
+                }
+                if (platform != null)
+                {
+                    urlBuilder.Append(Uri.EscapeDataString("platform")).Append('=').Append(Uri.EscapeDataString(ConvertToString(platform, CultureInfo.InvariantCulture))).Append('&');
                 }
                 urlBuilder.Length--;
 

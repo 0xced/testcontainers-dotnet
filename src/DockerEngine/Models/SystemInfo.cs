@@ -119,6 +119,8 @@ public class SystemInfo
     /// <br/>Kernel memory TCP limits are not supported when using cgroups v2, which
     /// <br/>does not support the corresponding `memory.kmem.tcp.limit_in_bytes` cgroup.
     /// <br/>
+    /// <br/>**Deprecated**: This field is deprecated as kernel 6.12 has deprecated kernel memory TCP accounting.
+    /// <br/>
     /// </summary>
 
     [JsonPropertyName("KernelMemoryTCP")]
@@ -180,20 +182,6 @@ public class SystemInfo
 
     [JsonPropertyName("IPv4Forwarding")]
     public bool? IPv4Forwarding { get; set; } = default!;
-
-    /// <summary>
-    /// Indicates if `bridge-nf-call-iptables` is available on the host.
-    /// </summary>
-
-    [JsonPropertyName("BridgeNfIptables")]
-    public bool? BridgeNfIptables { get; set; } = default!;
-
-    /// <summary>
-    /// Indicates if `bridge-nf-call-ip6tables` is available on the host.
-    /// </summary>
-
-    [JsonPropertyName("BridgeNfIp6tables")]
-    public bool? BridgeNfIp6tables { get; set; } = default!;
 
     /// <summary>
     /// Indicates if the daemon is running in debug-mode / with debug-level
@@ -279,7 +267,7 @@ public class SystemInfo
     public string? KernelVersion { get; set; } = default!;
 
     /// <summary>
-    /// Name of the host's operating system, for example: "Ubuntu 16.04.2 LTS"
+    /// Name of the host's operating system, for example: "Ubuntu 24.04 LTS"
     /// <br/>or "Windows Server 2016 Datacenter"
     /// <br/>
     /// </summary>
@@ -555,6 +543,21 @@ public class SystemInfo
     [JsonPropertyName("DefaultAddressPools")]
     public ICollection<DefaultAddressPools>? DefaultAddressPools { get; set; } = default!;
 
+
+    [JsonPropertyName("FirewallBackend")]
+    public FirewallInfo? FirewallBackend { get; set; } = default!;
+
+    /// <summary>
+    /// List of devices discovered by device drivers.
+    /// <br/>
+    /// <br/>Each device includes information about its source driver, kind, name,
+    /// <br/>and additional driver-specific attributes.
+    /// <br/>
+    /// </summary>
+
+    [JsonPropertyName("DiscoveredDevices")]
+    public ICollection<DeviceInfo>? DiscoveredDevices { get; set; } = default!;
+
     /// <summary>
     /// List of warnings / informational messages about missing features, or
     /// <br/>issues related to the daemon configuration.
@@ -583,6 +586,10 @@ public class SystemInfo
 
     [JsonPropertyName("CDISpecDirs")]
     public ICollection<string>? CDISpecDirs { get; set; } = default!;
+
+
+    [JsonPropertyName("Containerd")]
+    public ContainerdInfo? Containerd { get; set; } = default!;
 
 
 }

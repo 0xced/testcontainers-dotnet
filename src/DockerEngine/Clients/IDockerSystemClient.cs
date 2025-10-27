@@ -74,7 +74,7 @@ public partial interface IDockerSystemClient
     /// <br/>
     /// <br/>Containers report these events: `attach`, `commit`, `copy`, `create`, `destroy`, `detach`, `die`, `exec_create`, `exec_detach`, `exec_start`, `exec_die`, `export`, `health_status`, `kill`, `oom`, `pause`, `rename`, `resize`, `restart`, `start`, `stop`, `top`, `unpause`, `update`, and `prune`
     /// <br/>
-    /// <br/>Images report these events: `delete`, `import`, `load`, `pull`, `push`, `save`, `tag`, `untag`, and `prune`
+    /// <br/>Images report these events: `create`, `delete`, `import`, `load`, `pull`, `push`, `save`, `tag`, `untag`, and `prune`
     /// <br/>
     /// <br/>Volumes report these events: `create`, `mount`, `unmount`, `destroy`, and `prune`
     /// <br/>

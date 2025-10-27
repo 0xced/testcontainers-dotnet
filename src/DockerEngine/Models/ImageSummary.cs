@@ -87,15 +87,6 @@ public class ImageSummary
     public long SharedSize { get; set; } = default!;
 
     /// <summary>
-    /// Total size of the image including all layers it is composed of.
-    /// <br/>
-    /// <br/>Deprecated: this field is omitted in API v1.44, but kept for backward compatibility. Use Size instead.
-    /// </summary>
-
-    [JsonPropertyName("VirtualSize")]
-    public long? VirtualSize { get; set; } = default!;
-
-    /// <summary>
     /// User-defined key/value metadata.
     /// </summary>
 
@@ -106,13 +97,40 @@ public class ImageSummary
     /// Number of containers using this image. Includes both stopped and running
     /// <br/>containers.
     /// <br/>
-    /// <br/>This size is not calculated by default, and depends on which API endpoint
-    /// <br/>is used. `-1` indicates that the value has not been set / calculated.
+    /// <br/>`-1` indicates that the value has not been set / calculated.
     /// <br/>
     /// </summary>
 
     [JsonPropertyName("Containers")]
     public int Containers { get; set; } = default!;
+
+    /// <summary>
+    /// Manifests is a list of manifests available in this image.
+    /// <br/>It provides a more detailed view of the platform-specific image manifests
+    /// <br/>or other image-attached data like build attestations.
+    /// <br/>
+    /// <br/>WARNING: This is experimental and may change at any time without any backward
+    /// <br/>compatibility.
+    /// <br/>
+    /// </summary>
+
+    [JsonPropertyName("Manifests")]
+    public ICollection<ImageManifestSummary>? Manifests { get; set; } = default!;
+
+    /// <summary>
+    /// Descriptor is an OCI descriptor of the image target.
+    /// <br/>In case of a multi-platform image, this descriptor points to the OCI index
+    /// <br/>or a manifest list.
+    /// <br/>
+    /// <br/>This field is only present if the daemon provides a multi-platform image store.
+    /// <br/>
+    /// <br/>WARNING: This is experimental and may change at any time without any backward
+    /// <br/>compatibility.
+    /// <br/>
+    /// </summary>
+
+    [JsonPropertyName("Descriptor")]
+    public OCIDescriptor? Descriptor { get; set; } = default!;
 
 
 }

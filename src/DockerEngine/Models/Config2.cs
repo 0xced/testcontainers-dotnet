@@ -4,7 +4,11 @@ namespace DockerEngine;
 public class Config2
 {
     /// <summary>
-    /// Docker Version used to create the plugin
+    /// Docker Version used to create the plugin.
+    /// <br/>
+    /// <br/>Depending on how the plugin was created, this field may be empty or omitted.
+    /// <br/>
+    /// <br/>Deprecated: this field is no longer set, and will be removed in the next API version.
     /// </summary>
 
     [JsonPropertyName("DockerVersion")]

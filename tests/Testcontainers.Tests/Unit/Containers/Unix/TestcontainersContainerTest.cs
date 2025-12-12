@@ -5,6 +5,7 @@ namespace DotNet.Testcontainers.Tests.Unit
   using System.IO;
   using System.Net;
   using System.Net.Sockets;
+  using System.Runtime.InteropServices;
   using System.Text;
   using System.Threading.Tasks;
   using DotNet.Testcontainers.Builders;
@@ -544,6 +545,21 @@ namespace DotNet.Testcontainers.Tests.Unit
 
         await Assert.ThrowsAnyAsync<Exception>(() => container.StartAsync(TestContext.Current.CancellationToken))
           .ConfigureAwait(true);
+      }
+
+      [Fact]
+      public async Task NoMatchingManifest()
+      {
+        Assert.SkipWhen(RuntimeInformation.ProcessArchitecture == Architecture.X64, "Only relevant on non x64 architectures");
+
+        await using var container = new ContainerBuilder("alpine:3.1")
+          .WithEntrypoint(CommonCommands.SleepInfinity)
+          .WithImagePullPolicy(PullPolicy.Always)
+          .Build();
+
+        var exception = await Assert.ThrowsAnyAsync<Exception>(() => container.StartAsync(TestContext.Current.CancellationToken))
+          .ConfigureAwait(true);
+        Assert.Contains("no matching manifest", exception.Message);
       }
     }
   }

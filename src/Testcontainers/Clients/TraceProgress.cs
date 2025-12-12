@@ -55,6 +55,11 @@ namespace DotNet.Testcontainers.Clients
       {
         _logger.LogDebug("Auxiliary data: {ExtensionData}", JsonSerializer.Serialize(value.Aux.ExtensionData));
       }
+
+      if (value.Error != null)
+      {
+        throw new Exception(value.Error.Message);
+      }
     }
   }
 }

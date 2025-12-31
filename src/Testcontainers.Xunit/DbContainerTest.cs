@@ -7,9 +7,9 @@ namespace Testcontainers.Xunit;
 /// <typeparam name="TBuilderEntity">The builder entity.</typeparam>
 /// <typeparam name="TContainerEntity">The container entity.</typeparam>
 [PublicAPI]
-public abstract class DbContainerTest<TBuilderEntity, TContainerEntity>(ITestOutputHelper testOutputHelper, Func<TBuilderEntity, TBuilderEntity> configure = null)
-    : ContainerTest<TBuilderEntity, TContainerEntity>(testOutputHelper, configure), IDbContainerTestMethods
-    where TBuilderEntity : IContainerBuilder<TBuilderEntity, TContainerEntity, IContainerConfiguration>, new()
+public abstract class DbContainerTest<TBuilderEntity, TContainerEntity>(ITestOutputHelper testOutputHelper)
+    : ContainerTest<TBuilderEntity, TContainerEntity>(testOutputHelper), IDbContainerTestMethods
+    where TBuilderEntity : IContainerBuilder<TBuilderEntity, TContainerEntity, IContainerConfiguration>
     where TContainerEntity : IContainer, IDatabaseContainer
 {
     private DbContainerTestMethods _testMethods;

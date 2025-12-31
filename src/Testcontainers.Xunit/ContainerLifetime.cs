@@ -6,7 +6,7 @@ namespace Testcontainers.Xunit;
 /// <typeparam name="TBuilderEntity">The builder entity.</typeparam>
 /// <typeparam name="TContainerEntity">The container entity.</typeparam>
 public abstract class ContainerLifetime<TBuilderEntity, TContainerEntity> : IAsyncLifetime
-    where TBuilderEntity : IContainerBuilder<TBuilderEntity, TContainerEntity, IContainerConfiguration>, new()
+    where TBuilderEntity : IContainerBuilder<TBuilderEntity, TContainerEntity, IContainerConfiguration>
     where TContainerEntity : IContainer
 {
     private readonly Lazy<TContainerEntity> _container;
@@ -16,7 +16,7 @@ public abstract class ContainerLifetime<TBuilderEntity, TContainerEntity> : IAsy
 
     protected ContainerLifetime(ILogger logger)
     {
-        _container = new Lazy<TContainerEntity>(() => Configure(Configure()).WithLogger(logger).Build());
+        _container = new Lazy<TContainerEntity>(() => Configure().WithLogger(logger).Build());
     }
 
     /// <summary>
@@ -65,31 +65,7 @@ public abstract class ContainerLifetime<TBuilderEntity, TContainerEntity> : IAsy
     ///   </code>
     /// </example>
     /// <returns>A configured instance of <typeparamref name="TBuilderEntity" />.</returns>
-    protected virtual TBuilderEntity Configure() => new();
-
-    /// <summary>
-    /// Extension method to further configure the container instance.
-    /// </summary>
-    /// <example>
-    ///   <code>
-    ///   public class MariaDbRootUserFixture(IMessageSink messageSink) : DbContainerFixture&lt;MariaDbBuilder, MariaDbContainer&gt;(messageSink)
-    ///   {
-    ///     public override DbProviderFactory DbProviderFactory =&gt; MySqlConnectorFactory.Instance;
-    ///   <br />
-    ///     protected override MariaDbBuilder Configure(MariaDbBuilder builder)
-    ///     {
-    ///       return builder.WithUsername("root");
-    ///     }
-    ///   }
-    ///   </code>
-    /// </example>
-    /// <param name="builder">The container builder to configure.</param>
-    /// <returns>A configured instance of <typeparamref name="TBuilderEntity" />.</returns>
-    [Obsolete("This method is obsolete and will be removed. Use the parameterless Configure() method and create the builder explicitly instead.")]
-    protected virtual TBuilderEntity Configure(TBuilderEntity builder)
-    {
-        return builder;
-    }
+    protected abstract TBuilderEntity Configure();
 
     /// <inheritdoc cref="IAsyncLifetime.InitializeAsync" />
     protected virtual async LifetimeTask InitializeAsync()

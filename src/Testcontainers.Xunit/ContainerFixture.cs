@@ -9,7 +9,7 @@ namespace Testcontainers.Xunit;
 /// <typeparam name="TBuilderEntity">The builder entity.</typeparam>
 /// <typeparam name="TContainerEntity">The container entity.</typeparam>
 [PublicAPI]
-public class ContainerFixture<TBuilderEntity, TContainerEntity>(IMessageSink messageSink)
+public abstract class ContainerFixture<TBuilderEntity, TContainerEntity>(IMessageSink messageSink)
     : ContainerLifetime<TBuilderEntity, TContainerEntity>(new MessageSinkLogger(messageSink))
-    where TBuilderEntity : IContainerBuilder<TBuilderEntity, TContainerEntity, IContainerConfiguration>, new()
+    where TBuilderEntity : IContainerBuilder<TBuilderEntity, TContainerEntity, IContainerConfiguration>
     where TContainerEntity : IContainer;

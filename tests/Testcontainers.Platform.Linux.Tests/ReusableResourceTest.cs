@@ -110,6 +110,7 @@ public sealed class ReusableResourceTest : IAsyncLifetime
 
                 // When
                 var hash = new ReuseHashContainerBuilder()
+                    .WithImage("image")
                     .WithEnvironment(env)
                     .WithLabel("labelA", "A")
                     .WithLabel("labelB", "B")
@@ -118,11 +119,18 @@ public sealed class ReusableResourceTest : IAsyncLifetime
                 // Then
 
                 // The hash is calculated from the minified JSON. For readability, the JSON
-                // shown below is formatted. `Dtj7Jx6NVlbDUnA3vmH1nNZw+o8=` is the
+                // shown below is formatted. `zF/MsQdgCs4/vBDS/yP3lfxXwpg=` is the
                 // Base64-encoded SHA-1 hash for this JSON (minified):
                 //
                 // {
-                //     "Image": null,
+                //     "Image": {
+                //       "Repository": "image",
+                //       "Registry": null,
+                //       "Tag": "latest",
+                //       "Digest": null,
+                //       "Platform": null,
+                //       "FullName": "image:latest"
+                //     },
                 //     "Name": null,
                 //     "Entrypoint": null,
                 //     "Command": [],
@@ -133,14 +141,13 @@ public sealed class ReusableResourceTest : IAsyncLifetime
                 //     "ExposedPorts": {},
                 //     "PortBindings": {},
                 //     "NetworkAliases": [],
+                //     "ExtraHosts": [],
                 //     "Labels": {
                 //         "labelA": "A",
-                //         "labelB": "B",
-                //         "org.testcontainers": "true",
-                //         "org.testcontainers.lang": "dotnet"
+                //         "labelB": "B"
                 //     }
                 // }
-                Assert.Equal("Dtj7Jx6NVlbDUnA3vmH1nNZw+o8=", hash);
+                Assert.Equal("zF/MsQdgCs4/vBDS/yP3lfxXwpg=", hash);
             }
 
             [Fact]
